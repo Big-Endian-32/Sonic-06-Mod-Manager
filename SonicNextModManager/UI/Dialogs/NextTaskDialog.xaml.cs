@@ -57,7 +57,7 @@ namespace SonicNextModManager.UI.Dialogs
         /// <summary>
         /// Refreshes the tasks if the observable collection was changed.
         /// </summary>
-        private void Tasks_CollectionChanged(object? sender, NotifyCollectionChangedEventArgs e)
+        private void Tasks_CollectionChanged(object? in_sender, NotifyCollectionChangedEventArgs in_args)
         {
             // Clear all message box buttons.
             DialogTasks.Children.Clear();
@@ -83,12 +83,12 @@ namespace SonicNextModManager.UI.Dialogs
         /// <summary>
         /// Displays the message box dialog with the specified parameters.
         /// </summary>
-        /// <param name="message">Message to display.</param>
-        /// <param name="caption">Title bar caption to use.</param>
-        public void Show(string message = "", string caption = "")
+        /// <param name="in_message">Message to display.</param>
+        /// <param name="in_caption">Title bar caption to use.</param>
+        public void Show(string in_message = "", string in_caption = "")
         {
-            Message = message;
-            Caption = caption;
+            Message = in_message;
+            Caption = in_caption;
 
             // Add cancel button if requested.
             if (CancelButton)
@@ -101,13 +101,13 @@ namespace SonicNextModManager.UI.Dialogs
         /// <summary>
         /// Adds a task to the dialog box.
         /// </summary>
-        /// <param name="caption">Task title shown on the button.</param>
-        /// <param name="description">Task description shown on the button.</param>
-        /// <param name="iconName">Icon shown on the button.</param>
-        /// <param name="action">Actions performed once the button is clicked.</param>
-        public TaskButton AddTask(string caption, string description, string iconName, Action action)
+        /// <param name="in_caption">Task title shown on the button.</param>
+        /// <param name="in_desc">Task description shown on the button.</param>
+        /// <param name="in_icon">Icon shown on the button.</param>
+        /// <param name="in_callback">Actions performed once the button is clicked.</param>
+        public TaskButton AddTask(string in_caption, string in_desc, string in_icon, Action in_callback)
         {
-            TaskButton task = Tasks.SingleOrDefault(x => x.Caption == caption);
+            TaskButton task = Tasks.SingleOrDefault(x => x.Caption == in_caption);
 
             // Remove task if it already exists.
             if (task != null)
@@ -116,13 +116,13 @@ namespace SonicNextModManager.UI.Dialogs
             // Create a new task.
             task = new()
             {
-                Caption = caption,
-                Description = description,
-                IconName = iconName
+                Caption = in_caption,
+                Description = in_desc,
+                IconName = in_icon
             };
 
             // Set task click event.
-            task.RootButton.Click += (s, e) => action?.Invoke();
+            task.RootButton.Click += (s, e) => in_callback?.Invoke();
 
             Tasks.Add(task);
 
@@ -132,10 +132,10 @@ namespace SonicNextModManager.UI.Dialogs
         /// <summary>
         /// Removes a task from the dialog box matching the input caption.
         /// </summary>
-        /// <param name="caption">Caption to remove.</param>
-        public void RemoveTask(string caption)
+        /// <param name="in_caption">Caption to remove.</param>
+        public void RemoveTask(string in_caption)
         {
-            TaskButton task = Tasks.SingleOrDefault(x => x.Caption == caption);
+            TaskButton task = Tasks.SingleOrDefault(x => x.Caption == in_caption);
 
             if (task != null)
             {

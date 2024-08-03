@@ -16,7 +16,7 @@ namespace SonicNextModManager
         /// <param name="repository">GitHub repository name.</param>
         public static Task<ReleaseInfo> GetLatestRelease(string username, string repository)
         {
-            return JsonExtensions.DeserializeWebObjectAsync<ReleaseInfo>
+            return JsonHelper.DeserializeWebObjectAsync<ReleaseInfo>
             (
                 StringHelper.URLCombine(API, Repositories, username, repository, "releases", "latest")
             );
@@ -38,7 +38,7 @@ namespace SonicNextModManager
         /// <param name="labels">Labels automatically added to the issue.</param>
         public static void CreateNewIssue(string username, string repository, string title = "", string body = "", List<string> labels = null)
         {
-            ProcessExtensions.StartWithDefaultProgram
+            ProcessHelper.StartWithDefaultProgram
             (
                 StringHelper.URLCombine
                 (

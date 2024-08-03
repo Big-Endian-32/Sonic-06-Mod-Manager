@@ -1,6 +1,6 @@
-﻿namespace SonicNextModManager
+﻿namespace SonicNextModManager.Helpers
 {
-    public class PropertyExtensions
+    public class PropertyHelper
     {
         /// <summary>
         /// Sets a string property to a new value if the new value isn't null or empty.

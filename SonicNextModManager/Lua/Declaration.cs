@@ -1,4 +1,4 @@
-﻿namespace SonicNextModManager.IO
+﻿namespace SonicNextModManager.Lua
 {
     public class Declaration
     {

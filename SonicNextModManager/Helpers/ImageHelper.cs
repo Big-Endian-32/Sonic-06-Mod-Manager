@@ -11,15 +11,15 @@ namespace SonicNextModManager.Helpers
         /// Creates a <see cref="BitmapSource"/> from a <see cref="Bitmap"/>.
         /// <para><see href="https://stackoverflow.com/a/26261562">Learn more...</see></para>
         /// </summary>
-        /// <param name="bitmap">Bitmap to convert.</param>
-        public static BitmapSource GdiBitmapToBitmapSource(Bitmap bitmap)
+        /// <param name="in_bmp">Bitmap to convert.</param>
+        public static BitmapSource GdiBitmapToBitmapSource(Bitmap in_bmp)
         {
-            if (bitmap == null)
+            if (in_bmp == null)
                 throw new ArgumentNullException("bitmap");
 
-            var rect = new Rectangle(0, 0, bitmap.Width, bitmap.Height);
+            var rect = new Rectangle(0, 0, in_bmp.Width, in_bmp.Height);
 
-            var bitmapData = bitmap.LockBits
+            var bitmapData = in_bmp.LockBits
             (
                 rect,
                 ImageLockMode.ReadWrite,
@@ -32,10 +32,10 @@ namespace SonicNextModManager.Helpers
 
                 return BitmapSource.Create
                 (
-                    bitmap.Width,
-                    bitmap.Height,
-                    bitmap.HorizontalResolution,
-                    bitmap.VerticalResolution,
+                    in_bmp.Width,
+                    in_bmp.Height,
+                    in_bmp.HorizontalResolution,
+                    in_bmp.VerticalResolution,
                     PixelFormats.Bgra32,
                     null,
                     bitmapData.Scan0,
@@ -45,7 +45,7 @@ namespace SonicNextModManager.Helpers
             }
             finally
             {
-                bitmap.UnlockBits(bitmapData);
+                in_bmp.UnlockBits(bitmapData);
             }
         }
     }

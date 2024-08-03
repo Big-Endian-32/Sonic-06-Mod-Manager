@@ -1,11 +1,12 @@
-﻿using SonicNextModManager.Helpers;
+﻿using Marathon.Formats.Archive;
+using Marathon.IO;
+using SonicNextModManager.Interop;
 using SonicNextModManager.UI.Dialogs;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
-using System.Threading;
 using System.Threading.Tasks;
 
-namespace SonicNextModManager
+namespace SonicNextModManager.Metadata
 {
     public class Database : INotifyPropertyChanged
     {
@@ -45,7 +46,12 @@ namespace SonicNextModManager
         /// <summary>
         /// The current content data being installed.
         /// </summary>
-        public Metadata? CurrentContentInQueue { get; set; }
+        public MetadataBase? CurrentContentInQueue { get; set; }
+
+        /// <summary>
+        /// A collection of archives currently in use.
+        /// </summary>
+        public static Dictionary<string, U8Archive> Archives { get; set; } = new();
 
         /// <summary>
         /// Location of the content database.
@@ -105,7 +111,7 @@ namespace SonicNextModManager
                             progressDlg.SetDescription(Path.GetFileName(Path.GetDirectoryName(ini)));
                             progressDlg.SetProgress(i);
 
-                            SiS.MetadataConverter.Convert(ini);
+                            MetadataConverter.Convert(ini);
                         }
                     };
 
@@ -115,7 +121,7 @@ namespace SonicNextModManager
 
             // Parse all mods from the mods directory.
             foreach (string mod in Directory.EnumerateFiles(App.Settings.Path_ModsDirectory, "mod.json", SearchOption.AllDirectories))
-                Mods.Add(new Mod().Parse(mod));
+                Mods.Add(Mod.Parse(mod));
 
         Finish:
             return Mods;
@@ -133,11 +139,40 @@ namespace SonicNextModManager
             Patches.Clear();
 
             // Parse all patches from the patches directory.
-            foreach (string patch in Directory.EnumerateFiles(App.Directories["Patches"], "patch.json", SearchOption.AllDirectories))
-                Patches.Add(new Patch().Parse(patch));
+            foreach (string patch in Directory.EnumerateFiles(App.Directories["Patches"], "patch.lua", SearchOption.AllDirectories))
+                Patches.Add(Patch.Parse(patch));
 
         Finish:
             return Patches;
+        }
+
+        /// <summary>
+        /// Installs all content asynchronously.
+        /// </summary>
+        public async Task Install()
+        {
+            foreach (var mod in Mods)
+            {
+                if (mod.Enabled)
+                    await Task.Run(mod.Install);
+            }
+
+            foreach (var patch in Patches)
+            {
+                if (patch.Enabled)
+                    patch.Install();
+            }
+
+            await Task.Run(WriteArchives);
+        }
+
+        /// <summary>
+        /// Uninstalls all content asynchronously.
+        /// </summary>
+        public async Task Uninstall()
+        {
+            foreach (var mod in Mods)
+                await Task.Run(mod.Uninstall);
         }
 
         /// <summary>
@@ -145,7 +180,7 @@ namespace SonicNextModManager
         /// </summary>
         /// <typeparam name="T">Content type.</typeparam>
         /// <param name="collection">Collection of content.</param>
-        public static int IndexOfLastChecked<T>(ObservableCollection<T> collection) where T : Metadata
+        public static int IndexOfLastChecked<T>(ObservableCollection<T> collection) where T : MetadataBase
         {
             // Compute last index of installing or installed content.
             for (int i = collection.Count - 1; i > 0; i--)
@@ -162,7 +197,7 @@ namespace SonicNextModManager
         /// </summary>
         /// <typeparam name="T">Content type.</typeparam>
         /// <param name="collection">Collection of content.</param>
-        public static int IndexOfLastInstall<T>(ObservableCollection<T> collection) where T : Metadata
+        public static int IndexOfLastInstall<T>(ObservableCollection<T> collection) where T : MetadataBase
         {
             // Compute last index of installing or installed content.
             for (int i = collection.Count - 1; i > 0; i--)
@@ -178,21 +213,21 @@ namespace SonicNextModManager
         /// Deletes the content's data pertaining to metadata.
         /// </summary>
         /// <param name="metadata">Metadata to delete.</param>
-        public void Delete(Metadata metadata)
+        public void Delete(MetadataBase metadata)
         {
             if (metadata is Mod)
             {
                 Mods.Remove((Mod)metadata);
 
                 // Delete mod directory recursively.
-                Directory.Delete(Path.GetDirectoryName(metadata.Path), true);
+                Directory.Delete(Path.GetDirectoryName(metadata.Location), true);
             }
             else if (metadata is Patch)
             {
                 Patches.Remove((Patch)metadata);
 
                 // Delete patch.
-                File.Delete(metadata.Path);
+                File.Delete(metadata.Location);
             }
         }
 
@@ -219,7 +254,7 @@ namespace SonicNextModManager
                 Mod mod = Mods.SingleOrDefault
                 (
                     // Combine with mods directory with the relative path to get the full path.
-                    mod => mod.Path == Path.Combine(App.Settings.Path_ModsDirectory, modRelativePath.ToString())
+                    mod => mod.Location == Path.Combine(App.Settings.Path_ModsDirectory, modRelativePath.ToString())
                 );
 
                 SetMetadataEnabledState(mod, Mods);
@@ -230,13 +265,13 @@ namespace SonicNextModManager
                 Patch patch = Patches.SingleOrDefault
                 (
                     // Combine with patches directory with the relative path to get the full path.
-                    patch => patch.Path == Path.Combine(App.Directories["Patches"], patchRelativePath.ToString())
+                    patch => patch.Location == Path.Combine(App.Directories["Patches"], patchRelativePath.ToString())
                 );
 
                 SetMetadataEnabledState(patch, Patches);
             }
 
-            void SetMetadataEnabledState<T>(T metadata, ObservableCollection<T> collection) where T : Metadata
+            void SetMetadataEnabledState<T>(T metadata, ObservableCollection<T> collection) where T : MetadataBase
             {
                 if (metadata != null)
                 {
@@ -262,26 +297,45 @@ namespace SonicNextModManager
             foreach (var mod in Mods)
             {
                 if (mod.Enabled)
-                {
-                    ActiveContent.Mods.Add
-                    (
-                        StringHelper.OmitSourceDirectory(mod.Path, App.Settings.Path_ModsDirectory)
-                    );
-                }
+                    ActiveContent.Mods.Add(Path.GetRelativePath(App.Settings.Path_ModsDirectory, mod.Location));
             }
 
             foreach (var patch in Patches)
             {
                 if (patch.Enabled)
-                {
-                    ActiveContent.Patches.Add
-                    (
-                        StringHelper.OmitSourceDirectory(patch.Path, App.Directories["Patches"])
-                    );
-                }
+                    ActiveContent.Patches.Add(Path.GetRelativePath(App.Directories["Patches"], patch.Location));
             }
 
             File.WriteAllText(Location, JsonConvert.SerializeObject(ActiveContent, Formatting.Indented));
+        }
+
+        /// <summary>
+        /// Reads a requested archive.
+        /// If it has not been previously read, then we store it for future access.
+        /// </summary>
+        /// <param name="in_path">The path to the archive to read.</param>
+        public static async Task<U8Archive> ReadArchive(string in_path)
+        {
+            if (!Archives.ContainsKey(in_path))
+                Archives.Add(in_path, new(in_path, ReadMode.IndexOnly));
+
+            return Archives[in_path];
+        }
+
+        /// <summary>
+        /// Repacks any archives waiting in memory.
+        /// </summary>
+        public static async Task WriteArchives()
+        {
+            foreach (var archive in Archives)
+            {
+                if (!File.Exists($"{archive.Key}.06mm_backup"))
+                    File.Copy($"{archive.Key}", $"{archive.Key}.06mm_backup");
+
+                archive.Value.Save(archive.Key);
+            }
+
+            Archives.Clear();
         }
     }
 }

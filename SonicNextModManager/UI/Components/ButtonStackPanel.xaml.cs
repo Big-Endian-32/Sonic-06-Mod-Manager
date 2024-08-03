@@ -28,7 +28,7 @@ namespace SonicNextModManager.UI.Components
         /// <summary>
         /// Refreshes the buttons if the observable collection was changed.
         /// </summary>
-        private void Buttons_CollectionChanged(object? sender, NotifyCollectionChangedEventArgs e)
+        private void Buttons_CollectionChanged(object? in_sender, NotifyCollectionChangedEventArgs in_args)
         {
             // Clear all message box buttons.
             DialogButtons.Children.Clear();
@@ -51,11 +51,11 @@ namespace SonicNextModManager.UI.Components
         /// <summary>
         /// Adds a button to the message box.
         /// </summary>
-        /// <param name="caption">Text shown on the button.</param>
-        /// <param name="action">Actions performed once the button is clicked.</param>
-        public Button AddButton(string caption, Action action)
+        /// <param name="in_caption">Text shown on the button.</param>
+        /// <param name="in_callback">Actions performed once the button is clicked.</param>
+        public Button AddButton(string in_caption, Action in_callback)
         {
-            Button button = Buttons.SingleOrDefault(x => x.Content == caption);
+            Button button = Buttons.SingleOrDefault(x => x.Content == in_caption);
 
             // Remove button if it already exists.
             if (button != null)
@@ -64,11 +64,11 @@ namespace SonicNextModManager.UI.Components
             // Create a new button.
             button = new()
             {
-                Content = caption
+                Content = in_caption
             };
 
             // Set button click event.
-            button.Click += (s, e) => action?.Invoke();
+            button.Click += (s, e) => in_callback?.Invoke();
 
             Buttons.Add(button);
 
@@ -78,10 +78,10 @@ namespace SonicNextModManager.UI.Components
         /// <summary>
         /// Removes a button from the message box matching the input caption.
         /// </summary>
-        /// <param name="caption">Caption to remove.</param>
-        public void RemoveButton(string caption)
+        /// <param name="in_caption">Caption to remove.</param>
+        public void RemoveButton(string in_caption)
         {
-            Button button = Buttons.SingleOrDefault(x => x.Content == caption);
+            Button button = Buttons.SingleOrDefault(x => x.Content == in_caption);
 
             if (button != null)
             {
@@ -93,10 +93,10 @@ namespace SonicNextModManager.UI.Components
         /// <summary>
         /// Returns a button from the message box matching the input caption.
         /// </summary>
-        /// <param name="caption">Caption to find.</param>
-        public Button GetButton(string caption)
+        /// <param name="in_caption">Caption to find.</param>
+        public Button GetButton(string in_caption)
         {
-            Button button = Buttons.SingleOrDefault(x => x.Content == caption);
+            Button button = Buttons.SingleOrDefault(x => x.Content == in_caption);
 
             if (button != null)
             {
@@ -110,13 +110,13 @@ namespace SonicNextModManager.UI.Components
         /// <summary>
         /// Returns a button from the input index.
         /// </summary>
-        /// <param name="index">Index to return.</param>
-        public Button GetButton(int index)
+        /// <param name="in_index">Index to return.</param>
+        public Button GetButton(int in_index)
         {
-            if (index > Buttons.Count)
+            if (in_index > Buttons.Count)
                 throw new IndexOutOfRangeException();
 
-            return Buttons[index];
+            return Buttons[in_index];
         }
     }
 }

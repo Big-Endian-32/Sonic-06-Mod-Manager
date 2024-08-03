@@ -1,4 +1,5 @@
-﻿using System.Net.Http;
+﻿using SonicNextModManager.Interop;
+using System.Net.Http;
 
 namespace SonicNextModManager.Networking
 {

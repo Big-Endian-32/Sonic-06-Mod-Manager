@@ -1,6 +1,6 @@
 ﻿using System.Runtime.InteropServices;
 
-namespace SonicNextModManager
+namespace SonicNextModManager.Interop
 {
     public static class ImmersiveDarkMode
     {

@@ -1,15 +1,14 @@
 ﻿using Microsoft.Win32;
-using SonicNextModManager.Services;
 
 namespace SonicNextModManager.UI.Dialogs
 {
     public class FileQueries
     {
-        public static string BasicFileQuery(string title, Dictionary<string, string> filters)
+        public static string BasicFileQuery(string title, Dictionary<string, string> in_filters)
         {
             OpenFileDialog ofd = new()
             {
-                Filter = new FilterBuilder(filters).Result,
+                Filter = new FilterBuilder(in_filters).Result,
                 Title = title
             };
 

@@ -5,6 +5,8 @@
                    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
                    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
                    xmlns:local="clr-namespace:SonicNextModManager"
+                   xmlns:metadata="clr-namespace:SonicNextModManager.Metadata"
+                   xmlns:converters="clr-namespace:SonicNextModManager.UI.Converters"
                    xmlns:c="clr-namespace:SonicNextModManager.UI.Components"
                    xmlns:dd="urn:gong-wpf-dragdrop"
                    xmlns:hc="https://handyorg.github.io/handycontrol"
@@ -22,23 +24,22 @@
     <Window.Resources>
 
         <!-- Set up converters -->
-        <local:Boolean2YesNoConverter x:Key="Boolean2YesNoConverter"/>
-        <local:InstallState2BooleanConverter x:Key="InstallState2BooleanConverter"/>
-        <local:String2NotAvailableConverter x:Key="String2NotAvailableConverter"/>
-        <local:Thumbnail2WidthConverter x:Key="Thumbnail2WidthConverter"/>
+        <converters:InstallStateToBoolConverter x:Key="InstallStateToBoolConverter"/>
+        <converters:StringToNotAvailableConverter x:Key="StringToNotAvailableConverter"/>
+        <converters:ThumbnailToWidthConverter x:Key="ThumbnailToWidthConverter"/>
 
         <!-- Set up template for content metadata -->
-        <DataTemplate x:Key="ContentListItem" DataType="{x:Type local:Metadata}">
+        <DataTemplate x:Key="ContentListItem" DataType="{x:Type metadata:MetadataBase}">
             <StackPanel Orientation="Horizontal">
-                <c:IconFontControl Height="17" Margin="-5,0,10,0" Text="done" Visibility="{Binding State, Converter={StaticResource InstallState2VisibilityConverter}, ConverterParameter={x:Static local:InstallState.Installed}}" Width="18"/>
-                <hc:LoadingCircle DotDiameter="3" Height="17" Margin="-5,0,10,0" Visibility="{Binding State, Converter={StaticResource InstallState2VisibilityConverter}, ConverterParameter={x:Static local:InstallState.Installing}}" Width="18"/>
-                <CheckBox Checked="Content_CheckBox_CheckedChanged" Unchecked="Content_CheckBox_CheckedChanged" IsChecked="{Binding Enabled}" Margin="-5,0,10,0" VerticalAlignment="Center" Visibility="{Binding State, Converter={StaticResource InstallState2VisibilityConverter}, ConverterParameter={x:Static local:InstallState.Idle}}"/>
+                <c:IconFontControl Margin="-3,0,6,-1" Height="17" Text="done" Visibility="{Binding State, Converter={StaticResource InstallStateToVisibilityConverter}, ConverterParameter={x:Static local:InstallState.Installed}}" Width="18"/>
+                <hc:LoadingCircle Margin="-3,0,6,-1" DotDiameter="3" Height="17" Visibility="{Binding State, Converter={StaticResource InstallStateToVisibilityConverter}, ConverterParameter={x:Static local:InstallState.Installing}}" Width="18"/>
+                <CheckBox Margin="-3,0,8,-1" Checked="Content_CheckBox_CheckedChanged" Unchecked="Content_CheckBox_CheckedChanged" IsChecked="{Binding Enabled}" VerticalAlignment="Center" Visibility="{Binding State, Converter={StaticResource InstallStateToVisibilityConverter}, ConverterParameter={x:Static local:InstallState.Idle}}"/>
                 <TextBlock Text="{Binding Title}" VerticalAlignment="Top"/>
             </StackPanel>
         </DataTemplate>
 
         <!-- Set up template for content information -->
-        <DataTemplate x:Key="ContentInformation" DataType="{x:Type local:Metadata}">
+        <DataTemplate x:Key="ContentInformation" DataType="{x:Type metadata:MetadataBase}">
             <Expander IsExpanded="{Binding InfoDisplay}"
                       Margin="{Binding ElementName=Root, Path=InfoDisplayMargin}"
                       Style="{StaticResource BaseStyle}"
@@ -53,7 +54,7 @@
                     <hc:TransitioningContentControl Margin="39,0,0,8" TransitionMode="Top2BottomWithFade">
                         <Grid>
                             <Grid.ColumnDefinitions>
-                                <ColumnDefinition Width="{Binding Thumbnail, Converter={StaticResource Thumbnail2WidthConverter}}"/>
+                                <ColumnDefinition Width="{Binding Thumbnail, Converter={StaticResource ThumbnailToWidthConverter}}"/>
                                 <ColumnDefinition/>
                             </Grid.ColumnDefinitions>
 
@@ -156,7 +157,7 @@
                                     <EventSetter Event="KeyDown" Handler="ModsList_KeyDown"/>
                                     <EventSetter Event="MouseDoubleClick" Handler="ModsList_MouseDoubleClick"/>
                                     <Setter Property="ContextMenu" Value="{DynamicResource ModContextMenu}"/>
-                                    <Setter Property="dd:DragDrop.DragSourceIgnore" Value="{Binding State, Converter={StaticResource InstallState2BooleanConverter}}"/>
+                                    <Setter Property="dd:DragDrop.DragSourceIgnore" Value="{Binding State, Converter={StaticResource InstallStateToBoolConverter}}"/>
                                     <Setter Property="ToolTip">
                                         <Setter.Value>
                                             <ToolTip Content="{DynamicResource Mods_DragDrop}"/>
@@ -171,7 +172,7 @@
                                     <GridViewColumn Header="{DynamicResource Metadata_Title}" CellTemplate="{StaticResource ContentListItem}"/>
                                     <GridViewColumn Header="{DynamicResource Metadata_Version}" DisplayMemberBinding="{Binding Version}" Width="80"/>
                                     <GridViewColumn Header="{DynamicResource Metadata_Author}" DisplayMemberBinding="{Binding Author}"/>
-                                    <GridViewColumn Header="{DynamicResource Metadata_Date}" DisplayMemberBinding="{Binding Date, Converter={StaticResource String2NotAvailableConverter}}"/>
+                                    <GridViewColumn Header="{DynamicResource Metadata_Date}" DisplayMemberBinding="{Binding Date, Converter={StaticResource StringToNotAvailableConverter}}"/>
                                     <GridViewColumn Header="{DynamicResource Metadata_Platform}" DisplayMemberBinding="{Binding Platform}" Width="80"/>
                                 </GridView>
                             </ListView.View>

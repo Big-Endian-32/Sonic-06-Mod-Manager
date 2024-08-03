@@ -1,10 +1,10 @@
-﻿using System.Collections.ObjectModel;
-using Marathon.Helpers;
-using SonicNextModManager.IO;
+﻿using SonicNextModManager.Helpers;
+using SonicNextModManager.Lua;
+using System.Collections.ObjectModel;
 
-namespace SonicNextModManager
+namespace SonicNextModManager.Metadata
 {
-    public class Patch : Metadata
+    public class Patch : MetadataBase
     {
         /// <summary>
         /// The category that represents this patch.
@@ -26,37 +26,104 @@ namespace SonicNextModManager
         /// </summary>
         public ObservableCollection<Declaration> Declarations { get; set; } = new();
 
+        [JsonIgnore]
+        public string Code { get; set; }
+
+        public Patch() { }
+
+        public Patch(string in_file)
+        {
+            var lines = File.ReadAllLines(in_file);
+
+            var json = new StringBuilder();
+            var lua = new StringBuilder();
+
+            var i = 0;
+            var isJSONReached = false;
+
+            for (i = 0; i < lines.Length; i++)
+            {
+                var line = lines[i];
+
+                if (line == "{")
+                {
+                    json.AppendLine(line);
+
+                    isJSONReached = true;
+
+                    continue;
+                }
+
+                if (isJSONReached)
+                {
+                    json.AppendLine(line);
+
+                    if (line == "}")
+                    {
+                        i++;
+                        break;
+                    }
+                }
+            }
+
+            for (; i < lines.Length; i++)
+            {
+                lua.AppendLine(lines[i]);
+            }
+
+            var patch = JsonConvert.DeserializeObject<Patch>(json.ToString());
+
+            Title        = patch.Title;
+            Author       = patch.Author;
+            Platform     = patch.Platform;
+            Date         = patch.Date;
+            Description  = patch.Description;
+            Category     = patch.Category;
+            Blurb        = patch.Blurb;
+            Function     = patch.Function;
+            Declarations = patch.Declarations;
+            Code         = lua.ToString();
+            Location     = in_file;
+        }
+
         /// <summary>
         /// Returns patch metadata parsed from the input file.
         /// </summary>
-        /// <param name="file">Lua script to pull metadata from.</param>
-        public Patch Parse(string file)
+        /// <param name="in_file">Lua script to pull metadata from.</param>
+        public static Patch Parse(string in_file)
         {
-            Patch metadata = JsonConvert.DeserializeObject<Patch>(File.ReadAllText(file));
-
-            // Set metadata path.
-            metadata.Path = file;
-
-            return metadata;
+            return new Patch(in_file);
         }
 
-        public void Write(string file)
-            => File.WriteAllText(file, JsonConvert.SerializeObject(this, Formatting.Indented));
+        public void Write(Patch in_mod, string in_file)
+            => File.WriteAllText(in_file, JsonConvert.SerializeObject(in_mod, Formatting.Indented));
+
+        public void Write(string in_file)
+            => Write(this, in_file);
 
         public void Write()
-            => Write(Path);
+            => Write(this, Location);
 
         public void Install()
         {
-            // Add game executable symbol.
+            // Initialise patch symbols.
             Patcher.AddSymbol("Executable", App.Settings.Path_GameExecutable);
+            Patcher.AddSymbol("Platform", App.CurrentPlatform.ToString());
 
             // Initialise script interpreter.
             Script interpreter = new();
 
             // Run script.
             interpreter.Initialise();
-            interpreter.DoFile(Marathon.Helpers.StringHelper.ReplaceFilename(Path, "patch.lua"));
+
+            // Initialise global declarations.
+            foreach (var decl in Declarations)
+            {
+                // TODO: use config values.
+                interpreter.Globals[decl.Name] = decl.DefaultValue;
+            }
+
+            interpreter.DoString(Code);
 
             if (string.IsNullOrEmpty(Function))
                 return;

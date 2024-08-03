@@ -1,6 +1,6 @@
 ﻿using System.Collections.ObjectModel;
 
-namespace SonicNextModManager
+namespace SonicNextModManager.Extensions
 {
     public static class CollectionExtensions
     {

@@ -52,13 +52,13 @@
             InitializeComponent();
         }
 
-        public TaskButton(string caption, string description = "", string iconName = "")
+        public TaskButton(string in_caption, string in_desc = "", string in_icon = "")
         {
             InitializeComponent();
 
-            Caption = caption;
-            Description = description;
-            IconName = iconName;
+            Caption = in_caption;
+            Description = in_desc;
+            IconName = in_icon;
         }
     }
 }

@@ -1,6 +1,6 @@
-﻿namespace SonicNextModManager
+﻿namespace SonicNextModManager.Helpers
 {
-    public class DirectoryExtensions
+    public class DirectoryHelper
     {
         /// <summary>
         /// Returns whether or not a directory contains a resulting file based off a wildcard.

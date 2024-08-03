@@ -4,6 +4,7 @@
                    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
                    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
                    xmlns:local="clr-namespace:SonicNextModManager"
+                   xmlns:converters="clr-namespace:SonicNextModManager.UI.Converters"
                    xmlns:c="clr-namespace:SonicNextModManager.UI.Components"
                    xmlns:hc="https://handyorg.github.io/handycontrol"
                    mc:Ignorable="d"
@@ -18,7 +19,7 @@
     <c:ImmersiveWindow.Resources>
 
         <!-- Set up converters -->
-        <local:Enum2IntConverter x:Key="Enum2IntConverter"/>
+        <converters:EnumToIntConverter x:Key="EnumToIntConverter"/>
 
     </c:ImmersiveWindow.Resources>
 
@@ -72,7 +73,7 @@
 
                             <StackPanel Margin="0,0,0,15">
                                 <c:HorizontalFieldLabel Caption="{DynamicResource Metadata_Platform}" Description="{DynamicResource Editor_Metadata_Platform_Description}" Margin="0,0,0,5"/>
-                                <ComboBox SelectedIndex="{Binding Platform, Converter={StaticResource Enum2IntConverter}}">
+                                <ComboBox SelectedIndex="{Binding Platform, Converter={StaticResource EnumToIntConverter}}">
                                     <ComboBoxItem Content="Any"/>
                                     <ComboBoxItem Content="Xbox"/>
                                     <ComboBoxItem Content="PlayStation"/>

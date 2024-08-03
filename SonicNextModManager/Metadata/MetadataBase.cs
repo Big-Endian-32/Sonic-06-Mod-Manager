@@ -1,8 +1,8 @@
 ﻿using System.ComponentModel;
 
-namespace SonicNextModManager
+namespace SonicNextModManager.Metadata
 {
-    public class Metadata : INotifyPropertyChanged
+    public class MetadataBase : INotifyPropertyChanged
     {
         public event PropertyChangedEventHandler? PropertyChanged;
 
@@ -69,6 +69,6 @@ namespace SonicNextModManager
         /// The path to this content.
         /// </summary>
         [JsonIgnore]
-        public string? Path { get; set; }
+        public string? Location { get; set; }
     }
 }

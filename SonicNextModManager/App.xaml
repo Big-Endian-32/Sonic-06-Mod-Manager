@@ -4,6 +4,7 @@
              xmlns:hc="https://handyorg.github.io/handycontrol"
              xmlns:system="clr-namespace:System;assembly=mscorlib"
              xmlns:local="clr-namespace:SonicNextModManager"
+             xmlns:converters="clr-namespace:SonicNextModManager.UI.Converters"
              StartupUri="UI/Setup.xaml"
              ShutdownMode="OnExplicitShutdown">
     
@@ -27,8 +28,8 @@
             </ResourceDictionary.MergedDictionaries>
 
             <!-- Set up converters -->
-            <local:InstallState2VisibilityConverter x:Key="InstallState2VisibilityConverter"/>
-            <local:MultiplyConverter x:Key="MultiplyConverter"/>
+            <converters:InstallStateToVisibilityConverter x:Key="InstallStateToVisibilityConverter"/>
+            <converters:MultiplyConverter x:Key="MultiplyConverter"/>
 
             <!-- Font used for displaying icons with text -->
             <FontFamily x:Key="MaterialIcons">pack://application:,,,/Resources/Fonts/#Material Icons</FontFamily>

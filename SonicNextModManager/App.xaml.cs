@@ -15,6 +15,7 @@ global using System.Windows.Data;
 global using System.Windows.Input;
 
 using SonicNextModManager.Helpers;
+using SonicNextModManager.Metadata;
 
 namespace SonicNextModManager
 {
@@ -52,8 +53,6 @@ namespace SonicNextModManager
             { "scetool", Path.Combine(Directories["Resources"], "Libraries", "PlayStation", "scetool.exe") },
             { "make_fself", Path.Combine(Directories["Resources"], "Libraries", "PlayStation", "make_fself.exe") }
         };
-
-        public static Dictionary<string, Marathon.Formats.Archive.U8Archive> Archives = new();
 
         /// <summary>
         /// Returns the assembly informational version from the entry assembly. 
@@ -127,7 +126,7 @@ namespace SonicNextModManager
             return true;
         }
 
-        protected override void OnStartup(StartupEventArgs e)
+        protected override void OnStartup(StartupEventArgs in_args)
         {
             // Set current informational version for binding.
             CurrentInformationalVersion = GetInformationalVersion();
@@ -149,7 +148,7 @@ namespace SonicNextModManager
             if (Settings.Setup_Complete)
                 StartupUri = new Uri("pack://application:,,,/SonicNextModManager;component/UI/Manager.xaml");
 
-            base.OnStartup(e);
+            base.OnStartup(in_args);
         }
     }
 }

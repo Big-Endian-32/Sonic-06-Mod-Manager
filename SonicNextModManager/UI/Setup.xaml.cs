@@ -19,10 +19,10 @@ namespace SonicNextModManager.UI
             InitializeComponent();
         }
 
-        private void Language_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        private void Language_SelectionChanged(object in_sender, SelectionChangedEventArgs in_args)
             => SonicNextModManager.Language.UpdateCultureResources();
 
-        private void Game_Path_TextChanged(object sender, TextChangedEventArgs e)
+        private void Game_Path_TextChanged(object in_sender, TextChangedEventArgs in_args)
         {
             // Set Next button enabled state.
             DialogButtons.GetButton(LocaleService.Localise("Common_Next")).IsEnabled = Game_Path.Text.Length != 0;
@@ -31,7 +31,7 @@ namespace SonicNextModManager.UI
             App.Settings.Path_GameExecutable = Game_Path.Text;
         }
 
-        private void Game_Browse_Click(object sender, RoutedEventArgs e)
+        private void Game_Browse_Click(object in_sender, RoutedEventArgs in_args)
         {
             string executable = FileQueries.QueryGameExecutable();
 
@@ -39,7 +39,7 @@ namespace SonicNextModManager.UI
                 Game_Path.Text = executable;
         }
 
-        private void Emulator_Path_TextChanged(object sender, TextChangedEventArgs e)
+        private void Emulator_Path_TextChanged(object in_sender, TextChangedEventArgs in_args)
         {
             // Set Next button enabled state.
             DialogButtons.GetButton(LocaleService.Localise("Common_Next")).IsEnabled = Emulator_Path.Text.Length != 0;
@@ -48,7 +48,7 @@ namespace SonicNextModManager.UI
             App.Settings.Path_EmulatorExecutable = Emulator_Path.Text;
         }
 
-        private void Emulator_Browse_Click(object sender, RoutedEventArgs e)
+        private void Emulator_Browse_Click(object in_sender, RoutedEventArgs in_args)
         {
             string executable = FileQueries.QueryEmulatorExecutable();
 
@@ -59,13 +59,13 @@ namespace SonicNextModManager.UI
         /// <summary>
         /// Displays a full preview upon double-clicking an image in a carousel.
         /// </summary>
-        private void Image_Carousel_MouseDown(object sender, MouseButtonEventArgs e)
+        private void Image_Carousel_MouseDown(object in_sender, MouseButtonEventArgs in_args)
         {
-            if (e.ClickCount == 2)
-                new ImageBrowser(new Uri(((BitmapFrame)((Image)sender).Source).Decoder.ToString())).Show();
+            if (in_args.ClickCount == 2)
+                new ImageBrowser(new Uri(((BitmapFrame)((Image)in_sender).Source).Decoder.ToString())).Show();
         }
 
-        private void StateMachine_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        private void StateMachine_SelectionChanged(object in_sender, SelectionChangedEventArgs in_args)
         {
             if (DialogButtons == null)
                 return;

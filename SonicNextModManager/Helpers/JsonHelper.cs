@@ -1,9 +1,9 @@
 ﻿using System.Threading.Tasks;
 using SonicNextModManager.Networking;
 
-namespace SonicNextModManager
+namespace SonicNextModManager.Helpers
 {
-    public static class JsonExtensions
+    public static class JsonHelper
     {
         /// <summary>
         /// Deserializes the JSON web string to the specified .NET type asynchronously.

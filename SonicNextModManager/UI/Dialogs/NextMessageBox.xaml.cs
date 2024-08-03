@@ -65,7 +65,7 @@ namespace SonicNextModManager.UI.Dialogs
             DataContext = this;
         }
 
-        private void NextMessageBox_Loaded(object sender, RoutedEventArgs e)
+        private void NextMessageBox_Loaded(object in_sender, RoutedEventArgs in_args)
         {
             if (Owner != null)
                 return;
@@ -76,28 +76,28 @@ namespace SonicNextModManager.UI.Dialogs
         /// <summary>
         /// Displays the message box dialog with the specified parameters.
         /// </summary>
-        /// <param name="message">Message to display.</param>
-        /// <param name="caption">Title bar caption to use.</param>
-        /// <param name="buttons">Win32 buttons to display.</param>
-        /// <param name="icon">Win32 icon to display.</param>
+        /// <param name="in_message">Message to display.</param>
+        /// <param name="in_caption">Title bar caption to use.</param>
+        /// <param name="in_buttons">Win32 buttons to display.</param>
+        /// <param name="in_icon">Win32 icon to display.</param>
         public static NextDialogResult Show
         (
-            string message,
-            string caption = "",
-            NextMessageBoxButton buttons = NextMessageBoxButton.OK,
-            NextMessageBoxIcon icon = NextMessageBoxIcon.None
+            string in_message,
+            string in_caption = "",
+            NextMessageBoxButton in_buttons = NextMessageBoxButton.OK,
+            NextMessageBoxIcon in_icon = NextMessageBoxIcon.None
         )
         {
             var msg = new NextMessageBox();
 
-            msg.Message = message;
-            msg.Caption = caption;
+            msg.Message = in_message;
+            msg.Caption = in_caption;
 
             // Add generic Win32 buttons.
-            msg.SetButtons(buttons);
+            msg.SetButtons(in_buttons);
 
             // Set dialog icon.
-            msg.SetIcon(icon);
+            msg.SetIcon(in_icon);
 
             // Open message box.
             msg.ShowDialog();
@@ -108,25 +108,25 @@ namespace SonicNextModManager.UI.Dialogs
         /// <summary>
         /// Adds a button to the message box.
         /// </summary>
-        /// <param name="caption">Text shown on the button.</param>
-        /// <param name="action">Actions performed once the button is clicked.</param>
-        public void AddButton(string caption, Action action)
-            => DialogButtons.AddButton(caption, action);
+        /// <param name="in_caption">Text shown on the button.</param>
+        /// <param name="in_callback">Actions performed once the button is clicked.</param>
+        public void AddButton(string in_caption, Action in_callback)
+            => DialogButtons.AddButton(in_caption, in_callback);
 
         /// <summary>
         /// Removes a button from the message box matching the input caption.
         /// </summary>
-        /// <param name="caption">Caption to remove.</param>
-        public void RemoveButton(string caption)
-            => DialogButtons.RemoveButton(caption);
+        /// <param name="in_caption">Caption to remove.</param>
+        public void RemoveButton(string in_caption)
+            => DialogButtons.RemoveButton(in_caption);
 
         /// <summary>
         /// Adds the generic Win32 default buttons using <see cref="NextMessageBoxButton"/>.
         /// </summary>
-        /// <param name="buttons">Tasks to use.</param>
-        public void SetButtons(NextMessageBoxButton buttons)
+        /// <param name="in_buttons">Tasks to use.</param>
+        public void SetButtons(NextMessageBoxButton in_buttons)
         {
-            switch (buttons)
+            switch (in_buttons)
             {
                 case NextMessageBoxButton.OK:
                     SetButtonResultAndClose("Common_OK", NextDialogResult.OK);
@@ -160,13 +160,13 @@ namespace SonicNextModManager.UI.Dialogs
                     break;
             }
 
-            void SetButtonResultAndClose(string localisedResource, NextDialogResult result)
+            void SetButtonResultAndClose(string in_str, NextDialogResult in_result)
             {
                 AddButton
                 (
-                    LocaleService.Localise(localisedResource), () =>
+                    LocaleService.Localise(in_str), () =>
                     {
-                        Result = result;
+                        Result = in_result;
                         Close();
                     }
                 );
@@ -176,13 +176,13 @@ namespace SonicNextModManager.UI.Dialogs
         /// <summary>
         /// Sets the icon used by the message using <see cref="NextMessageBoxIcon"/>.
         /// </summary>
-        /// <param name="icon">Icon to display.</param>
-        public void SetIcon(NextMessageBoxIcon icon)
+        /// <param name="in_icon">Icon to display.</param>
+        public void SetIcon(NextMessageBoxIcon in_icon)
         {
             // Set default width in case this changes whilst the dialog is open.
             IconColumn.Width = new GridLength(72);
 
-            switch (icon)
+            switch (in_icon)
             {
                 case NextMessageBoxIcon.None:
                     IconColumn.Width = new GridLength(0);

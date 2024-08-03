@@ -1,4 +1,5 @@
-﻿using System.Runtime.InteropServices;
+﻿using SonicNextModManager.Interop;
+using System.Runtime.InteropServices;
 using System.Windows.Interop;
 
 namespace SonicNextModManager.UI.Components
@@ -28,7 +29,7 @@ namespace SonicNextModManager.UI.Components
             set => SetValue(CloseButtonProperty, value);
         }
 
-        protected override void OnSourceInitialized(EventArgs e)
+        protected override void OnSourceInitialized(EventArgs in_args)
         {
             // Initialise immersive dark mode for every window.
             ImmersiveDarkMode.Initialise(new WindowInteropHelper(this).Handle, true);
@@ -40,7 +41,7 @@ namespace SonicNextModManager.UI.Components
                 SetWindowLong(hWND, GWL_STYLE, GetWindowLong(hWND, GWL_STYLE) & ~WS_SYSMENU);
             }
 
-            base.OnSourceInitialized(e);
+            base.OnSourceInitialized(in_args);
         }
     }
 }

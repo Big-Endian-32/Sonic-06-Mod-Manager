@@ -1,8 +1,8 @@
 ﻿using System.Diagnostics;
 
-namespace SonicNextModManager
+namespace SonicNextModManager.Helpers
 {
-    public class ProcessExtensions
+    public class ProcessHelper
     {
         /// <summary>
         /// Opens the input URL in the default application.

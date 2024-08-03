@@ -1,6 +1,6 @@
-﻿namespace SonicNextModManager.SiS
+﻿namespace SonicNextModManager.Interop
 {
-    public class SprintConverter
+    public class PatchConverter
     {
         public void Convert(string file)
         {

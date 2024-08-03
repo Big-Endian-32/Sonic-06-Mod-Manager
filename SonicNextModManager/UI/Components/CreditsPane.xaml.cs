@@ -1,4 +1,6 @@
-﻿namespace SonicNextModManager.UI.Components
+﻿using SonicNextModManager.Helpers;
+
+namespace SonicNextModManager.UI.Components
 {
     /// <summary>
     /// Interaction logic for CreditsPane.xaml
@@ -19,24 +21,24 @@
             set => SetValue(CreditsProperty, value);
         }
 
-        public CreditsPane(Credits? credits)
+        public CreditsPane(Credits? in_credits)
         {
             InitializeComponent();
 
-            if (credits == null)
+            if (in_credits == null)
                 return;
 
-            Credits = credits;
+            Credits = in_credits;
             Category.Header = LocaleService.Localise(Credits.Category);
         }
 
-        private void ListViewItem_MouseDoubleClick(object sender, MouseButtonEventArgs e)
+        private void ListViewItem_MouseDoubleClick(object in_sender, MouseButtonEventArgs in_args)
         {
-            string url = ((Credits.Contributor)((ListViewItem)sender).Content).URL;
+            string url = ((Credits.Contributor)((ListViewItem)in_sender).Content).URL;
 
             // Direct to user webpage (if available) when double-clicked.
             if (!string.IsNullOrEmpty(url))
-                ProcessExtensions.StartWithDefaultProgram(url);
+                ProcessHelper.StartWithDefaultProgram(url);
         }
     }
 }

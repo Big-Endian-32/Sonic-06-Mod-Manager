@@ -54,7 +54,7 @@
             InitializeComponent();
         }
 
-        private void Browse_Click(object sender, RoutedEventArgs e)
-            => Browse?.Invoke(sender, e);
+        private void Browse_Click(object in_sender, RoutedEventArgs in_args)
+            => Browse?.Invoke(in_sender, in_args);
     }
 }

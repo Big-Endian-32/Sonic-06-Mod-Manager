@@ -1,4 +1,6 @@
-﻿namespace SonicNextModManager.SiS
+﻿using SonicNextModManager.Metadata;
+
+namespace SonicNextModManager.Interop
 {
     public class PlatformConverter
     {
@@ -8,17 +10,17 @@
         /// <param name="platform">Platform by name.</param>
         public static Platform Convert(string platform)
         {
-            if (!Enum.TryParse(platform, out Platform parsed))
+            if (!Enum.TryParse(platform, out Platform out_platform))
             {
-                parsed = platform switch
+                out_platform = platform switch
                 {
-                    "Xbox 360" => Platform.Xbox,
+                    "Xbox 360"      => Platform.Xbox,
                     "PlayStation 3" => Platform.PlayStation,
-                    _ => Platform.Any,
+                    _               => Platform.Any,
                 };
             }
 
-            return parsed;
+            return out_platform;
         }
     }
 }

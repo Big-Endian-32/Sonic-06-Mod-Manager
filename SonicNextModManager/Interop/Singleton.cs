@@ -1,4 +1,4 @@
-﻿namespace SonicNextModManager
+﻿namespace SonicNextModManager.Interop
 {
     public struct Singleton<T>
     {

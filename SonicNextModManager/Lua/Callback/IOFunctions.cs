@@ -1,53 +1,52 @@
 ﻿using Keystone;
+using Marathon.Exceptions;
 using Marathon.Formats.Archive;
 using Marathon.Formats.Script.Lua;
 using Marathon.IO;
 using SonicNextModManager.Helpers;
+using SonicNextModManager.Metadata;
 using System.Diagnostics;
-using System.Runtime.InteropServices;
 
-namespace SonicNextModManager.IO.Callback
+namespace SonicNextModManager.Lua.Callback
 {
-	[MoonSharpUserData]
+    [MoonSharpUserData]
     public class IOFunctions
     {
-        private static Dictionary<string, U8Archive> _archives = new();
-
         /// <summary>
         /// Loads an archive from the input path.
         /// </summary>
-        /// <param name="path">Path to archive.</param>
-        public static void LoadArchive(string path)
+        /// <param name="in_path">Path to archive.</param>
+        public static void LoadArchive(string in_path)
         {
-            if (_archives.ContainsKey(path))
-                _archives[path].Dispose();
+            if (Database.Archives.ContainsKey(in_path))
+                Database.Archives[in_path].Dispose();
 
-            _archives[path] = new U8Archive(path, ReadMode.IndexOnly);
+            Database.Archives[in_path] = new U8Archive(in_path, ReadMode.IndexOnly);
         }
 
         /// <summary>
         /// Saves an archive from the input path.
         /// </summary>
-        /// <param name="path">Path to archive.</param>
-        public static void SaveArchive(string path)
+        /// <param name="in_path">Path to archive.</param>
+        public static void SaveArchive(string in_path)
         {
-            _archives[path].Save();
-            _archives.Remove(path);
+            Database.Archives[in_path].Save();
+            Database.Archives.Remove(in_path);
         }
 
         /// <summary>
         /// Writes a file to the loaded archive.
         /// </summary>
-        /// <param name="path">Archive to write data to.</param>
-        /// <param name="internalPath">Path to write the file to inside the archive.</param>
-        /// <param name="filePath">Path to the file to read data from.</param>
-        public static void WriteFile(string path, string internalPath, string filePath)
+        /// <param name="in_path">Archive to write data to.</param>
+        /// <param name="in_internalPath">Path to write the file to inside the archive.</param>
+        /// <param name="in_filePath">Path to the file to read data from.</param>
+        public static void WriteFile(string in_path, string in_internalPath, string in_filePath)
         {
-            _archives[path].Root.CreateDirectories(Path.GetDirectoryName(internalPath)).Add
+            Database.Archives[in_path].Root.CreateDirectories(Path.GetDirectoryName(in_internalPath)).Add
             (
-                new U8ArchiveFile(filePath)
+                new U8ArchiveFile(in_filePath)
                 {
-                    Name = Path.GetFileName(internalPath)
+                    Name = Path.GetFileName(in_internalPath)
                 }
             );
         }
@@ -55,9 +54,11 @@ namespace SonicNextModManager.IO.Callback
         /// <summary>
         /// Encrypts the current game executable (required step for PlayStation executable patching).
         /// </summary>
-        public static bool EncryptExecutable()
+        public static void EncryptExecutable()
         {
             string? executable = App.Settings.Path_GameExecutable;
+
+            IOHelper.Backup(executable);
 
             switch (App.CurrentPlatform)
             {
@@ -74,7 +75,7 @@ namespace SonicNextModManager.IO.Callback
                     )
                     .WaitForExit();
 
-                    return true;
+                    break;
                 }
 
                 case Platform.PlayStation:
@@ -96,20 +97,19 @@ namespace SonicNextModManager.IO.Callback
                     if (File.Exists(encrypt))
                         File.Move(encrypt, executable, true);
 
-                    return true;
+                    break;
                 }
-
-                default:
-                    return false;
             }
         }
 
         /// <summary>
         /// Decrypts the current game executable.
         /// </summary>
-        public static bool DecryptExecutable()
+        public static void DecryptExecutable()
         {
             string? executable = App.Settings.Path_GameExecutable;
+
+            IOHelper.Backup(executable);
 
             switch (App.CurrentPlatform)
             {
@@ -126,7 +126,7 @@ namespace SonicNextModManager.IO.Callback
                     )
                     .WaitForExit();
 
-                    return true;
+                    break;
                 }
 
                 case Platform.PlayStation:
@@ -142,47 +142,53 @@ namespace SonicNextModManager.IO.Callback
                     )
                     .WaitForExit();
 
-                    return true;
+                    break;
                 }
-
-                default:
-                    return false;
             }
         }
 
         /// <summary>
         /// Decompiles the input Lua script.
         /// </summary>
-        public static bool DecompileLua(string path)
+        public static bool DecompileLua(string in_path)
         {
-            LuaBinary lub = new(path);
-            lub.Decompile();
+            LuaBinary lub = new();
 
-            return false;
+            try
+            {
+                lub.Load(in_path);
+                lub.Decompile();
+            }
+            catch (InvalidSignatureException)
+            {
+                return false;
+            }
+
+            return true;
         }
 
         /// <summary>
         /// Reads bytes from the specified address and returns a hexadecimal string.
         /// </summary>
-        /// <param name="file">File to read from.</param>
-        /// <param name="address">Address to read from.</param>
-        /// <param name="count">Amount of bytes to read.</param>
-        public static string ReadBytes(string file, int address, int count)
+        /// <param name="in_file">File to read from.</param>
+        /// <param name="in_addr">Address to read from.</param>
+        /// <param name="in_count">Amount of bytes to read.</param>
+        public static string ReadBytes(string in_file, int in_addr, int in_count)
         {
 #if !DEBUG
             try
             {
 #endif
                 // Open the file for reading.
-                using (FileStream fileStream = File.OpenRead(Patcher.GetSymbol(file)))
+                using (FileStream fileStream = File.OpenRead(Patcher.GetSymbol(in_file)))
                 {
                     using (var reader = new BinaryReader(fileStream))
                     {
                         // Seek to requested address in the stream.
-                        reader.BaseStream.Seek(address, SeekOrigin.Begin);
+                        reader.BaseStream.Seek(in_addr, SeekOrigin.Begin);
 
                         // Return as a hexadecimal string.
-                        return MemoryHelper.ByteArrayToHexString(reader.ReadBytes(count));
+                        return MemoryHelper.ByteArrayToHexString(reader.ReadBytes(in_count));
                     }
                 }
 #if !DEBUG
@@ -199,28 +205,31 @@ namespace SonicNextModManager.IO.Callback
         /// <summary>
         /// Writes bytes to the specified address and returns whether or not it succeeded.
         /// </summary>
-        /// <param name="file">File to write to.</param>
-        /// <param name="address">Address to write from.</param>
-        /// <param name="hex">Hexadecimal string containing the bytes to be written.</param>
-        public static bool WriteBytes(string file, int address, string hex)
+        /// <param name="in_file">File to write to.</param>
+        /// <param name="in_addr">Address to write from.</param>
+        /// <param name="in_hexStr">Hexadecimal string containing the bytes to be written.</param>
+        public static bool WriteBytes(string in_file, int in_addr, string in_hexStr)
         {
 #if !DEBUG
             try
             {
 #endif
+                IOHelper.Backup(in_file);
+
                 // Open the file for writing.
-                using (FileStream fileStream = File.OpenWrite(Patcher.GetSymbol(file)))
+                // TODO: accept paths to archive files.
+                using (FileStream fileStream = File.OpenWrite(Patcher.GetSymbol(in_file)))
                 {
                     using (var writer = new BinaryWriter(fileStream))
                     {
                         // Seek to the requested address in the stream.
-                        writer.BaseStream.Seek(address, SeekOrigin.Begin);
+                        writer.BaseStream.Seek(in_addr, SeekOrigin.Begin);
 
                         // Write the specified bytes to the address.
-                        writer.Write(MemoryHelper.HexStringToByteArray(hex));
+                        writer.Write(MemoryHelper.HexStringToByteArray(in_hexStr));
 
                         // Log written bytes to the console.
-                        Console.WriteLine($"Written bytes to 0x{address:X8}: {hex}");
+                        Console.WriteLine($"Written bytes to 0x{in_addr:X8}: {in_hexStr}");
                     }
                 }
 #if !DEBUG
@@ -239,27 +248,23 @@ namespace SonicNextModManager.IO.Callback
         /// <summary>
         /// Writes bytes to the specified address and returns whether or not it succeeded.
         /// </summary>
-        /// <param name="file">File to write to.</param>
-        /// <param name="address">Address to write from.</param>
-        /// <param name="data">Byte array containing the bytes to be written.</param>
-        private static bool WriteBytes(string file, int address, byte[] data)
-            => WriteBytes(file, address, MemoryHelper.ByteArrayToHexString(data));
+        /// <param name="in_file">File to write to.</param>
+        /// <param name="in_addr">Address to write from.</param>
+        /// <param name="in_data">Byte array containing the bytes to be written.</param>
+        private static bool WriteBytes(string in_file, int in_addr, byte[] in_data)
+            => WriteBytes(in_file, in_addr, MemoryHelper.ByteArrayToHexString(in_data));
 
         /// <summary>
         /// Writes a no-operation opcode to the specified address and returns whether or not it succeeded.
         /// </summary>
-        /// <param name="file">File to write to.</param>
-        /// <param name="address">Address to write from.</param>
-        /// <param name="count">Amount of NOPs to write.</param>
-        public static bool WriteNop(string file, int address, int count = 1, Keystone.Architecture arch = Keystone.Architecture.PPC, Mode archMode = Mode.PPC64 | Mode.BIG_ENDIAN)
+        /// <param name="in_addr">Address to write from.</param>
+        /// <param name="in_count">Amount of NOPs to write.</param>
+        public static bool WriteNop(int in_addr, int in_count = 1)
         {
-            for (int i = 0; i < count; i++)
+            for (int i = 0; i < in_count; i++)
             {
-                // Write a no operation opcode to the address in the requested file.
-                WriteAsm(file, address, "nop;", arch, archMode);
-
-                // Increment the address by four bytes.
-                address += 4;
+                WriteBytes("Executable", in_addr, [0x60, 0x00, 0x00, 0x00]);
+                in_addr += 4;
             }
 
             return true;
@@ -268,51 +273,39 @@ namespace SonicNextModManager.IO.Callback
         /// <summary>
         /// Writes a jump instruction to the specified address and returns whether or not it succeeded.
         /// </summary>
-        /// <param name="file">File to write to.</param>
-        /// <param name="source">Address to write from.</param>
-        /// <param name="destination">Destination to jump to.</param>
-        public static bool WriteJump(string file, int source, int destination, Keystone.Architecture arch = Keystone.Architecture.PPC, Mode archMode = Mode.PPC64 | Mode.BIG_ENDIAN)
-            => WriteAsm(file, source, $"b {destination};", arch, archMode);
+        /// <param name="in_source">Address to write from.</param>
+        /// <param name="in_destination">Destination to jump to.</param>
+        public static bool WriteJump(int in_source, int in_destination)
+            => WriteAsm(in_source, $"b {in_destination};");
 
         /// <summary>
         /// Writes a UTF8-encoded string to the specified address and returns the input string.
         /// </summary>
-        /// <param name="file">File to write to.</param>
-        /// <param name="address">Address to write from.</param>
-        /// <param name="text">Text to write.</param>
-        public static string WriteString(string file, int address, string text)
+        /// <param name="in_file">File to write to.</param>
+        /// <param name="in_addr">Address to write from.</param>
+        /// <param name="in_str">Text to write.</param>
+        public static string WriteString(string in_file, int in_addr, string in_str)
         {
             // Write the specified UTF8 string to the address in the requested file.
-            WriteBytes(file, address, Encoding.UTF8.GetBytes(text));
+            WriteBytes(in_file, in_addr, Encoding.UTF8.GetBytes(in_str));
 
-            return text;
+            return in_str;
         }
 
         /// <summary>
         /// Writes compiled assembly bytecode to the specified address and returns whether or not it succeeded.
         /// </summary>
-        /// <param name="file">File to write to.</param>
-        /// <param name="address">Address to write from.</param>
-        /// <param name="assembly">Assembly to compile.</param>
-        /// <param name="arch">Compiler architecture.</param>
-        /// <param name="archMode">Compiler architecture mode.</param>
-        public static bool WriteAsm(string file, int address, string assembly, Keystone.Architecture arch = Keystone.Architecture.PPC, Mode archMode = Mode.PPC64 | Mode.BIG_ENDIAN)
+        /// <param name="in_addr">Address to write from.</param>
+        /// <param name="in_code">Assembly to compile.</param>
+        public static bool WriteAsm(int in_addr, string in_code)
         {
 #if !DEBUG
             try
             {
 #endif
-                using
-                (
-                    var keystone = new Engine(arch, archMode)
-                    {
-                        ThrowOnError = true
-                    }
-                )
+                using (var keystone = new Engine(Architecture.PPC, Mode.PPC64 | Mode.BIG_ENDIAN) { ThrowOnError = true })
                 {
-                    // Write assembled bytecode to the address in the requested file.
-                    WriteBytes(file, address, keystone.Assemble(assembly, (ulong)address).Buffer);
-
+                    WriteBytes("Executable", in_addr, keystone.Assemble(in_code, (ulong)in_addr).Buffer);
                     return true;
                 }
 #if !DEBUG
@@ -320,7 +313,6 @@ namespace SonicNextModManager.IO.Callback
             catch (KeystoneException ex)
             {
                 Console.WriteLine(ex);
-
                 return false;
             }
 #endif

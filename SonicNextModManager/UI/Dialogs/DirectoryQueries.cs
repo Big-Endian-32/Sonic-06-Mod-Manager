@@ -1,15 +1,14 @@
 ﻿using System.Windows.Forms;
-using SonicNextModManager.Services;
 
 namespace SonicNextModManager.UI.Dialogs
 {
     public class DirectoryQueries
     {
-        public static string BasicDirectoryQuery(string title)
+        public static string BasicDirectoryQuery(string in_title)
         {
             FolderBrowserDialog fbd = new()
             {
-                Description = title,
+                Description = in_title,
                 UseDescriptionForTitle = true,
             };
 

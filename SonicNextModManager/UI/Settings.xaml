@@ -4,6 +4,7 @@
                    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
                    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
                    xmlns:local="clr-namespace:SonicNextModManager"
+                   xmlns:converters="clr-namespace:SonicNextModManager.UI.Converters"
                    xmlns:c="clr-namespace:SonicNextModManager.UI.Components"
                    xmlns:hc="https://handyorg.github.io/handycontrol"
                    mc:Ignorable="d"
@@ -23,7 +24,7 @@
             </Style>
 
             <!-- Set up converters -->
-            <local:Int2InvertedBooleanConverter x:Key="Int2InvertedBooleanConverter"/>
+            <converters:IntToInvertedBoolConverter x:Key="IntToInvertedBoolConverter"/>
             
         </Grid.Resources>
 
@@ -69,7 +70,7 @@
 
                         <StackPanel Margin="0,0,5,10">
                             <c:HorizontalFieldLabel Caption="{DynamicResource Settings_Emulator_Width}" Description="{DynamicResource Settings_Emulator_Width_Description}" Margin="0,0,0,5"/>
-                            <ComboBox IsEnabled="{Binding Source={x:Static local:App.Settings}, Path=Emulator_Backend, Converter={StaticResource Int2InvertedBooleanConverter}}" SelectedIndex="{Binding Mode=TwoWay, Source={x:Static local:App.Settings}, Path=Emulator_Width}">
+                            <ComboBox IsEnabled="{Binding Source={x:Static local:App.Settings}, Path=Emulator_Backend, Converter={StaticResource IntToInvertedBoolConverter}}" SelectedIndex="{Binding Mode=TwoWay, Source={x:Static local:App.Settings}, Path=Emulator_Width}">
                                 <ComboBoxItem Content="1280"/>
                                 <ComboBoxItem Content="2560"/>
                                 <ComboBoxItem Content="3840"/>
@@ -82,7 +83,7 @@
 
                         <StackPanel Grid.Column="1" Margin="5,0,0,10">
                             <c:HorizontalFieldLabel Caption="{DynamicResource Settings_Emulator_Height}" Description="{DynamicResource Settings_Emulator_Height_Description}" Margin="0,0,0,5"/>
-                            <ComboBox IsEnabled="{Binding Source={x:Static local:App.Settings}, Path=Emulator_Backend, Converter={StaticResource Int2InvertedBooleanConverter}}" SelectedIndex="{Binding Mode=TwoWay, Source={x:Static local:App.Settings}, Path=Emulator_Height}">
+                            <ComboBox IsEnabled="{Binding Source={x:Static local:App.Settings}, Path=Emulator_Backend, Converter={StaticResource IntToInvertedBoolConverter}}" SelectedIndex="{Binding Mode=TwoWay, Source={x:Static local:App.Settings}, Path=Emulator_Height}">
                                 <ComboBoxItem Content="720"/>
                                 <ComboBoxItem Content="1440"/>
                                 <ComboBoxItem Content="2160"/>

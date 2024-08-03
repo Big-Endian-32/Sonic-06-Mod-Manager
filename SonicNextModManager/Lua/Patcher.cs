@@ -1,11 +1,11 @@
 ﻿using SonicNextModManager.Extensions;
-using SonicNextModManager.IO.Callback;
+using SonicNextModManager.Lua.Callback;
 
-namespace SonicNextModManager.IO
+namespace SonicNextModManager.Lua
 {
     public static class Patcher
     {
-        private static Dictionary<string, string> Symbols = new Dictionary<string, string>();
+        private static Dictionary<string, string> Symbols = new();
 
         /// <summary>
         /// Initialises the input Lua interpreter with the default exposed functions.
@@ -25,12 +25,18 @@ namespace SonicNextModManager.IO
         /// <para>Symbols are used to create shortcut phrases for what would otherwise be long strings.</para>
         /// </summary>
         /// <param name="symbol">Symbol name.</param>
-        /// <param name="actualValue">Value of this symbol.</param>
-        public static string AddSymbol(string symbol, string actualValue)
+        /// <param name="value">Value of this symbol.</param>
+        public static string AddSymbol(string symbol, string value)
         {
-            Symbols.Add(symbol, actualValue);
+            if (Symbols.ContainsKey(symbol))
+            {
+                Symbols[symbol] = value;
+                return value;
+            }
 
-            return actualValue;
+            Symbols.Add(symbol, value);
+
+            return value;
         }
 
         /// <summary>

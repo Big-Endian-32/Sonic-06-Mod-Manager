@@ -1,11 +1,12 @@
 ﻿using SonicNextModManager.UI.ViewModel;
 using System.Collections.ObjectModel;
 using System.Windows.Media.Animation;
-using System.Windows.Shapes;
 using SonicNextModManager.UI.Components;
 using SonicNextModManager.UI.Dialogs;
 using CommunityToolkit.Mvvm.Input;
 using System.Threading.Tasks;
+using SonicNextModManager.Metadata;
+using SonicNextModManager.Helpers;
 
 namespace SonicNextModManager.UI
 {
@@ -45,9 +46,9 @@ namespace SonicNextModManager.UI
             DataContext = ViewModel;
         }
 
-        protected override void OnClosed(EventArgs e)
+        protected override void OnClosed(EventArgs in_args)
         {
-            base.OnClosed(e);
+            base.OnClosed(in_args);
 
             Environment.Exit(0);
         }
@@ -55,8 +56,8 @@ namespace SonicNextModManager.UI
         /// <summary>
         /// Sets the new width of the info display based on the current window size.
         /// </summary>
-        private void SizeChanged(object sender, SizeChangedEventArgs e)
-            => InfoDisplayMargin = new Thickness(-40, 15, (e.NewSize.Width - 76) * -1, 0);
+        private void SizeChanged(object in_sender, SizeChangedEventArgs in_args)
+            => InfoDisplayMargin = new Thickness(-40, 15, (in_args.NewSize.Width - 76) * -1, 0);
 
         private void RefreshUI()
         {
@@ -73,17 +74,17 @@ namespace SonicNextModManager.UI
         /// <summary>
         /// Various key down events for list views.
         /// </summary>
-        /// <param name="sender">List view calling this function.</param>
-        /// <param name="e">Key event handler.</param>
-        private void InvokeListViewKeyDown(ListView sender, KeyEventArgs e)
+        /// <param name="in_sender">List view calling this function.</param>
+        /// <param name="in_args">Key event handler.</param>
+        private void InvokeListViewKeyDown(ListView in_sender, KeyEventArgs in_args)
         {
-            switch (e.Key)
+            switch (in_args.Key)
             {
                 // Set content enabled state upon space key down.
                 case Key.Space:
                 {
                     // Flip enabled state for each selected item.
-                    foreach (Metadata item in sender.SelectedItems)
+                    foreach (MetadataBase item in in_sender.SelectedItems)
                         item.Enabled ^= true;
 
                     // Save updated content list.
@@ -97,26 +98,26 @@ namespace SonicNextModManager.UI
         /// <summary>
         /// Processes key down events for the mods list.
         /// </summary>
-        private void ModsList_KeyDown(object sender, KeyEventArgs e)
-            => InvokeListViewKeyDown(ModsList, e);
+        private void ModsList_KeyDown(object in_sender, KeyEventArgs in_args)
+            => InvokeListViewKeyDown(ModsList, in_args);
 
         /// <summary>
         /// Processes key down events for the patches list.
         /// </summary>
-        private void PatchesList_KeyDown(object sender, KeyEventArgs e)
-            => InvokeListViewKeyDown(PatchesList, e);
+        private void PatchesList_KeyDown(object in_sender, KeyEventArgs in_args)
+            => InvokeListViewKeyDown(PatchesList, in_args);
 
         /// <summary>
         /// Saves the database and shifts newly checked items to the bottom of the queue if currently installing.
         /// </summary>
-        private void Content_CheckBox_CheckedChanged(object sender, RoutedEventArgs e)
+        private void Content_CheckBox_CheckedChanged(object in_sender, RoutedEventArgs in_args)
         {
             // Save content database.
             ViewModel.Database.Save();
 
             if (ViewModel.State == InstallState.Installing)
             {
-                Metadata? metadata = ((CheckBox)sender).DataContext as Metadata;
+                var metadata = ((CheckBox)in_sender).DataContext as MetadataBase;
 
                 if (metadata is Mod)
                 {
@@ -129,7 +130,7 @@ namespace SonicNextModManager.UI
                     InsertQueuedItem(ViewModel.Database.Patches);
                 }
 
-                void InsertQueuedItem<T>(ObservableCollection<T> collection) where T : Metadata
+                void InsertQueuedItem<T>(ObservableCollection<T> collection) where T : MetadataBase
                 {
                     // Remove current item.
                     collection.Remove((T)metadata);
@@ -143,16 +144,16 @@ namespace SonicNextModManager.UI
         /// <summary>
         /// Opens or closes the info display for the selected content.
         /// </summary>
-        private void ModsList_MouseDoubleClick(object sender, MouseButtonEventArgs e)
+        private void ModsList_MouseDoubleClick(object in_sender, MouseButtonEventArgs in_args)
         {
-            Metadata? selectedItem = ((ListViewItem)sender).Content as Metadata;
+            var selectedItem = ((ListViewItem)in_sender).Content as MetadataBase;
 
             // Do not handle for check boxes or null items.
-            if (e.OriginalSource is Rectangle || selectedItem == null)
+            if (in_args.OriginalSource is System.Windows.Shapes.Rectangle || selectedItem == null)
                 return;
 
             // Do not handle for other mouse clicks.
-            if (e.ChangedButton != MouseButton.Left)
+            if (in_args.ChangedButton != MouseButton.Left)
                 return;
 
             if (selectedItem is Mod)
@@ -166,7 +167,7 @@ namespace SonicNextModManager.UI
                 CloseAllInfoDisplays(ViewModel.Database.Patches);
             }
 
-            void CloseAllInfoDisplays<T>(ObservableCollection<T> collection) where T : Metadata
+            void CloseAllInfoDisplays<T>(ObservableCollection<T> collection) where T : MetadataBase
             {
                 // Close all info displays.
                 foreach (T item in collection)
@@ -184,81 +185,74 @@ namespace SonicNextModManager.UI
                 selectedItem.InfoDisplay ^= true;
         }
 
-        private async void Install_Click(object sender, RoutedEventArgs e)
+        private async Task InstallContent()
         {
-            // Set the view model state.
+            // TODO: change install button to cancel button with progress bar.
+            if (ViewModel.State == InstallState.Installing)
+                return;
+
             ViewModel.State = InstallState.Installing;
+            Uninstall.IsEnabled = false;
 
-            // Get the game directory.
-            string gameDirectory = System.IO.Path.GetDirectoryName(App.Settings.Path_GameExecutable);
-                        
-            // Loop through each mod, if its enabled, run its install task.
-            foreach (var mod in ViewModel.Database.Mods)
-                if (mod.Enabled)
-                    await Task.Run(() => mod.Install(gameDirectory));
+            await Task.Run(ViewModel.Database.Install);
 
-            // Loop through each patch, if its enabled, run its install task.
-            // TODO: Patches are a myth right now.
-            foreach (var patch in ViewModel.Database.Patches)
-                if (patch.Enabled)
-                    patch.Install();
-
-            // Repackage the archives left in memory from merge mods and patches.
-            await Task.Run(() => Helpers.ArchiveHelper.PackArchives());
-
-            // Reset the view model state.
+            Uninstall.IsEnabled = true;
             ViewModel.State = InstallState.Idle;
         }
 
-        private async void Uninstall_Click(object sender, RoutedEventArgs e)
+        private async Task UninstallContent()
         {
-            // Get the game directory.
-            string gameDirectory = System.IO.Path.GetDirectoryName(App.Settings.Path_GameExecutable);
+            ViewModel.State = InstallState.Uninstalling;
+            Install.IsEnabled = false;
 
-            // Loop through each of the files that have the mod manager's backup extension and restore them.
-            foreach (string backupFile in Directory.GetFiles(gameDirectory, "*.06mm_backup", SearchOption.AllDirectories))
-                File.Move(backupFile, backupFile.Replace(".06mm_backup", ""), true);
+            await Task.Run(ViewModel.Database.Uninstall);
 
-            // Loop through each mod and run its uninstall task.
-            foreach (var mod in ViewModel.Database.Mods)
-                await Task.Run(() => mod.Uninstall(gameDirectory));
+            Install.IsEnabled = true;
+            ViewModel.State = InstallState.Idle;
+        }
+
+        private async void Install_Click(object in_sender, RoutedEventArgs in_args)
+        {
+            await Dispatcher.Invoke(UninstallContent);
+            await Dispatcher.Invoke(InstallContent);
+        }
+
+        private async void Uninstall_Click(object in_sender, RoutedEventArgs in_args)
+        {
+            await Dispatcher.Invoke(UninstallContent);
         }
 
         /// <summary>
         /// Performs a hard refresh of the content database.
         /// </summary>
-        private void Refresh_Click(object sender, RoutedEventArgs e)
+        private void Refresh_Click(object in_sender, RoutedEventArgs in_args)
             => ViewModel.InvokeDatabaseContentUpdate();
 
         /// <summary>
         /// Opens the mod editor to create a new mod.
         /// </summary>
-        private void Add_Click(object sender, RoutedEventArgs e)
+        private void Add_Click(object in_sender, RoutedEventArgs in_args)
         {
-            new Editor
-            {
-                Owner = this
-            }
-            .ShowDialog();
+            new Editor { Owner = this }.ShowDialog();
         }
 
         /// <summary>
         /// Opens the containing directory of the content.
         /// </summary>
-        private void Common_OpenFolder_Click(object sender, RoutedEventArgs e)
+        private void Common_OpenFolder_Click(object in_sender, RoutedEventArgs in_args)
         {
-            Metadata? metadata = ((MenuItem)sender).DataContext as Metadata;
+            var metadata = ((MenuItem)in_sender).DataContext as MetadataBase;
 
             if (metadata != null)
             {
                 // Open path in Windows Explorer.
-                ProcessExtensions.StartWithDefaultProgram
+                ProcessHelper.StartWithDefaultProgram
                 (
                     // Use containing directory if mod, otherwise launch Windows Explorer.
-                    metadata is Mod ? System.IO.Path.GetDirectoryName(metadata.Path) : "explorer",
+                    metadata is Mod ? Path.GetDirectoryName(metadata.Location) : "explorer",
 
                     // Use no arguments if mod, otherwise select the patch with Windows Explorer.
-                    metadata is Mod ? string.Empty : $"/select, \"{metadata.Path}\""
+                    metadata is Mod ? string.Empty : $"/select, \"{metadata.Location}\""
                 );
             }
         }
@@ -266,25 +260,21 @@ namespace SonicNextModManager.UI
         /// <summary>
         /// Opens the Editor window to create or edit content.
         /// </summary>
-        private void Content_Create_Click(object sender, RoutedEventArgs e)
+        private void Content_Create_Click(object in_sender, RoutedEventArgs in_args)
         {
-            var metadata = ((MenuItem)sender).DataContext as Metadata;
+            var metadata = ((MenuItem)in_sender).DataContext as MetadataBase;
 
             if (metadata != null)
             {
                 if (metadata is Mod)
                 {
                     // Pass current metadata through to the editor.
-                    new Editor(metadata)
-                    {
-                        Owner = this
-                    }
-                    .ShowDialog();
+                    new Editor(metadata) { Owner = this }.ShowDialog();
                 }
                 else if (metadata is Patch)
                 {
                     // Opens the current metadata in the default text viewer.
-                    ProcessExtensions.StartWithDefaultProgram(metadata.Path);
+                    ProcessHelper.StartWithDefaultProgram(metadata.Location);
                 }
             }
         }
@@ -292,9 +282,9 @@ namespace SonicNextModManager.UI
         /// <summary>
         /// Deletes the selected content.
         /// </summary>
-        private void Content_Delete_Click(object sender, RoutedEventArgs e)
+        private void Content_Delete_Click(object in_sender, RoutedEventArgs in_args)
         {
-            Metadata? metadata = ((MenuItem)sender).DataContext as Metadata;
+            var metadata = ((MenuItem)in_sender).DataContext as MetadataBase;
 
             if (metadata != null)
             {
@@ -365,7 +355,7 @@ namespace SonicNextModManager.UI
         /// <summary>
         /// Closes the side bar upon mouse leaving the control.
         /// </summary>
-        private void Sidebar_MouseLeave(object sender, MouseEventArgs e)
+        private void Sidebar_MouseLeave(object in_sender, MouseEventArgs in_args)
             => CloseSidebar();
 
         /// <summary>
@@ -376,11 +366,11 @@ namespace SonicNextModManager.UI
         /// <summary>
         /// Tab index setter for the side bar.
         /// </summary>
-        /// <param name="index">Index parameter.</param>
-        private void SetSidebarTabIndex(string index)
+        /// <param name="in_index">Index parameter.</param>
+        private void SetSidebarTabIndex(string in_index)
         {
             CloseSidebar();
-            MainTabControl.SelectedIndex = Convert.ToInt32(index);
+            MainTabControl.SelectedIndex = Convert.ToInt32(in_index);
         }
 
         /// <summary>
@@ -396,12 +386,7 @@ namespace SonicNextModManager.UI
             CloseSidebar();
             Sidebar_Settings.IsSelected = false;
 
-            new Settings
-            {
-                Owner = this
-            }
-            .ShowDialog();
-
+            new Settings { Owner = this }.ShowDialog();
             RefreshUI();
         }
     }

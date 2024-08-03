@@ -1,6 +1,7 @@
 ﻿using Marathon.Helpers;
+using SonicNextModManager.Metadata;
 
-namespace SonicNextModManager.SiS
+namespace SonicNextModManager.Interop
 {
     public class MetadataConverter
     {
@@ -19,7 +20,7 @@ namespace SonicNextModManager.SiS
                 Author = DeserialiseKey(in_file, "Author"),
                 Platform = PlatformConverter.Convert(DeserialiseKey(in_file, "Platform")),
                 Description = DeserialiseKey(in_file, "Description"),
-                Path = in_file
+                Location = in_file
             };
 
             // Deserialise the old INI keys.
@@ -30,7 +31,7 @@ namespace SonicNextModManager.SiS
 
             // Loop through each patch in the requiredPatches CSV string and add it to our new list, appending a + to indicate its required in the new system.
             foreach (var patch in requiredPatches)
-                mod.Patches.Add($"+{Path.GetFileNameWithoutExtension(patch)}");
+                mod.Patches.Add($"+{Path.ChangeExtension(Path.GetFileName(patch), ".lua")}");
 
             foreach (var file in Directory.EnumerateFiles(Path.GetDirectoryName(in_file), "*", SearchOption.AllDirectories))
             {

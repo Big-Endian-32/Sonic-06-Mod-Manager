@@ -1,4 +1,5 @@
 ﻿using SonicNextModManager.Helpers;
+using SonicNextModManager.Metadata;
 using SonicNextModManager.UI.Components;
 using SonicNextModManager.UI.Dialogs;
 
@@ -9,34 +10,34 @@ namespace SonicNextModManager.UI
     /// </summary>
     public partial class Editor : ImmersiveWindow
     {
-        protected internal Metadata? Metadata { get; set; } = new();
+        protected internal MetadataBase? Metadata { get; set; } = new();
 
         protected internal string? Directory { get; set; }
 
         protected internal bool IsINI { get; private set; } = false;
 
-        public Editor(Metadata? metadata = null)
+        public Editor(MetadataBase? in_metadata = null)
         {
             InitializeComponent();
 
             // Set current metadata and enable edit mode.
-            if (metadata != null)
+            if (in_metadata != null)
             {
-                Metadata = metadata;
-                Directory = metadata.Path;
+                Metadata = in_metadata;
+                Directory = in_metadata.Location;
 
                 // Set title to display the metadata name.
-                Title = LocaleService.Localise("Editor_Editing", metadata.Title);
+                Title = LocaleService.Localise("Editor_Editing", in_metadata.Title);
 
                 // This metadata was converted.
-                if (Path.GetExtension(metadata.Path) == ".ini")
+                if (Path.GetExtension(in_metadata.Location) == ".ini")
                     IsINI = true;
             }
 
             DataContext = Metadata;
         }
 
-        private void Thumbnail_Browse_Click(object sender, RoutedEventArgs e)
+        private void Thumbnail_Browse_Click(object in_sender, RoutedEventArgs in_args)
         {
             (Metadata as Mod).Thumbnail = FileQueries.BasicFileQuery
             (
@@ -51,7 +52,7 @@ namespace SonicNextModManager.UI
             );
         }
 
-        private void OK_Click(object sender, RoutedEventArgs e)
+        private void OK_Click(object in_sender, RoutedEventArgs in_args)
         {
             if (Metadata is Mod mod)
             {
@@ -62,11 +63,11 @@ namespace SonicNextModManager.UI
                     File.Copy(mod.Thumbnail, thumbnailDest, true);
 
                 // Write metadata as JSON - rename if necessary.
-                mod.Write(IsINI ? StringHelper.ReplaceFilename(mod.Path, "mod.json") : mod.Path);
+                mod.Write(IsINI ? StringHelper.ReplaceFilename(mod.Location, "mod.json") : mod.Location);
 
                 // Back up original INI.
                 if (IsINI)
-                    File.Move(mod.Path, $"{mod.Path}.bak");
+                    File.Move(mod.Location, $"{mod.Location}.bak");
             }
             else if (Metadata is Patch patch)
             {

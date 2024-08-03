@@ -22,12 +22,12 @@ namespace SonicNextModManager.UI
         /// <summary>
         /// Builds the exception log for the RichTextBox control.
         /// </summary>
-        /// <param name="markdown">Enables markdown for a better preview with services that use it.</param>
-        private string BuildExceptionLog(bool markdown = false)
+        /// <param name="in_isMarkdown">Enables markdown for a better preview with services that use it.</param>
+        private string BuildExceptionLog(bool in_isMarkdown = false)
         {
             StringBuilder exception = new();
 
-            if (markdown)
+            if (in_isMarkdown)
                 exception.AppendLine("```");
 
             exception.AppendLine("Sonic '06 Mod Manager " + $"({App.GetAssemblyVersion()})");
@@ -50,16 +50,16 @@ namespace SonicNextModManager.UI
             if (Exception.InnerException != null)
                 exception.AppendLine($"\nInner Exception: \n{Exception.InnerException}");
 
-            if (markdown)
+            if (in_isMarkdown)
                 exception.AppendLine("```");
 
             return exception.ToString();
         }
 
-        private void Copy_Click(object sender, RoutedEventArgs e)
+        private void Copy_Click(object in_sender, RoutedEventArgs in_args)
             => Clipboard.SetText(BuildExceptionLog(true));
 
-        private void Report_Click(object sender, RoutedEventArgs e)
+        private void Report_Click(object in_sender, RoutedEventArgs in_args)
         {
             GitHub.CreateNewIssue
             (
@@ -72,7 +72,7 @@ namespace SonicNextModManager.UI
             );
         }
 
-        private void Ignore_Click(object sender, RoutedEventArgs e)
+        private void Ignore_Click(object in_sender, RoutedEventArgs in_args)
             => Close();
     }
 }

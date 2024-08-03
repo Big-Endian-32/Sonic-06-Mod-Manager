@@ -1,6 +1,6 @@
 ﻿namespace SonicNextModManager.Extensions
 {
-    public static class LuaExtensions
+    public static class MoonSharpExtensions
     {
         /// <summary>
         /// Pushes all public static methods to Lua globals from a class as a generic type.

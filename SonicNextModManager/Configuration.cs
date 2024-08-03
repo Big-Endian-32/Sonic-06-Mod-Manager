@@ -1,4 +1,5 @@
-﻿using System.ComponentModel;
+﻿using SonicNextModManager.Metadata;
+using System.ComponentModel;
 
 namespace SonicNextModManager
 {
@@ -38,9 +39,9 @@ namespace SonicNextModManager
 
         public string? Path_EmulatorExecutable { get; set; } = "";
 
-        public void OnPropertyChanged(PropertyChangedEventArgs e)
+        public void OnPropertyChanged(PropertyChangedEventArgs in_args)
         {
-            PropertyChanged?.Invoke(this, e);
+            PropertyChanged?.Invoke(this, in_args);
             Export();
         }
 
@@ -61,6 +62,14 @@ namespace SonicNextModManager
 
             // Export from current config and return.
             return Export();
+        }
+
+        /// <summary>
+        /// Gets the path to the current game directory.
+        /// </summary>
+        public string? GetGameDirectory()
+        {
+            return Path.GetDirectoryName(Path_GameExecutable);
         }
     }
 }

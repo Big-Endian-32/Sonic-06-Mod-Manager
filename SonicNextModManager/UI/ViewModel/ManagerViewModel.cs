@@ -1,4 +1,5 @@
 ﻿using GongSolutions.Wpf.DragDrop;
+using SonicNextModManager.Metadata;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
 
@@ -38,19 +39,19 @@ namespace SonicNextModManager.UI.ViewModel
         public void InvokeDatabaseActiveContentUpdate()
             => Database.Load();
 
-        public void DragOver(IDropInfo dropInfo)
+        public void DragOver(IDropInfo in_dropInfo)
         {
-            if (dropInfo.Data is Metadata && dropInfo.TargetItem is Metadata)
+            if (in_dropInfo.Data is MetadataBase && in_dropInfo.TargetItem is MetadataBase)
             {
-                dropInfo.DropTargetAdorner = DropTargetAdorners.Insert;
-                dropInfo.Effects = DragDropEffects.Move;
+                in_dropInfo.DropTargetAdorner = DropTargetAdorners.Insert;
+                in_dropInfo.Effects = DragDropEffects.Move;
             }
         }
 
-        public void Drop(IDropInfo dropInfo)
+        public void Drop(IDropInfo in_dropInfo)
         {
-            Metadata? sourceItem = dropInfo.Data as Metadata;
-            Metadata? targetItem = dropInfo.TargetItem as Metadata;
+            MetadataBase? sourceItem = in_dropInfo.Data as MetadataBase;
+            MetadataBase? targetItem = in_dropInfo.TargetItem as MetadataBase;
 
             if (sourceItem is Mod)
             {
@@ -63,23 +64,23 @@ namespace SonicNextModManager.UI.ViewModel
                 InsertQueuedItem(Database.Patches);
             }
 
-            void InsertQueuedItem<T>(ObservableCollection<T> collection) where T : Metadata
+            void InsertQueuedItem<T>(ObservableCollection<T> in_collection) where T : MetadataBase
             {
-                int forbiddenIndex = Database.IndexOfLastInstall<T>(collection);
-                int dropIndex = collection.IndexOf((T)targetItem);
+                int forbiddenIndex = Database.IndexOfLastInstall(in_collection);
+                int dropIndex = in_collection.IndexOf((T)targetItem);
 
                 // Remove current item.
-                collection.Remove((T)sourceItem);
+                in_collection.Remove((T)sourceItem);
 
                 if (dropIndex < forbiddenIndex)
                 {
                     // Insert current item after the last index of installing or installed content.
-                    collection.Insert(forbiddenIndex + 1, (T)sourceItem);
+                    in_collection.Insert(forbiddenIndex + 1, (T)sourceItem);
                 }
                 else
                 {
                     // Insert current item at dropped location.
-                    collection.Insert(dropIndex, (T)sourceItem);
+                    in_collection.Insert(dropIndex, (T)sourceItem);
                 }
             }
         }

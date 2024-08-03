@@ -1,4 +1,4 @@
-﻿namespace SonicNextModManager
+﻿namespace SonicNextModManager.Metadata
 {
     [JsonConverter(typeof(StringEnumConverter))]
     public enum Platform

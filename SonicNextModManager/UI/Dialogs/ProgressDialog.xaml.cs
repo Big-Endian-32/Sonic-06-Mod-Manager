@@ -93,13 +93,13 @@ namespace SonicNextModManager.UI.Dialogs
             DataContext = this;
         }
 
-        public ProgressDialog(string in_description, string in_caption = "Sonic '06 Mod Manager") : this()
+        public ProgressDialog(string in_desc, string in_caption = "Sonic '06 Mod Manager") : this()
         {
-            Description = LocaleService.Localise(in_description);
+            Description = LocaleService.Localise(in_desc);
             Caption = LocaleService.Localise(in_caption);
         }
 
-        private void ProgressDialog_Loaded(object sender, RoutedEventArgs e)
+        private void ProgressDialog_Loaded(object in_sender, RoutedEventArgs in_args)
         {
             if (Owner == null)
             {
