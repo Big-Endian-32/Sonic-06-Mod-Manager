@@ -4,4 +4,4 @@
 
 <h1 align="center">Sonic '06 Mod Manager</h1>
 
-<p align="center">The next generation of Sonic '06 Mod Manager awaits...</p>
+<p align="center">Work in progress...</p>
