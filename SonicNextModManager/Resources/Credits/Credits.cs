@@ -1,13 +1,10 @@
 ﻿using System.Collections.ObjectModel;
-using Newtonsoft.Json;
 
 namespace SonicNextModManager
 {
     public class Credits
     {
         public string? Category { get; set; }
-
-        public string? Description { get; set; }
 
         public string? GitHub { get; set; }
 

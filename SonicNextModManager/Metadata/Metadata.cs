@@ -9,25 +9,21 @@ namespace SonicNextModManager
         /// <summary>
         /// The title of this content.
         /// </summary>
-        [Category("Metadata")]
         public string? Title { get; set; }
 
         /// <summary>
         /// The author of this content.
         /// </summary>
-        [Category("Metadata")]
         public string? Author { get; set; }
 
         /// <summary>
         /// The platform this content is targeting.
         /// </summary>
-        [Category("Metadata")]
         public Platform Platform { get; set; }
 
         /// <summary>
         /// The date this content was created on.
         /// </summary>
-        [Category("Metadata")]
         public string? Date { get; set; }
 
         /// <summary>
@@ -38,7 +34,6 @@ namespace SonicNextModManager
         /// <summary>
         /// The description of this content.
         /// </summary>
-        [Category("Metadata")]
         public string? Description
         {
             get => _Description?.Replace("\\n", Environment.NewLine);
@@ -49,34 +44,31 @@ namespace SonicNextModManager
         /// <summary>
         /// The path to the thumbnail used by this content.
         /// </summary>
+        [JsonIgnore]
         public string? Thumbnail { get; set; }
 
         /// <summary>
         /// Determines if this content is enabled.
         /// </summary>
         [JsonIgnore]
-        [Browsable(false)]
         public bool Enabled { get; set; }
 
         /// <summary>
         /// Determines if this content's information is being displayed.
         /// </summary>
         [JsonIgnore]
-        [Browsable(false)]
         public bool InfoDisplay { get; set; }
 
         /// <summary>
         /// The state of this content's installation process.
         /// </summary>
         [JsonIgnore]
-        [Browsable(false)]
         public InstallState State { get; set; }
 
         /// <summary>
         /// The path to this content.
         /// </summary>
         [JsonIgnore]
-        [Browsable(false)]
         public string? Path { get; set; }
     }
 }

@@ -1,0 +1,31 @@
+﻿<UserControl x:Name="Root"
+             x:Class="SonicNextModManager.UI.Components.PathField"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:SonicNextModManager"
+             xmlns:c="clr-namespace:SonicNextModManager.UI.Components"
+             mc:Ignorable="d" 
+             d:DesignHeight="55" d:DesignWidth="400">
+    <Grid>
+        <StackPanel>
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition/>
+                    <ColumnDefinition Width="75"/>
+                </Grid.ColumnDefinitions>
+
+                <Grid.RowDefinitions>
+                    <RowDefinition/>
+                    <RowDefinition/>
+                </Grid.RowDefinitions>
+
+                <c:HorizontalFieldLabel Caption="{Binding ElementName=Root,Path=Caption}" Description="{Binding ElementName=Root, Path=Description}" Grid.Column="0" Margin="0,0,0,5"/>
+                <TextBox Grid.Column="0" Grid.Row="1" Text="{Binding ElementName=Root, Path=Property}"/>
+
+                <Button Click="Browse_Click" Content="{StaticResource Common_Browse}" Grid.Column="1" Grid.Row="1" Height="32" HorizontalAlignment="Right" Width="70"/>
+            </Grid>
+        </StackPanel>
+    </Grid>
+</UserControl>

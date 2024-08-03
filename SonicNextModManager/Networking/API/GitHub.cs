@@ -1,4 +1,5 @@
 ﻿using System.Threading.Tasks;
+using SonicNextModManager.Helpers;
 using SonicNextModManager.Networking.API.GitHub;
 
 namespace SonicNextModManager
@@ -17,7 +18,7 @@ namespace SonicNextModManager
         {
             return JsonExtensions.DeserializeWebObjectAsync<ReleaseInfo>
             (
-                StringExtensions.URLCombine(API, Repositories, username, repository, "releases", "latest")
+                StringHelper.URLCombine(API, Repositories, username, repository, "releases", "latest")
             );
         }
 
@@ -39,7 +40,7 @@ namespace SonicNextModManager
         {
             ProcessExtensions.StartWithDefaultProgram
             (
-                StringExtensions.URLCombine
+                StringHelper.URLCombine
                 (
                     $"https://github.com/{username}/{repository}/issues/new",
 

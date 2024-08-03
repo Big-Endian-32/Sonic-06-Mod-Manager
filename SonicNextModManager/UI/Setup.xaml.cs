@@ -1,7 +1,13 @@
-﻿using System.Windows.Media.Imaging;
-using HandyControl.Controls;
+﻿using HandyControl.Controls;
+using SonicNextModManager.Helpers;
+using SonicNextModManager.Networking;
+using SonicNextModManager.Services;
+using SonicNextModManager.UI.Components;
+using SonicNextModManager.UI.Dialogs;
+using System.Threading.Tasks;
+using System.Windows.Media.Imaging;
 
-namespace SonicNextModManager
+namespace SonicNextModManager.UI
 {
     /// <summary>
     /// Interaction logic for Setup.xaml
@@ -16,42 +22,10 @@ namespace SonicNextModManager
         private void Language_SelectionChanged(object sender, SelectionChangedEventArgs e)
             => SonicNextModManager.Language.UpdateCultureResources();
 
-        private void Click_ToPreviousMajorStep(object sender, RoutedEventArgs e)
-        {
-            Steps.StepIndex -= 1;
-            MajorStepPages.SelectedIndex -= 1;
-        }
-
-        private void Click_ToNextMajorStep(object sender, RoutedEventArgs e)
-        {
-            Steps.StepIndex += 1;
-            MajorStepPages.SelectedIndex += 1;
-        }
-
-        private void Click_ReturnToEmulatorPrompt(object sender, RoutedEventArgs e)
-            => EmulatorStepPages.SelectedItem = Emulator_Prompt;
-
-        private void Click_ToRelevantEmulatorWarning(object sender, RoutedEventArgs e)
-        {
-            switch (Path.GetExtension(Game_Path.Text))
-            {
-                case ".xex":
-                    EmulatorStepPages.SelectedItem = Emulator_Xenia;
-                    break;
-
-                case ".bin":
-                    EmulatorStepPages.SelectedItem = Emulator_RPCS3;
-                    break;
-            }
-        }
-
-        private void Click_ToEmulatorPathSetup(object sender, RoutedEventArgs e)
-            => EmulatorStepPages.SelectedItem = Emulator_Setup;
-
         private void Game_Path_TextChanged(object sender, TextChangedEventArgs e)
         {
-            // Set Continue button enabled state.
-            Game_Continue.IsEnabled = Game_Path.Text.Length != 0;
+            // Set Next button enabled state.
+            DialogButtons.GetButton(LocaleService.Localise("Common_Next")).IsEnabled = Game_Path.Text.Length != 0;
 
             // Set global game executable path.
             App.Settings.Path_GameExecutable = Game_Path.Text;
@@ -67,8 +41,8 @@ namespace SonicNextModManager
 
         private void Emulator_Path_TextChanged(object sender, TextChangedEventArgs e)
         {
-            // Set Continue button enabled state.
-            Emulator_Continue.IsEnabled = Emulator_Path.Text.Length != 0;
+            // Set Next button enabled state.
+            DialogButtons.GetButton(LocaleService.Localise("Common_Next")).IsEnabled = Emulator_Path.Text.Length != 0;
 
             // Set global emulator executable path.
             App.Settings.Path_EmulatorExecutable = Emulator_Path.Text;
@@ -82,18 +56,6 @@ namespace SonicNextModManager
                 Emulator_Path.Text = executable;
         }
 
-        private void Click_FinishSetup(object sender, RoutedEventArgs e)
-        {
-            // Set completion flag.
-            App.Settings.Setup_Complete = true;
-
-            // Load mod manager window.
-            new Manager().Show();
-
-            // Close current window.
-            Close();
-        }
-
         /// <summary>
         /// Displays a full preview upon double-clicking an image in a carousel.
         /// </summary>
@@ -101,6 +63,131 @@ namespace SonicNextModManager
         {
             if (e.ClickCount == 2)
                 new ImageBrowser(new Uri(((BitmapFrame)((Image)sender).Source).Decoder.ToString())).Show();
+        }
+
+        private void StateMachine_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            if (DialogButtons == null)
+                return;
+
+            DialogButtons.Buttons.Clear();
+
+            if (MajorStepPages.SelectedItem == MajorStep_Welcome)
+            {
+                DialogButtons.AddButton(LocaleService.Localise("Common_Next"), () => SetCurrentStep(1));
+            }
+            else if (MajorStepPages.SelectedItem == MajorStep_Game)
+            {
+                DialogButtons.AddButton(LocaleService.Localise("Common_Next"), () => SetCurrentStep(1)).IsEnabled = Game_Path.Text.Length != 0;
+                DialogButtons.AddButton(LocaleService.Localise("Common_Back"), () => SetCurrentStep(-1));
+            }
+            else if (MajorStepPages.SelectedItem == MajorStep_Emulator)
+            {
+                if (EmulatorStepPages.SelectedItem == EmulatorStep_Prompt)
+                {
+                    DialogButtons.AddButton(LocaleService.Localise("Common_No"), () => SetCurrentStep(1));
+
+                    DialogButtons.AddButton(LocaleService.Localise("Common_Yes"), () =>
+                    {
+                        Task<string> supportedEmulators;
+
+                        try
+                        {
+                            supportedEmulators = Client.Get().GetStringAsync
+                            (
+                                StringHelper.URLCombine
+                                (
+                                    Properties.Resources.GitHub_Raw,
+                                    Properties.Resources.GitHub_User,
+                                    Properties.Resources.GitHub_Repository,
+                                    "next/SonicNextModManager/Resources/Networking/Emulators.json"
+                                )
+                            );
+
+                            // Attempt to connect to GitHub.
+                            supportedEmulators.Wait();
+                        }
+                        catch
+                        {
+                            EmulatorStepPages.SelectedItem = EmulatorStep_NetworkError;
+
+                            return;
+                        }
+
+                        // Parse flags from JSON.
+                        var emulatorFlags = JsonConvert.DeserializeObject<Dictionary<string, bool>>(supportedEmulators.Result);
+
+                        switch (Path.GetExtension(Game_Path.Text))
+                        {
+                            case ".xex":
+                            {
+                                if (emulatorFlags["IsXeniaBugFree"])
+                                    break;
+
+                                EmulatorStepPages.SelectedItem = EmulatorStep_Xenia;
+                                return;
+                            }
+
+                            case ".bin":
+                            {
+                                if (emulatorFlags["IsRPCS3BugFree"])
+                                    break;
+
+                                EmulatorStepPages.SelectedItem = EmulatorStep_RPCS3;
+                                return;
+                            }
+                        }
+
+                        // Jump another major page if all cases pass.
+                        SetCurrentStep(1);
+                    });
+                }
+                else if (EmulatorStepPages.SelectedItem == EmulatorStep_Xenia)
+                {
+                    DialogButtons.AddButton(LocaleService.Localise("Common_Next"), () => EmulatorStepPages.SelectedItem = EmulatorStep_Setup);
+                    DialogButtons.AddButton(LocaleService.Localise("Common_Back"), () => ToEmulatorStepRoot());
+                }
+                else if (EmulatorStepPages.SelectedItem == EmulatorStep_RPCS3)
+                {
+                    DialogButtons.AddButton(LocaleService.Localise("Common_Back"), () => ToEmulatorStepRoot());
+                }
+                else if (EmulatorStepPages.SelectedItem == EmulatorStep_NetworkError)
+                {
+                    DialogButtons.AddButton(LocaleService.Localise("Common_Next"), () => SetCurrentStep(1));
+                    DialogButtons.AddButton(LocaleService.Localise("Common_Back"), () => ToEmulatorStepRoot());
+                }
+                else if (EmulatorStepPages.SelectedItem == EmulatorStep_Setup)
+                {
+                    DialogButtons.AddButton(LocaleService.Localise("Common_Next"), () => SetCurrentStep(1)).IsEnabled = Emulator_Path.Text.Length != 0;
+                    DialogButtons.AddButton(LocaleService.Localise("Common_Back"), () => SetCurrentStep(-1));
+                }
+
+                void ToEmulatorStepRoot()
+                {
+                    EmulatorStepPages.SelectedIndex = 0;
+                    SetCurrentStep(-1);
+                }
+            }
+            else if (MajorStepPages.SelectedItem == MajorStep_Finish)
+            {
+                DialogButtons.AddButton(LocaleService.Localise("Setup_Finish_OK"), () =>
+                {
+                    // Set completion flag.
+                    App.Settings.Setup_Complete = true;
+
+                    // Load mod manager window.
+                    new Manager().Show();
+
+                    // Close current window.
+                    Close();
+                });
+            }
+
+            void SetCurrentStep(int index)
+            {
+                Steps.StepIndex += index;
+                MajorStepPages.SelectedIndex += index;
+            }
         }
     }
 }

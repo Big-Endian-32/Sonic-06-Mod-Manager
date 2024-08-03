@@ -1,18 +1,20 @@
-﻿global using Newtonsoft.Json;
+﻿global using MoonSharp.Interpreter;
+global using Newtonsoft.Json;
+global using Newtonsoft.Json.Converters;
+global using SonicNextModManager.Services;
 global using System;
 global using System.Collections.Generic;
 global using System.Globalization;
 global using System.IO;
 global using System.Linq;
+global using System.Reflection;
 global using System.Text;
 global using System.Windows;
 global using System.Windows.Controls;
 global using System.Windows.Data;
 global using System.Windows.Input;
 
-using System.Reflection;
-using MoonSharp.Interpreter;
-using Sprint;
+using SonicNextModManager.Helpers;
 
 namespace SonicNextModManager
 {
@@ -27,7 +29,9 @@ namespace SonicNextModManager
 
         public static Language CurrentCulture { get; set; }
 
-        public static Platform CurrentPlatform { get; } = StringExtensions.GetPlatformFromFilePath(Settings.Path_GameExecutable);
+        public static Platform CurrentPlatform { get; } = StringHelper.GetPlatformFromFilePath(Settings.Path_GameExecutable);
+
+        public static string CurrentInformationalVersion { get; private set; }
 
         public static Dictionary<string, string> Directories { get; } = new()
         {
@@ -49,6 +53,15 @@ namespace SonicNextModManager
             { "make_fself", Path.Combine(Directories["Resources"], "Libraries", "PlayStation", "make_fself.exe") }
         };
 
+        /// <summary>
+        /// Returns the assembly informational version from the entry assembly. 
+        /// </summary>
+        public static string GetInformationalVersion()
+            => Assembly.GetEntryAssembly().GetCustomAttribute<AssemblyInformationalVersionAttribute>().InformationalVersion;
+
+        /// <summary>
+        /// Returns the current assembly name.
+        /// </summary>
         public static string GetAssemblyName()
             => Assembly.GetEntryAssembly().GetName().Name;
 
@@ -114,6 +127,9 @@ namespace SonicNextModManager
 
         protected override void OnStartup(StartupEventArgs e)
         {
+            // Set current informational version for binding.
+            CurrentInformationalVersion = GetInformationalVersion();
+
             // Set up exception handler.
             CreateExceptionHandler();
 
@@ -122,7 +138,7 @@ namespace SonicNextModManager
 
             // Verify if the required modules exist and throw if not.
             if (!VerifyModuleIntegrity())
-                throw new FileNotFoundException(Language.Localise("Exception_MissingModules"));
+                throw new FileNotFoundException(LocaleService.Localise("Exception_MissingModules"));
 
             // Set up language settings.
             Language.LoadCultureResources();

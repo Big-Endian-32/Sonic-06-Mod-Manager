@@ -64,24 +64,37 @@ namespace SonicNextModManager.Properties {
         ///   Looks up a localized string similar to [
         ///  {
         ///    &quot;Category&quot;: &quot;Sonic &apos;06 Mod Manager&quot;,
-        ///    &quot;Description&quot;: &quot;Credits_SonicNextModManager&quot;,
-        ///    &quot;GitHub&quot;: &quot;https://github.com/Big-Endian-32/SonicNextModManager&quot;,
         ///    &quot;IsExpanded&quot;: true,
         ///    &quot;Contributors&quot;: [
         ///      {
         ///        &quot;Name&quot;: &quot;Hyper&quot;,
-        ///        &quot;Description&quot;: &quot;Lead developer, designer and reverse-engineer&quot;,
-        ///        &quot;URL&quot;: &quot;https://github.com/HyperBE32&quot;
+        ///        &quot;Description&quot;: &quot;Lead developer and designer&quot;,
+        ///        &quot;URL&quot;: &quot;https://github.com/hyperbx&quot;
         ///      },
         ///      {
         ///        &quot;Name&quot;: &quot;Sajid&quot;,
         ///        &quot;Description&quot;: &quot;GitHub API&quot;,
         ///        &quot;URL&quot;: &quot;https://github.com/Sajidur78&quot;
-        ///      } [rest of string was truncated]&quot;;.
+        ///      },
+        ///      {
+        ///        &quot;Name&quot;: &quot;SuperSonic16&quot;,
+        ///        &quot;Description&quot;: &quot;GameBanana API&quot;,
+        ///        &quot;URL&quot;: &quot;https://github.com/thesupersonic16&quot;
+        ///   [rest of string was truncated]&quot;;.
         /// </summary>
         internal static string Credits {
             get {
                 return ResourceManager.GetString("Credits", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
+        internal static System.Drawing.Bitmap Error {
+            get {
+                object obj = ResourceManager.GetObject("Error", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
             }
         }
         
@@ -106,6 +119,15 @@ namespace SonicNextModManager.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to https://raw.githubusercontent.com.
+        /// </summary>
+        internal static string GitHub_Raw {
+            get {
+                return ResourceManager.GetString("GitHub_Raw", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to SonicNextModManager.
         /// </summary>
         internal static string GitHub_Repository {
@@ -115,11 +137,21 @@ namespace SonicNextModManager.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Big-Endian-32.
+        ///   Looks up a localized string similar to hyperbx.
         /// </summary>
         internal static string GitHub_User {
             get {
                 return ResourceManager.GetString("GitHub_User", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
+        internal static System.Drawing.Bitmap Information {
+            get {
+                object obj = ResourceManager.GetObject("Information", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
             }
         }
         
@@ -154,6 +186,16 @@ namespace SonicNextModManager.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
+        internal static System.Drawing.Bitmap Question {
+            get {
+                object obj = ResourceManager.GetObject("Question", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized resource of type System.Byte[].
         /// </summary>
         internal static byte[] scetool {
@@ -170,6 +212,16 @@ namespace SonicNextModManager.Properties {
             get {
                 object obj = ResourceManager.GetObject("vsh_curves", resourceCulture);
                 return ((byte[])(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
+        internal static System.Drawing.Bitmap Warning {
+            get {
+                object obj = ResourceManager.GetObject("Warning", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
             }
         }
         

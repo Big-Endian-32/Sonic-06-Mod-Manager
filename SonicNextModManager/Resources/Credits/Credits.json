@@ -1,14 +1,12 @@
 [
   {
     "Category": "Sonic '06 Mod Manager",
-    "Description": "Credits_SonicNextModManager_Description",
-    "GitHub": "https://github.com/Big-Endian-32/SonicNextModManager",
     "IsExpanded": true,
     "Contributors": [
       {
         "Name": "Hyper",
         "Description": "Lead developer and designer",
-        "URL": "https://github.com/HyperBE32"
+        "URL": "https://github.com/hyperbx"
       },
       {
         "Name": "Sajid",
@@ -28,36 +26,12 @@
     ]
   },
   {
-    "Category": "Sprint",
-    "Description": "Credits_Sprint_Description",
-    "GitHub": "https://github.com/Big-Endian-32/Sprint",
-    "Contributors": [
-      {
-        "Name": "Hyper",
-        "Description": "Lead developer",
-        "URL": "https://github.com/HyperBE32"
-      },
-      {
-        "Name": "MoonSharp",
-        "Description": "Lua interpreter for .NET",
-        "URL": "https://github.com/moonsharp-devs/moonsharp"
-      },
-      {
-        "Name": "PUC-Rio",
-        "Description": "Lua",
-        "URL": "https://www.puc-rio.br/index.html"
-      }
-    ]
-  },
-  {
     "Category": "Marathon",
-    "Description": "Credits_Marathon_Description",
-    "GitHub": "https://github.com/Big-Endian-32/Marathon",
     "Contributors": [
       {
         "Name": "Hyper",
         "Description": "Lead developer and reverse-engineer",
-        "URL": "https://github.com/HyperBE32"
+        "URL": "https://github.com/hyperbx"
       },
       {
         "Name": "Knuxfan24",
@@ -98,18 +72,16 @@
   },
   {
     "Category": "Credits_Translators",
-    "Description": "Credits_Translators_Description",
     "Contributors": [
       {
         "Name": "Hyper",
         "Description": "English (United Kingdom)",
-        "URL": "https://github.com/HyperBE32"
+        "URL": "https://github.com/hyperbx"
       },
     ]
   },
   {
     "Category": "Credits_Miscellaneous",
-    "Description": "Credits_Miscellaneous_Description",
     "Contributors": [
       {
         "Name": "xorloser",

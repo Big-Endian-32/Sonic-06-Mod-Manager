@@ -1,5 +1,9 @@
-﻿using System.Collections.ObjectModel;
+﻿using SonicNextModManager.Helpers;
+using SonicNextModManager.UI.Dialogs;
+using System.Collections.ObjectModel;
 using System.ComponentModel;
+using System.Threading;
+using System.Threading.Tasks;
 
 namespace SonicNextModManager
 {
@@ -47,14 +51,14 @@ namespace SonicNextModManager
         /// Location of the content database.
         /// </summary>
         private string Location { get; } = Directory.Exists(App.Settings.Path_ModsDirectory)
-                                           ? Path.Combine(App.Settings.Path_ModsDirectory, "content.json")
-                                           : "content.json";
+                                               ? Path.Combine(App.Settings.Path_ModsDirectory, "content.json")
+                                               : "content.json";
 
         public Database(bool loadActiveContent = true)
         {
             // Initialise content data upon construction.
-            Mods = InitialiseMods();
-            Patches = InitialisePatches();
+            Mods = InitMods();
+            Patches = InitPatches();
 
             // Load database and set up checked content.
             if (loadActiveContent)
@@ -64,7 +68,7 @@ namespace SonicNextModManager
         /// <summary>
         /// Load all mods from the mods directory.
         /// </summary>
-        public ObservableCollection<Mod> InitialiseMods()
+        public ObservableCollection<Mod> InitMods()
         {
             if (!Directory.Exists(App.Settings.Path_ModsDirectory))
                 goto Finish;
@@ -72,12 +76,46 @@ namespace SonicNextModManager
             // Clear mods list before writing to it.
             Mods.Clear();
 
-            // Parse all mods from the mods directory.
-            foreach (string config in new[] { "mod.json", "mod.ini" })
+            // Get the count of mods using the old INI system.
+            var inis = Directory.GetFiles(App.Settings.Path_ModsDirectory, "mod.ini", SearchOption.AllDirectories);
+
+            // Check if we've found any mods using the old INI system.
+            if (inis.Length > 0)
             {
-                foreach (string mod in Directory.EnumerateFiles(App.Settings.Path_ModsDirectory, config, SearchOption.AllDirectories))
-                    Mods.Add(new Mod().Parse(mod));
+                // Ask the user if they want to migrate the old mods to the new system.
+                var result = NextMessageBox.Show(LocaleService.Localise("Message_MigrateMods_Body", inis.Length),
+                    LocaleService.Localise("Message_MigrateMods_Title"),
+                    NextMessageBoxButton.YesNo,
+                    NextMessageBoxIcon.Warning);
+
+                // If the user agrees, then convert all the old mods to the new system.
+                if (result == NextDialogResult.Yes)
+                {
+                    var progressDlg = new ProgressDialog("Common_PleaseWait", "Message_MigrateMods_Title")
+                    {
+                        Maximum = inis.Length
+                    };
+
+                    progressDlg.Callback = () =>
+                    {
+                        for (int i = 0; i < inis.Length; i++)
+                        {
+                            var ini = inis[i];
+
+                            progressDlg.SetDescription(Path.GetFileName(Path.GetDirectoryName(ini)));
+                            progressDlg.SetProgress(i);
+
+                            SiS.MetadataConverter.Convert(ini);
+                        }
+                    };
+
+                    progressDlg.ShowDialog();
+                }
             }
+
+            // Parse all mods from the mods directory.
+            foreach (string mod in Directory.EnumerateFiles(App.Settings.Path_ModsDirectory, "mod.json", SearchOption.AllDirectories))
+                Mods.Add(new Mod().Parse(mod));
 
         Finish:
             return Mods;
@@ -86,7 +124,7 @@ namespace SonicNextModManager
         /// <summary>
         /// Load all patches from the patches directory.
         /// </summary>
-        public ObservableCollection<Patch> InitialisePatches()
+        public ObservableCollection<Patch> InitPatches()
         {
             if (!Directory.Exists(App.Directories["Patches"]))
                 goto Finish;
@@ -95,7 +133,7 @@ namespace SonicNextModManager
             Patches.Clear();
 
             // Parse all patches from the patches directory.
-            foreach (string patch in Directory.EnumerateFiles(App.Directories["Patches"], "Patch_*.lua", SearchOption.AllDirectories))
+            foreach (string patch in Directory.EnumerateFiles(App.Directories["Patches"], "patch.json", SearchOption.AllDirectories))
                 Patches.Add(new Patch().Parse(patch));
 
         Finish:
@@ -227,7 +265,7 @@ namespace SonicNextModManager
                 {
                     ActiveContent.Mods.Add
                     (
-                        StringExtensions.OmitSourceDirectory(mod.Path, App.Settings.Path_ModsDirectory)
+                        StringHelper.OmitSourceDirectory(mod.Path, App.Settings.Path_ModsDirectory)
                     );
                 }
             }
@@ -238,7 +276,7 @@ namespace SonicNextModManager
                 {
                     ActiveContent.Patches.Add
                     (
-                        StringExtensions.OmitSourceDirectory(patch.Path, App.Directories["Patches"])
+                        StringHelper.OmitSourceDirectory(patch.Path, App.Directories["Patches"])
                     );
                 }
             }

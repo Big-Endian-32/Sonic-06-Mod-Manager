@@ -112,14 +112,17 @@
     <value>2.0</value>
   </resheader>
   <resheader name="reader">
-    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=5.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
   <resheader name="writer">
-    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=5.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
-  <assembly alias="System.Windows.Forms" name="System.Windows.Forms, Version=5.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" />
+  <assembly alias="System.Windows.Forms" name="System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" />
   <data name="Credits" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\resources\credits\credits.json;System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089;Windows-1252</value>
+  </data>
+  <data name="Error" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\resources\images\components\nextmessagebox\error.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
   <data name="Game_Executable_360" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\resources\images\setup\game_executable_360.png;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
@@ -127,11 +130,17 @@
   <data name="Game_Executable_PS3" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\resources\images\setup\game_executable_ps3.png;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
+  <data name="GitHub_Raw" xml:space="preserve">
+    <value>https://raw.githubusercontent.com</value>
+  </data>
   <data name="GitHub_Repository" xml:space="preserve">
     <value>SonicNextModManager</value>
   </data>
   <data name="GitHub_User" xml:space="preserve">
-    <value>Big-Endian-32</value>
+    <value>hyperbx</value>
+  </data>
+  <data name="Information" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\resources\images\components\nextmessagebox\information.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
   <data name="keys" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\resources\libraries\playstation\data\keys;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
@@ -142,11 +151,17 @@
   <data name="make_fself" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\resources\libraries\playstation\make_fself.exe;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
+  <data name="Question" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\resources\images\components\nextmessagebox\question.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
   <data name="scetool" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\resources\libraries\playstation\scetool.exe;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
   <data name="vsh_curves" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\resources\libraries\playstation\data\vsh_curves;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="Warning" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\resources\images\components\nextmessagebox\warning.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
   <data name="Web_UserAgent" xml:space="preserve">
     <value>Mozilla/5.0 (compatible; SonicNextModManager)</value>

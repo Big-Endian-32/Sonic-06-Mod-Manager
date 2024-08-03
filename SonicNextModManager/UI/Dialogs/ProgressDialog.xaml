@@ -1,0 +1,28 @@
+﻿<c:ImmersiveWindow x:Class="SonicNextModManager.UI.Dialogs.ProgressDialog"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:SonicNextModManager.UI.Dialogs"
+        xmlns:c="clr-namespace:SonicNextModManager.UI.Components"
+        mc:Ignorable="d"
+        Background="#191919"
+        Title="{Binding Caption}"
+        Height="180" Width="420"
+        CloseButton="False"
+        ResizeMode="NoResize"
+        SizeToContent="Height"
+        WindowStartupLocation="CenterOwner">
+    
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="50"/>
+        </Grid.RowDefinitions>
+
+        <TextBlock Margin="0,15,0,5" HorizontalAlignment="Center" VerticalAlignment="Center" Text="{Binding Description}"/>
+        <ProgressBar Grid.Row="1" Margin="15,0,15,0" Value="{Binding Progress}" Minimum="{Binding Minimum}" Maximum="{Binding Maximum}"/>
+        
+    </Grid>
+    
+</c:ImmersiveWindow>

@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Windows;
+﻿using HandyControl.Tools;
 
 namespace SonicNextModManager
 {
@@ -18,8 +15,9 @@ namespace SonicNextModManager
 
         public int Lines { get; set; }
 
-        public override string ToString()
-            => Lines != Languages.Count ? $"{Name} ({(float)Lines / Languages.Count * 100:N0}%)" : Name;
+        public override string ToString() => Lines != Languages.Count
+            ? $"{Name} ({(float)Lines / Languages.Count * 100:N0}%)"
+            : Name;
 
         public static void Load(string culture)
         {
@@ -29,7 +27,20 @@ namespace SonicNextModManager
             };
 
             while (Application.Current.Resources.MergedDictionaries.Count > 5)
+            {
                 Application.Current.Resources.MergedDictionaries.RemoveAt(5);
+            }
+
+            try
+            {
+                // Set HandyControl language.
+                ConfigHelper.Instance.SetLang(culture);
+            }
+            catch
+            {
+                // Fall back on English (United Kingdom) if the selected culture is invalid.
+                ConfigHelper.Instance.SetLang("en-GB");
+            }
 
             // No need to load the fallback language on top.
             if (culture == "en-GB")
@@ -84,27 +95,5 @@ namespace SonicNextModManager
 
             return cultureEntry;
         }
-
-        /// <summary>
-        /// Returns a localised string from the input resource name.
-        /// </summary>
-        /// <param name="key">Resource name.</param>
-        public static string Localise(string key)
-        {
-            var resource = Application.Current.TryFindResource(key);
-
-            if (resource is string str)
-                return str;
-
-            return key;
-        }
-
-        /// <summary>
-        /// Returns a formatted localised string from the input resources.
-        /// </summary>
-        /// <param name="key">Resource name.</param>
-        /// <param name="args">Formatting instructions.</param>
-        public static string LocaliseFormat(string key, params object[] args)
-            => string.Format(Localise(key), args);
     }
 }

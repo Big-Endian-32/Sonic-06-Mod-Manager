@@ -1,5 +1,4 @@
-﻿using System.Globalization;
-using System.Windows.Data;
+﻿using SonicNextModManager.Services;
 
 namespace SonicNextModManager
 {
@@ -7,10 +6,10 @@ namespace SonicNextModManager
     public class Boolean2YesNoConverter : IValueConverter
     {
         public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
-            => (bool)value ? Language.Localise("Common_Yes") : Language.Localise("Common_No");
+            => (bool)value ? LocaleService.Localise("Common_Yes") : LocaleService.Localise("Common_No");
 
         public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
-            => (string)value == Language.Localise("Common_Yes") ? true : false;
+            => (string)value == LocaleService.Localise("Common_Yes") ? true : false;
     }
 
     [ValueConversion(typeof(int), typeof(bool))]
@@ -26,7 +25,7 @@ namespace SonicNextModManager
     public class String2NotAvailableConverter : IValueConverter
     {
         public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
-            => string.IsNullOrEmpty((string)value) ? Language.Localise("Common_NotAvailable") : (string)value;
+            => string.IsNullOrEmpty((string)value) ? LocaleService.Localise("Common_NotAvailable") : (string)value;
 
         public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
             => throw new NotImplementedException();
@@ -48,6 +47,16 @@ namespace SonicNextModManager
         }
 
         public object[] ConvertBack(object value, Type[] targetTypes, object parameter, CultureInfo culture)
+            => throw new NotImplementedException();
+    }
+
+    [ValueConversion(typeof(Enum), typeof(int))]
+    public class Enum2IntConverter : IValueConverter
+    {
+        public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
+            => (int)value;
+
+        public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
             => throw new NotImplementedException();
     }
 }

@@ -4,7 +4,8 @@
              xmlns:hc="https://handyorg.github.io/handycontrol"
              xmlns:system="clr-namespace:System;assembly=mscorlib"
              xmlns:local="clr-namespace:SonicNextModManager"
-             StartupUri="UI/Setup.xaml">
+             StartupUri="UI/Setup.xaml"
+             ShutdownMode="OnExplicitShutdown">
     
     <Application.Resources>
         
@@ -12,16 +13,16 @@
 
             <ResourceDictionary.MergedDictionaries>
 
+                <!-- Load language data -->
+                <ResourceDictionary Source="Resources/Languages/Languages.xaml"/>
+                <ResourceDictionary Source="Resources/Languages/en-GB.xaml"/>
+
                 <!-- Load theme data for style overrides -->
                 <ResourceDictionary Source="pack://application:,,,/HandyControl;component/Themes/SkinDefault.xaml"/>
                 <ResourceDictionary Source="pack://application:,,,/HandyControl;component/Themes/Theme.xaml"/>
 
                 <!-- Set up HandyControl theme -->
                 <hc:Theme AccentColor="{x:Static SystemParameters.WindowGlassColor}" Skin="Dark"/>
-
-                <!-- Load language data -->
-                <ResourceDictionary Source="Resources/Languages/Languages.xaml"/>
-                <ResourceDictionary Source="Resources/Languages/en-GB.xaml"/>
 
             </ResourceDictionary.MergedDictionaries>
 

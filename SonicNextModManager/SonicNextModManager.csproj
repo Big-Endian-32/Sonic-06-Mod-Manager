@@ -2,18 +2,23 @@
 
   <PropertyGroup>
     <OutputType>WinExe</OutputType>
-    <TargetFramework>net6.0-windows</TargetFramework>
+    <TargetFramework>net8.0-windows7.0</TargetFramework>
     <Nullable>enable</Nullable>
     <UseWPF>true</UseWPF>
     <ApplicationIcon>Resources\Images\Icon.ico</ApplicationIcon>
     <UseWindowsForms>True</UseWindowsForms>
     <Version>1.0.0.0</Version>
+    <IncludeAllContentForSelfExtract>True</IncludeAllContentForSelfExtract>
   </PropertyGroup>
 
   <ItemGroup>
     <None Remove="FodyWeavers.xml" />
     <None Remove="Resources\Credits.json" />
     <None Remove="Resources\Fonts\Material.ttf" />
+    <None Remove="Resources\Images\Components\NextMessageBox\Error.png" />
+    <None Remove="Resources\Images\Components\NextMessageBox\Information.png" />
+    <None Remove="Resources\Images\Components\NextMessageBox\Question.png" />
+    <None Remove="Resources\Images\Components\NextMessageBox\Warning.png" />
     <None Remove="Resources\Images\Logo.png" />
     <None Remove="Resources\Images\Miscellaneous\Thumbnail.png" />
     <None Remove="Resources\Images\Setup\Game_Executable_360.png" />
@@ -30,15 +35,24 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Resource Include="Resources\Images\Components\NextMessageBox\Error.png" />
+    <Resource Include="Resources\Images\Components\NextMessageBox\Information.png" />
+    <Resource Include="Resources\Images\Components\NextMessageBox\Question.png" />
+    <Resource Include="Resources\Images\Components\NextMessageBox\Warning.png" />
+  </ItemGroup>
+
+  <ItemGroup>
     <None Include="..\.editorconfig" Link=".editorconfig" />
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="BE32.Marathon" Version="1.0.31" />
-    <PackageReference Include="BE32.Sprint" Version="1.0.4" />
-    <PackageReference Include="gong-wpf-dragdrop" Version="2.4.3" />
-    <PackageReference Include="HandyControl" Version="3.2.0" />
-    <PackageReference Include="PropertyChanged.Fody" Version="3.4.0" />
+    <PackageReference Include="BE32.Marathon" Version="1.0.75" />
+    <PackageReference Include="CommunityToolkit.Mvvm" Version="8.2.2" />
+    <PackageReference Include="gong-wpf-dragdrop" Version="3.2.1" />
+    <PackageReference Include="HandyControl" Version="3.5.1" />
+    <PackageReference Include="keystoneengine.csharp" Version="0.9.1.1" />
+    <PackageReference Include="MoonSharp" Version="2.0.0" />
+    <PackageReference Include="PropertyChanged.Fody" Version="4.1.0" />
   </ItemGroup>
 
   <ItemGroup>

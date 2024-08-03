@@ -18,6 +18,8 @@ namespace SonicNextModManager
         /// <param name="enabled">Whether or not immersive dark mode should be enabled.</param>
         public static bool Initialise(IntPtr handle, bool enabled)
         {
+            int useImmersiveDarkMode = enabled ? 1 : 0;
+
             if (IsW10OrGreater(17763))
             {
                 var attribute = DWMWA_USE_IMMERSIVE_DARK_MODE_BEFORE_20H1;
@@ -25,7 +27,6 @@ namespace SonicNextModManager
                 if (IsW10OrGreater(18985))
                     attribute = DWMWA_USE_IMMERSIVE_DARK_MODE;
 
-                int useImmersiveDarkMode = enabled ? 1 : 0;
                 return DwmSetWindowAttribute(handle, attribute, ref useImmersiveDarkMode, sizeof(int)) == 0;
             }
 

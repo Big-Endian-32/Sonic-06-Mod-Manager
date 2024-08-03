@@ -22,6 +22,11 @@ namespace SonicNextModManager.UI.ViewModel
         public Database Database { get; set; } = new();
 
         /// <summary>
+        /// Determines whether or not the sidebar is open.
+        /// </summary>
+        public bool IsSidebarOpen { get; set; } = false;
+
+        /// <summary>
         /// Updates the database by reloading everything.
         /// </summary>
         public void InvokeDatabaseContentUpdate()

@@ -1,4 +1,6 @@
-﻿namespace SonicNextModManager
+﻿using SonicNextModManager.UI.Components;
+
+namespace SonicNextModManager.UI
 {
     /// <summary>
     /// Interaction logic for ErrorHandler.xaml

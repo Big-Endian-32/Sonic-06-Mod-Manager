@@ -1,4 +1,7 @@
-﻿namespace SonicNextModManager
+﻿using SonicNextModManager.UI.Components;
+using SonicNextModManager.UI.Dialogs;
+
+namespace SonicNextModManager.UI
 {
     /// <summary>
     /// Interaction logic for Settings.xaml

@@ -1,8 +1,12 @@
 ﻿using SonicNextModManager.UI.ViewModel;
 using System.Collections.ObjectModel;
+using System.Windows.Media.Animation;
 using System.Windows.Shapes;
+using SonicNextModManager.UI.Components;
+using SonicNextModManager.UI.Dialogs;
+using CommunityToolkit.Mvvm.Input;
 
-namespace SonicNextModManager
+namespace SonicNextModManager.UI
 {
     /// <summary>
     /// Interaction logic for MainWindow.xaml
@@ -34,28 +38,35 @@ namespace SonicNextModManager
         public Manager()
         {
             InitializeComponent();
-            InvokeUserExperienceAmendments();
+            RefreshUI();
 
             // Set data context to new view model.
             DataContext = ViewModel;
         }
 
+        protected override void OnClosed(EventArgs e)
+        {
+            base.OnClosed(e);
+
+            Environment.Exit(0);
+        }
+
         /// <summary>
         /// Sets the new width of the info display based on the current window size.
         /// </summary>
-        private void Manager_SizeChanged(object sender, SizeChangedEventArgs e)
-            => InfoDisplayMargin = new Thickness(-40, 15, (e.NewSize.Width - 30) * -1, 0);
+        private void SizeChanged(object sender, SizeChangedEventArgs e)
+            => InfoDisplayMargin = new Thickness(-40, 15, (e.NewSize.Width - 76) * -1, 0);
 
-        /// <summary>
-        /// Amend erroneous UI elements under certain conditions.
-        /// </summary>
-        private void InvokeUserExperienceAmendments()
+        private void RefreshUI()
         {
+            // Set title to include the assembly informational version.
+            Title = $"Sonic '06 Mod Manager (Version {App.GetInformationalVersion()})";
+
             /* Set visibility of the emulator launcher depending on if there's an emulator specified.
                There's no point in displaying this option if the user is installing for real hardware. */
             Emulator_Launcher.Visibility = string.IsNullOrEmpty(App.Settings.Path_EmulatorExecutable)
-                                           ? Visibility.Collapsed
-                                           : Visibility.Visible;
+                ? Visibility.Collapsed
+                : Visibility.Visible;
         }
 
         /// <summary>
@@ -104,7 +115,7 @@ namespace SonicNextModManager
 
             if (ViewModel.State == InstallState.Installing)
             {
-                Metadata metadata = ((CheckBox)sender).DataContext as Metadata;
+                Metadata? metadata = ((CheckBox)sender).DataContext as Metadata;
 
                 if (metadata is Mod)
                 {
@@ -133,7 +144,7 @@ namespace SonicNextModManager
         /// </summary>
         private void ModsList_MouseDoubleClick(object sender, MouseButtonEventArgs e)
         {
-            Metadata selectedItem = ((ListViewItem)sender).Content as Metadata;
+            Metadata? selectedItem = ((ListViewItem)sender).Content as Metadata;
 
             // Do not handle for check boxes or null items.
             if (e.OriginalSource is Rectangle || selectedItem == null)
@@ -173,40 +184,23 @@ namespace SonicNextModManager
         }
 
         /// <summary>
-        /// TODO: https://github.com/Big-Endian-32/SonicNextModManager/projects/3#card-72800882
+        /// TODO: https://github.com/hyperbx/SonicNextModManager/projects/3#card-72800882
         /// </summary>
         private void Install_Click(object sender, RoutedEventArgs e)
         {
             ViewModel.State = InstallState.Installing;
+            
+            foreach (var mod in ViewModel.Database.Mods)
+                mod.Install();
 
-            int interval = 1000;
+            foreach (var patch in ViewModel.Database.Patches)
+                patch.Install();
 
-            foreach (var item in ViewModel.Database.Mods)
-                SetInstallState(item);
-
-            foreach (var item in ViewModel.Database.Patches)
-                SetInstallState(item);
-
-            void SetInstallState(Metadata metadata)
-            {
-                if (metadata.Enabled)
-                {
-                    ViewModel.Database.CurrentContentInQueue = metadata;
-                    metadata.State = InstallState.Installing;
-
-                    System.Timers.Timer t = new();
-                    t.Interval = interval;
-                    interval += 1000;
-
-                    t.Elapsed += (s, te) => metadata.State = InstallState.Installed;
-
-                    t.Start();
-                }
-            }
+            ViewModel.State = InstallState.Idle;
         }
 
         /// <summary>
-        /// TODO: https://github.com/Big-Endian-32/SonicNextModManager/projects/3#card-73379659
+        /// TODO: https://github.com/hyperbx/SonicNextModManager/projects/3#card-73379659
         /// </summary>
         private void Uninstall_Click(object sender, RoutedEventArgs e)
             => throw new NotImplementedException();
@@ -218,11 +212,11 @@ namespace SonicNextModManager
             => ViewModel.InvokeDatabaseContentUpdate();
 
         /// <summary>
-        /// Opens the Settings window.
+        /// Opens the mod editor to create a new mod.
         /// </summary>
-        private void Settings_Click(object sender, RoutedEventArgs e)
+        private void Add_Click(object sender, RoutedEventArgs e)
         {
-            new Settings
+            new Editor
             {
                 Owner = this
             }
@@ -234,7 +228,7 @@ namespace SonicNextModManager
         /// </summary>
         private void Common_OpenFolder_Click(object sender, RoutedEventArgs e)
         {
-            Metadata metadata = ((MenuItem)sender).DataContext as Metadata;
+            Metadata? metadata = ((MenuItem)sender).DataContext as Metadata;
 
             if (metadata != null)
             {
@@ -255,17 +249,24 @@ namespace SonicNextModManager
         /// </summary>
         private void Content_Create_Click(object sender, RoutedEventArgs e)
         {
-            string senderName = ((MenuItem)sender).Name;
-            Metadata metadata = ((MenuItem)sender).DataContext as Metadata;
+            var metadata = ((MenuItem)sender).DataContext as Metadata;
 
             if (metadata != null)
             {
-                // Pass current metadata through to the editor if the edit option was chosen.
-                new Editor(senderName == "Mods_Edit" || senderName == "Patches_Edit" ? metadata : null)
+                if (metadata is Mod)
                 {
-                    Owner = this
+                    // Pass current metadata through to the editor.
+                    new Editor(metadata)
+                    {
+                        Owner = this
+                    }
+                    .ShowDialog();
                 }
-                .ShowDialog();
+                else if (metadata is Patch)
+                {
+                    // Opens the current metadata in the default text viewer.
+                    ProcessExtensions.StartWithDefaultProgram(metadata.Path);
+                }
             }
         }
 
@@ -274,14 +275,14 @@ namespace SonicNextModManager
         /// </summary>
         private void Content_Delete_Click(object sender, RoutedEventArgs e)
         {
-            Metadata metadata = ((MenuItem)sender).DataContext as Metadata;
+            Metadata? metadata = ((MenuItem)sender).DataContext as Metadata;
 
             if (metadata != null)
             {
-                NextDialogResult result = new NextMessageBox().Show
+                var result = NextMessageBox.Show
                 (
-                    SonicNextModManager.Language.LocaliseFormat("Message_DeleteContent_Body", metadata.Title),
-                    SonicNextModManager.Language.Localise("Message_DeleteContent_Title"),
+                    LocaleService.Localise("Message_DeleteContent_Body", metadata.Title),
+                    LocaleService.Localise("Message_DeleteContent_Title"),
                     NextMessageBoxButton.YesNo,
                     NextMessageBoxIcon.Question
                 );
@@ -290,6 +291,99 @@ namespace SonicNextModManager
                 if (result == NextDialogResult.Yes)
                     ViewModel.Database.Delete(metadata);
             }
+        }
+
+        /// <summary>
+        /// Opens the side bar.
+        /// </summary>
+        private void OpenSidebar()
+        {
+            // Always deselect the menu button.
+            SidebarMenu.IsSelected = false;
+
+            if (!ViewModel.IsSidebarOpen)
+            {
+                (Sidebar.Resources["SidebarOpening"] as Storyboard).Begin();
+                ViewModel.IsSidebarOpen = true;
+            }
+        }
+
+        /// <summary>
+        /// Closes the side bar.
+        /// </summary>
+        private void CloseSidebar()
+        {
+            // Always deselect the menu button.
+            SidebarMenu.IsSelected = false;
+
+            if (ViewModel.IsSidebarOpen)
+            {
+                (Sidebar.Resources["SidebarClosing"] as Storyboard).Begin();
+                ViewModel.IsSidebarOpen = false;
+            }
+        }
+
+        /// <summary>
+        /// Opens or closes the side bar depending on the current open state.
+        /// </summary>
+        private void SidebarMenu_Click()
+        {
+            if (ViewModel.IsSidebarOpen)
+            {
+                CloseSidebar();
+            }
+            else
+            {
+                OpenSidebar();
+            }
+        }
+
+        /// <summary>
+        /// Executes <see cref="SidebarMenu_Click"/> for the menu button in the side bar.
+        /// </summary>
+        public RelayCommand Command_SidebarMenu_Click => new(SidebarMenu_Click);
+
+        /// <summary>
+        /// Closes the side bar upon mouse leaving the control.
+        /// </summary>
+        private void Sidebar_MouseLeave(object sender, MouseEventArgs e)
+            => CloseSidebar();
+
+        /// <summary>
+        /// <see cref="SetSidebarTabIndex"/> command for side bar bindings.
+        /// </summary>
+        public RelayCommand<string> Command_SetSidebarTabIndex => new(SetSidebarTabIndex);
+
+        /// <summary>
+        /// Tab index setter for the side bar.
+        /// </summary>
+        /// <param name="index">Index parameter.</param>
+        private void SetSidebarTabIndex(string index)
+        {
+            CloseSidebar();
+            MainTabControl.SelectedIndex = Convert.ToInt32(index);
+        }
+
+        /// <summary>
+        /// <see cref="SetSidebarTabIndex"/> command for side bar bindings.
+        /// </summary>
+        public RelayCommand Command_OpenSettings => new(OpenSettings);
+
+        /// <summary>
+        /// Opens the Settings window.
+        /// </summary>
+        private void OpenSettings()
+        {
+            CloseSidebar();
+            Sidebar_Settings.IsSelected = false;
+
+            new Settings
+            {
+                Owner = this
+            }
+            .ShowDialog();
+
+            RefreshUI();
         }
     }
 }

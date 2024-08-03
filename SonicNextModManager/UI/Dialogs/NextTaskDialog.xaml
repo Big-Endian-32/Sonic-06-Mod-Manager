@@ -1,0 +1,34 @@
+﻿<c:ImmersiveWindow x:Class="SonicNextModManager.UI.Dialogs.NextTaskDialog"
+                   xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                   xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                   xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+                   xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+                   xmlns:local="clr-namespace:SonicNextModManager"
+                   xmlns:c="clr-namespace:SonicNextModManager.UI.Components"
+                   mc:Ignorable="d"
+                   Title="{Binding Caption}"
+                   Height="450" Width="420"
+                   Background="#131313"
+                   ResizeMode="NoResize"
+                   SizeToContent="Height"
+                   WindowStartupLocation="CenterOwner">
+    
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="0.25*"/>
+            <RowDefinition/>
+        </Grid.RowDefinitions>
+
+        <TextBlock FontSize="16" HorizontalAlignment="Center" Margin="24,24,24,14" Text="{Binding Message}" VerticalAlignment="Center" Visibility="{Binding Message, Converter={StaticResource String2VisibilityConverter}}"/>
+
+        <StackPanel Name="DialogTasks" Grid.Row="1" Margin="10,10,10,0">
+            <StackPanel.Resources>
+                <Style TargetType="c:TaskButton">
+                    <Setter Property="Height" Value="64"/>
+                    <Setter Property="Margin" Value="0,0,0,10"/>
+                </Style>
+            </StackPanel.Resources>
+        </StackPanel>
+    </Grid>
+    
+</c:ImmersiveWindow>

@@ -1,21 +1,21 @@
-﻿<local:ImmersiveWindow x:Class="SonicNextModManager.Settings"
-                       xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
-                       xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-                       xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-                       xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-                       xmlns:local="clr-namespace:SonicNextModManager"
-                       xmlns:hc="https://handyorg.github.io/handycontrol"
-                       mc:Ignorable="d"
-                       Title="Settings" Height="600" Width="600" Background="#131313" WindowStartupLocation="CenterOwner" MinWidth="600" MinHeight="600">
+﻿<c:ImmersiveWindow x:Class="SonicNextModManager.UI.Settings"
+                   xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                   xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                   xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+                   xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+                   xmlns:local="clr-namespace:SonicNextModManager"
+                   xmlns:c="clr-namespace:SonicNextModManager.UI.Components"
+                   xmlns:hc="https://handyorg.github.io/handycontrol"
+                   mc:Ignorable="d"
+                   Title="{DynamicResource Settings}"
+                   Height="600" Width="600"
+                   Background="#131313"
+                   WindowStartupLocation="CenterOwner"
+                   MinWidth="600" MinHeight="600">
 
     <Grid>
 
         <Grid.Resources>
-
-            <!-- Set global transition mode -->
-            <Style TargetType="hc:TransitioningContentControl">
-                <Setter Property="TransitionMode" Value="Top2Bottom"/>
-            </Style>
 
             <!-- Set global check box alignment -->
             <Style BasedOn="{StaticResource CheckBoxBaseStyle}" TargetType="CheckBox">
@@ -35,116 +35,130 @@
         <hc:TabControl Background="#191919" Grid.Row="0" ShowContextMenu="False" Style="{StaticResource TabControlInLine}">
 
             <hc:TabItem Header="{DynamicResource Settings_General}" Style="{StaticResource TabItemInLineAccentColour}">
-                <hc:TransitioningContentControl>
-                    <StackPanel Margin="10">
-                        
-                        <!-- Language -->
-                        <StackPanel Margin="0,0,0,15">
-                            <local:HorizontalFieldLabel Caption="{DynamicResource Common_Language}" Description="{DynamicResource Settings_General_Language_Description}" Margin="0,0,0,5"/>
-                            <ComboBox ItemsSource="{Binding SupportedCultures, Source={x:Static Application.Current}}" SelectedItem="{Binding CurrentCulture, Source={x:Static Application.Current}}" SelectionChanged="Language_SelectionChanged"/>
-                        </StackPanel>
+                <StackPanel Margin="10">
 
-                        <CheckBox Content="{DynamicResource Settings_General_Debug}" IsChecked="{Binding Mode=TwoWay, Source={x:Static local:App.Settings}, Path=General_Debug}"/>
-
+                    <!-- Language -->
+                    <StackPanel Margin="0,0,0,15">
+                        <c:HorizontalFieldLabel Caption="{DynamicResource Common_Language}" Description="{DynamicResource Settings_General_Language_Description}" Margin="0,0,0,5"/>
+                        <ComboBox ItemsSource="{Binding SupportedCultures, Source={x:Static Application.Current}}" SelectedItem="{Binding CurrentCulture, Source={x:Static Application.Current}}" SelectionChanged="Language_SelectionChanged"/>
                     </StackPanel>
-                </hc:TransitioningContentControl>
+
+                    <CheckBox Content="{DynamicResource Settings_General_Debug}" IsChecked="{Binding Mode=TwoWay, Source={x:Static local:App.Settings}, Path=General_Debug}"/>
+
+                </StackPanel>
             </hc:TabItem>
-            
+
             <hc:TabItem Header="{DynamicResource Settings_Emulator}" Style="{StaticResource TabItemInLineAccentColour}">
-                <hc:TransitioningContentControl>
-                    <StackPanel Margin="10">
+                <StackPanel Margin="10">
 
-                        <!-- Backend -->
-                        <StackPanel Margin="0,0,0,10">
-                            <local:HorizontalFieldLabel Caption="{DynamicResource Settings_Emulator_Backend}" Description="{DynamicResource Settings_Emulator_Backend_Description}" Margin="0,0,0,5"/>
-                            <ComboBox SelectedIndex="{Binding Mode=TwoWay, Source={x:Static local:App.Settings}, Path=Emulator_Backend}">
-                                <ComboBoxItem Content="DirectX 12"/>
-                                <ComboBoxItem Content="Vulkan"/>
-                            </ComboBox>
-                        </StackPanel>
-                        
-                        <!-- Resolution -->
-                        <StackPanel Margin="0,0,0,10">
-                            <local:HorizontalFieldLabel Caption="{DynamicResource Settings_Emulator_Resolution}" Description="{DynamicResource Settings_Emulator_Resolution_Description}" Margin="0,0,0,5"/>
-                            <ComboBox IsEnabled="{Binding Source={x:Static local:App.Settings}, Path=Emulator_Backend, Converter={StaticResource Int2InvertedBooleanConverter}}" SelectedIndex="{Binding Mode=TwoWay, Source={x:Static local:App.Settings}, Path=Emulator_Resolution}">
-                                <ComboBoxItem Content="1280x720"/>
-                                <ComboBoxItem Content="2560x1440"/>
-                                <ComboBoxItem Content="3840x2160"/>
-                            </ComboBox>
-                        </StackPanel>
-                        
-                        <!-- Language -->
-                        <StackPanel Margin="0,0,0,10">
-                            <local:HorizontalFieldLabel Caption="{DynamicResource Common_Language}" Description="{DynamicResource Settings_Emulator_Language_Description}" Margin="0,0,0,5"/>
-                            <ComboBox SelectedIndex="{Binding Mode=TwoWay, Source={x:Static local:App.Settings}, Path=Emulator_Language}">
-                                <ComboBoxItem Content="English"/>
-                                <ComboBoxItem Content="French"/>
-                                <ComboBoxItem Content="German"/>
-                                <ComboBoxItem Content="Italian"/>
-                                <ComboBoxItem Content="Japanese"/>
-                                <ComboBoxItem Content="Spanish"/>
-                            </ComboBox>
-                        </StackPanel>
-                        
-                        <!-- Arguments -->
-                        <StackPanel Margin="0,0,0,15">
-                            <local:HorizontalFieldLabel Caption="{DynamicResource Settings_Emulator_Arguments}" Description="{DynamicResource Settings_Emulator_Arguments_Description}" Margin="0,0,0,5"/>
-                            <TextBox Text="{Binding Mode=TwoWay, Source={x:Static local:App.Settings}, Path=Emulator_Arguments}"/>
-                        </StackPanel>
-
-                        <!-- Fullscreen -->
-                        <Grid Margin="0,0,0,10">
-                            <CheckBox Content="{DynamicResource Settings_Emulator_Fullscreen}" IsChecked="{Binding Mode=TwoWay, Source={x:Static local:App.Settings}, Path=Emulator_Fullscreen}"/>
-                            <TextBlock HorizontalAlignment="Right" FontStyle="Italic" Foreground="Gray" Text="{DynamicResource Settings_Emulator_Fullscreen_Description}" VerticalAlignment="Center"/>
-                        </Grid>
-
-                        <!-- Gamma correction -->
-                        <Grid Margin="0,0,0,10">
-                            <CheckBox Content="{DynamicResource Settings_Emulator_GammaCorrect}" IsChecked="{Binding Mode=TwoWay, Source={x:Static local:App.Settings}, Path=Emulator_GammaCorrect}"/>
-                            <TextBlock HorizontalAlignment="Right" FontStyle="Italic" Foreground="Gray" Text="{DynamicResource Settings_Emulator_GammaCorrect_Description}" VerticalAlignment="Center"/>
-                        </Grid>
-
-                        <!-- Launch after installing content -->
-                        <Grid Margin="0,0,0,10">
-                            <CheckBox Content="{DynamicResource Settings_Emulator_LaunchAfterInstallingContent}" IsChecked="{Binding Mode=TwoWay, Source={x:Static local:App.Settings}, Path=Emulator_LaunchAfterInstallingContent}"/>
-                            <TextBlock HorizontalAlignment="Right" FontStyle="Italic" Foreground="Gray" Text="{DynamicResource Settings_Emulator_LaunchAfterInstallingContent_Description}" VerticalAlignment="Center"/>
-                        </Grid>
-                        
+                    <!-- Backend -->
+                    <StackPanel Margin="0,0,0,10">
+                        <c:HorizontalFieldLabel Caption="{DynamicResource Settings_Emulator_Backend}" Description="{DynamicResource Settings_Emulator_Backend_Description}" Margin="0,0,0,5"/>
+                        <ComboBox SelectedIndex="{Binding Mode=TwoWay, Source={x:Static local:App.Settings}, Path=Emulator_Backend}">
+                            <ComboBoxItem Content="DirectX 12"/>
+                            <ComboBoxItem Content="Vulkan"/>
+                        </ComboBox>
                     </StackPanel>
-                </hc:TransitioningContentControl>
+
+                    <!-- Resolution -->
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition/>
+                            <ColumnDefinition/>
+                        </Grid.ColumnDefinitions>
+
+                        <StackPanel Margin="0,0,5,10">
+                            <c:HorizontalFieldLabel Caption="{DynamicResource Settings_Emulator_Width}" Description="{DynamicResource Settings_Emulator_Width_Description}" Margin="0,0,0,5"/>
+                            <ComboBox IsEnabled="{Binding Source={x:Static local:App.Settings}, Path=Emulator_Backend, Converter={StaticResource Int2InvertedBooleanConverter}}" SelectedIndex="{Binding Mode=TwoWay, Source={x:Static local:App.Settings}, Path=Emulator_Width}">
+                                <ComboBoxItem Content="1280"/>
+                                <ComboBoxItem Content="2560"/>
+                                <ComboBoxItem Content="3840"/>
+                                <ComboBoxItem Content="5120"/>
+                                <ComboBoxItem Content="6400"/>
+                                <ComboBoxItem Content="7680"/>
+                                <ComboBoxItem Content="8960"/>
+                            </ComboBox>
+                        </StackPanel>
+
+                        <StackPanel Grid.Column="1" Margin="5,0,0,10">
+                            <c:HorizontalFieldLabel Caption="{DynamicResource Settings_Emulator_Height}" Description="{DynamicResource Settings_Emulator_Height_Description}" Margin="0,0,0,5"/>
+                            <ComboBox IsEnabled="{Binding Source={x:Static local:App.Settings}, Path=Emulator_Backend, Converter={StaticResource Int2InvertedBooleanConverter}}" SelectedIndex="{Binding Mode=TwoWay, Source={x:Static local:App.Settings}, Path=Emulator_Height}">
+                                <ComboBoxItem Content="720"/>
+                                <ComboBoxItem Content="1440"/>
+                                <ComboBoxItem Content="2160"/>
+                                <ComboBoxItem Content="2880"/>
+                                <ComboBoxItem Content="3600"/>
+                                <ComboBoxItem Content="4320"/>
+                                <ComboBoxItem Content="5040"/>
+                            </ComboBox>
+                        </StackPanel>
+                    </Grid>
+
+                    <!-- Language -->
+                    <StackPanel Margin="0,0,0,10">
+                        <c:HorizontalFieldLabel Caption="{DynamicResource Common_Language}" Description="{DynamicResource Settings_Emulator_Language_Description}" Margin="0,0,0,5"/>
+                        <ComboBox SelectedIndex="{Binding Mode=TwoWay, Source={x:Static local:App.Settings}, Path=Emulator_Language}">
+                            <ComboBoxItem Content="English"/>
+                            <ComboBoxItem Content="French"/>
+                            <ComboBoxItem Content="German"/>
+                            <ComboBoxItem Content="Italian"/>
+                            <ComboBoxItem Content="Japanese"/>
+                            <ComboBoxItem Content="Spanish"/>
+                        </ComboBox>
+                    </StackPanel>
+
+                    <!-- Arguments -->
+                    <StackPanel Margin="0,0,0,15">
+                        <c:HorizontalFieldLabel Caption="{DynamicResource Settings_Emulator_Arguments}" Description="{DynamicResource Settings_Emulator_Arguments_Description}" Margin="0,0,0,5"/>
+                        <TextBox Text="{Binding Mode=TwoWay, Source={x:Static local:App.Settings}, Path=Emulator_Arguments}"/>
+                    </StackPanel>
+
+                    <!-- Fullscreen -->
+                    <Grid Margin="0,0,0,10">
+                        <CheckBox Content="{DynamicResource Settings_Emulator_Fullscreen}" IsChecked="{Binding Mode=TwoWay, Source={x:Static local:App.Settings}, Path=Emulator_Fullscreen}"/>
+                        <TextBlock HorizontalAlignment="Right" FontStyle="Italic" Foreground="Gray" Text="{DynamicResource Settings_Emulator_Fullscreen_Description}" VerticalAlignment="Center"/>
+                    </Grid>
+
+                    <!-- Gamma correction -->
+                    <Grid Margin="0,0,0,10">
+                        <CheckBox Content="{DynamicResource Settings_Emulator_GammaCorrect}" IsChecked="{Binding Mode=TwoWay, Source={x:Static local:App.Settings}, Path=Emulator_GammaCorrect}"/>
+                        <TextBlock HorizontalAlignment="Right" FontStyle="Italic" Foreground="Gray" Text="{DynamicResource Settings_Emulator_GammaCorrect_Description}" VerticalAlignment="Center"/>
+                    </Grid>
+
+                    <!-- Launch after installing content -->
+                    <Grid Margin="0,0,0,10">
+                        <CheckBox Content="{DynamicResource Settings_Emulator_LaunchAfterInstallingContent}" IsChecked="{Binding Mode=TwoWay, Source={x:Static local:App.Settings}, Path=Emulator_LaunchAfterInstallingContent}"/>
+                        <TextBlock HorizontalAlignment="Right" FontStyle="Italic" Foreground="Gray" Text="{DynamicResource Settings_Emulator_LaunchAfterInstallingContent_Description}" VerticalAlignment="Center"/>
+                    </Grid>
+
+                </StackPanel>
             </hc:TabItem>
 
             <hc:TabItem Header="{DynamicResource Settings_Paths}" Style="{StaticResource TabItemInLineAccentColour}">
-                <hc:TransitioningContentControl>
-                    <StackPanel Margin="10">
-                        
-                        <!-- Mods Directory -->
-                        <local:PathField Browse="Path_ModsDirectory_Browse" Caption="{DynamicResource Settings_Paths_ModsDirectory}" Description="{DynamicResource Settings_Paths_ModsDirectory_Description}" Property="{Binding Mode=TwoWay, Source={x:Static local:App.Settings}, Path=Path_ModsDirectory}" Margin="0,0,0,15"/>
+                <StackPanel Margin="10">
 
-                        <!-- Game Executable -->
-                        <local:PathField Browse="Path_GameExecutable_Browse" Caption="{DynamicResource Settings_Paths_GameExecutable}" Description="{DynamicResource Settings_Paths_GameExecutable_Description}" Property="{Binding Mode=TwoWay, Source={x:Static local:App.Settings}, Path=Path_GameExecutable}" Margin="0,0,0,15"/>
+                    <!-- Mods Directory -->
+                    <c:PathField Browse="Path_ModsDirectory_Browse" Caption="{DynamicResource Settings_Paths_ModsDirectory}" Description="{DynamicResource Settings_Paths_ModsDirectory_Description}" Property="{Binding Mode=TwoWay, Source={x:Static local:App.Settings}, Path=Path_ModsDirectory}" Margin="0,0,0,15"/>
 
-                        <!-- Emulator Executable -->
-                        <local:PathField Browse="Path_EmulatorExecutable_Browse" Caption="{DynamicResource Settings_Paths_EmulatorExecutable}" Description="{DynamicResource Settings_Paths_EmulatorExecutable_Description}" Property="{Binding Mode=TwoWay, Source={x:Static local:App.Settings}, Path=Path_EmulatorExecutable}" Margin="0,0,0,15"/>
+                    <!-- Game Executable -->
+                    <c:PathField Browse="Path_GameExecutable_Browse" Caption="{DynamicResource Settings_Paths_GameExecutable}" Description="{DynamicResource Settings_Paths_GameExecutable_Description}" Property="{Binding Mode=TwoWay, Source={x:Static local:App.Settings}, Path=Path_GameExecutable}" Margin="0,0,0,15"/>
 
-                    </StackPanel>
-                </hc:TransitioningContentControl>
+                    <!-- Emulator Executable -->
+                    <c:PathField Browse="Path_EmulatorExecutable_Browse" Caption="{DynamicResource Settings_Paths_EmulatorExecutable}" Description="{DynamicResource Settings_Paths_EmulatorExecutable_Description}" Property="{Binding Mode=TwoWay, Source={x:Static local:App.Settings}, Path=Path_EmulatorExecutable}" Margin="0,0,0,15"/>
+
+                </StackPanel>
             </hc:TabItem>
-            
+
             <hc:TabItem Header="{DynamicResource Settings_About}" Style="{StaticResource TabItemInLineAccentColour}">
-                <hc:TransitioningContentControl>
-                    <hc:ScrollViewer>
-                        <StackPanel Name="Credits" Margin="0,0,0,10"/>
-                    </hc:ScrollViewer>
-                </hc:TransitioningContentControl>
+                <hc:ScrollViewer>
+                    <StackPanel Name="Credits" Margin="0,0,0,10"/>
+                </hc:ScrollViewer>
             </hc:TabItem>
             
         </hc:TabControl>
 
-        <hc:SimplePanel Grid.Row="1">
-            <Button Click="OK_Click" Content="{DynamicResource Common_OK}" Height="32" HorizontalAlignment="Right" Margin="0,0,10,0" Width="120"/>
-        </hc:SimplePanel>
+        <Button Click="OK_Click" Content="{DynamicResource Common_OK}" Grid.Row="1" Height="32" HorizontalAlignment="Right" Margin="0,0,10,0" Width="120"/>
         
     </Grid>
     
-</local:ImmersiveWindow>
+</c:ImmersiveWindow>

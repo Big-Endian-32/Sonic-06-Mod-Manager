@@ -1,4 +1,4 @@
-﻿namespace SonicNextModManager
+﻿namespace SonicNextModManager.Helpers
 {
     public class WindowHelper
     {

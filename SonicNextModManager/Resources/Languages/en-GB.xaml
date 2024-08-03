@@ -21,7 +21,7 @@
         {
           "Name": "Hyper",
           "Description": "English (United Kingdom)",
-          "URL": "https://github.com/HyperBE32"
+          "URL": "https://github.com/hyperbx"
         },
         
         If you don't have a URL to link, just remove that field entirely.
@@ -36,10 +36,11 @@
     <system:String x:Key="Common_Cancel"      >Cancel</system:String>
     <system:String x:Key="Common_Yes"         >Yes</system:String>
     <system:String x:Key="Common_No"          >No</system:String>
-    <system:String x:Key="Common_Continue"    >Continue</system:String>
+    <system:String x:Key="Common_Next"        >Next</system:String>
     <system:String x:Key="Common_Back"        >Back</system:String>
     <system:String x:Key="Common_Refresh"     >Refresh</system:String>
     <system:String x:Key="Common_Browse"      >Browse...</system:String>
+    <system:String x:Key="Common_Search"      >Search</system:String>
     <system:String x:Key="Common_Language"    >Language</system:String>
     <system:String x:Key="Common_Copy"        >Copy</system:String>
     <system:String x:Key="Common_Report"      >Report</system:String>
@@ -49,59 +50,82 @@
     <system:String x:Key="Common_NotAvailable">N/A</system:String>
     <system:String x:Key="Common_OpenFolder"  >Open Folder</system:String>
     <system:String x:Key="Common_Updates"     >Check for Updates</system:String>
+    <system:String x:Key="Common_PleaseWait"  >Please wait...</system:String>
 
     <!-- Exception Strings -->
     <system:String x:Key="Exception_Fatal"         >A fatal error has occurred and the application has been halted...</system:String>
     <system:String x:Key="Exception_MissingModules">Unable to locate the required modules for mod installation. Please redownload Sonic '06 Mod Manager...</system:String>
+    <system:String x:Key="Exception_NetworkError"  >Network error</system:String>
 
     <!-- Query Strings -->
     <system:String x:Key="Query_ModsDirectory"     >Please select your mods directory...</system:String>
     <system:String x:Key="Query_GameExecutable"    >Please select your game executable...</system:String>
     <system:String x:Key="Query_EmulatorExecutable">Please select your emulator executable...</system:String>
 
-    <!-- Message Strings -->
+    <!-- Filter Strings -->
+    <system:String x:Key="Filter_Supported"  >Supported files</system:String>
+    <system:String x:Key="Filter_Xbox"       >Xbox 360 executable</system:String>
+    <system:String x:Key="Filter_PlayStation">PlayStation 3 executable</system:String>
+
+    <!-- Dialog Strings -->
     <system:String x:Key="Message_DeleteContent_Title">Content Deletion</system:String>
     <system:String x:Key="Message_DeleteContent_Body" >Are you sure you want to delete '{0}'?</system:String>
+    <system:String x:Key="Message_MigrateMods_Title"  >Migrate Mods</system:String>
+    <system:String x:Key="Message_MigrateMods_Body"   >Detected {0} legacy mods that need to be migrated.\n\nThis action is irreversible, do you want to proceed?</system:String>
 
     <!-- Setup Strings -->
-    <system:String x:Key="Setup_Step_Welcome"         >Welcome</system:String>
-    <system:String x:Key="Setup_Step_Game"            >Game</system:String>
-    <system:String x:Key="Setup_Step_Emulator"        >Emulator</system:String>
-    <system:String x:Key="Setup_Step_Finish"          >Finish</system:String>
-    <system:String x:Key="Setup_Welcome_Caption"      >Welcome to Sonic '06 Mod Manager!</system:String>
-    <system:String x:Key="Setup_Welcome_Text_1"       >This is a step-by-step guide on setting up the game for use with the mod manager.</system:String>
-    <system:String x:Key="Setup_Welcome_Text_2"       >We have created some default directories for you to help you get started.</system:String>
-    <system:String x:Key="Setup_Game_Caption"         >Let's set the game up.</system:String>
-    <system:String x:Key="Setup_Game_Text_1"          >Before we proceed, you'll need an extracted copy of the game.</system:String>
-    <system:String x:Key="Setup_Game_Text_2"          >If you plan to mod the Xbox version of the game, locate and select 'default.xex' from the game directory.</system:String>
-    <system:String x:Key="Setup_Game_Text_3"          >Alternatively, if you plan to mod the PlayStation version of the game, locate and select 'EBOOT.BIN' from the game directory.</system:String>
-    <system:String x:Key="Setup_Emulator_Caption_1"   >Plan to emulate?</system:String>
-    <system:String x:Key="Setup_Emulator_Text_1"      >Sonic '06 Mod Manager allows you to install mods to external media for use with real hardware.</system:String>
-    <system:String x:Key="Setup_Emulator_Text_2"      >Alternatively, with adequate PC hardware, you can emulate the game instead.</system:String>
-    <system:String x:Key="Setup_Emulator_Text_3"      >Do you want to emulate the game?</system:String>
-    <system:String x:Key="Setup_Emulator_Caption_2"   >So, about the emulator...</system:String>
-    <system:String x:Key="Setup_Emulator_Xenia_Text_1">For Xbox 360 games, we use Xenia.</system:String>
-    <system:String x:Key="Setup_Emulator_Xenia_Text_2">In its current state, it runs the game almost perfectly other than some memory corruption issues at random.</system:String>
-    <system:String x:Key="Setup_Emulator_Xenia_Text_3">To temporarily mitigate this issue, press F5 to clear your GPU cache when it occurs.</system:String>
-    <system:String x:Key="Setup_Emulator_RPCS3_Text_1">For PlayStation 3 games, we would use RPCS3.</system:String>
-    <system:String x:Key="Setup_Emulator_RPCS3_Text_2">In its current state, it does not render the game properly and is generally unstable.</system:String>
-    <system:String x:Key="Setup_Emulator_RPCS3_Text_3">For now, we would recommend using either real hardware or emulating the Xbox 360 version instead.</system:String>
-    <system:String x:Key="Setup_Emulator_Caption_3"   >Let's set it up then.</system:String>
-    <system:String x:Key="Setup_Emulator_Text_4"      >Please select the executable for the respective emulator required by the game.</system:String>
-    <system:String x:Key="Setup_Finish"               >That's it!</system:String>
-    <system:String x:Key="Setup_Finish_Text_1"        >We've reached the end of the step-by-step guide.</system:String>
-    <system:String x:Key="Setup_Finish_Text_2"        >Now, off you go - get installing, get patching and get tweaking.</system:String>
-    <system:String x:Key="Setup_Finish_OK"            >Let's go</system:String>
+    <system:String x:Key="Setup_Step_Welcome"            >Welcome</system:String>
+    <system:String x:Key="Setup_Step_Game"               >Game</system:String>
+    <system:String x:Key="Setup_Step_Emulator"           >Emulator</system:String>
+    <system:String x:Key="Setup_Step_Finish"             >Finish</system:String>
+    <system:String x:Key="Setup_Welcome_Caption"         >Welcome to Sonic '06 Mod Manager!</system:String>
+    <system:String x:Key="Setup_Welcome_Text_1"          >This is a step-by-step guide on setting up the game for use with the mod manager.</system:String>
+    <system:String x:Key="Setup_Welcome_Text_2"          >We have created some default directories for you to help you get started.</system:String>
+    <system:String x:Key="Setup_Game_Caption"            >Let's set the game up.</system:String>
+    <system:String x:Key="Setup_Game_Text_1"             >Before we proceed, you'll need an extracted copy of the game.</system:String>
+    <system:String x:Key="Setup_Game_Text_2"             >If you plan to mod the Xbox version of the game, locate and select 'default.xex' from the game directory.</system:String>
+    <system:String x:Key="Setup_Game_Text_3"             >Alternatively, if you plan to mod the PlayStation version of the game, locate and select 'EBOOT.BIN' from the game directory.</system:String>
+    <system:String x:Key="Setup_Emulator_Caption_1"      >Plan to emulate?</system:String>
+    <system:String x:Key="Setup_Emulator_Text_1"         >Sonic '06 Mod Manager allows you to install mods to external media for use with real hardware.</system:String>
+    <system:String x:Key="Setup_Emulator_Text_2"         >Alternatively, with adequate PC hardware, you can emulate the game instead.</system:String>
+    <system:String x:Key="Setup_Emulator_Text_3"         >Do you want to emulate the game?</system:String>
+    <system:String x:Key="Setup_Emulator_Caption_2"      >So, about the emulator...</system:String>
+    <system:String x:Key="Setup_Emulator_Xenia_Text_1"   >For Xbox 360 games, we use Xenia.</system:String>
+    <system:String x:Key="Setup_Emulator_Xenia_Text_2"   >In its current state, it runs the game almost perfectly other than some memory corruption issues at random.</system:String>
+    <system:String x:Key="Setup_Emulator_Xenia_Text_3"   >To temporarily mitigate this issue, press F5 to clear your GPU cache when it occurs.</system:String>
+    <system:String x:Key="Setup_Emulator_RPCS3_Text_1"   >For PlayStation 3 games, we would use RPCS3.</system:String>
+    <system:String x:Key="Setup_Emulator_RPCS3_Text_2"   >In its current state, it does not render the game properly and is generally unstable.</system:String>
+    <system:String x:Key="Setup_Emulator_RPCS3_Text_3"   >For now, we would recommend using either real hardware or emulating the Xbox 360 version instead.</system:String>
+    <system:String x:Key="Setup_Emulator_Caption_3"      >Let's set it up then.</system:String>
+    <system:String x:Key="Setup_Emulator_Text_4"         >Please select the executable for the respective emulator required by the game.</system:String>
+    <system:String x:Key="Setup_Emulator_Network_Error_1">Failed to establish a connection to GitHub's servers.</system:String>
+    <system:String x:Key="Setup_Emulator_Network_Error_2">Sonic '06 Mod Manager will be unable to disclaim any issues regarding the required emulator.</system:String>
+    <system:String x:Key="Setup_Finish"                  >That's it!</system:String>
+    <system:String x:Key="Setup_Finish_Text_1"           >We've reached the end of the step-by-step guide.</system:String>
+    <system:String x:Key="Setup_Finish_Text_2"           >Now, off you go - get installing, get patching and get tweaking.</system:String>
+    <system:String x:Key="Setup_Finish_OK"               >Let's go</system:String>
 
     <!-- Main Strings -->
     <system:String x:Key="Main_Mods"             >Mods</system:String>
     <system:String x:Key="Main_Patches"          >Patches</system:String>
     <system:String x:Key="Main_Tweaks"           >Tweaks</system:String>
+    <system:String x:Key="Main_Updates"          >Updates</system:String>
     <system:String x:Key="Main_Install"          >Install</system:String>
     <system:String x:Key="Main_Installing"       >Installing...</system:String>
     <system:String x:Key="Main_Uninstall"        >Uninstall</system:String>
     <system:String x:Key="Main_Emulator_Launcher">Launch Sonic '06</system:String>
-    <system:String x:Key="Main_Settings"         >Settings</system:String>
+
+    <!-- Editor Strings -->
+    <system:String x:Key="Editor"                                 >Editor</system:String>
+    <system:String x:Key="Editor_Editing"                         >Editing {0}</system:String>
+    <system:String x:Key="Editor_Metadata"                        >Metadata</system:String>
+    <system:String x:Key="Editor_Metadata_Title_Description"      >The name of this content.</system:String>
+    <system:String x:Key="Editor_Metadata_Author_Description"     >The creator of this content.</system:String>
+    <system:String x:Key="Editor_Metadata_Platform_Description"   >The target platform for this content.</system:String>
+    <system:String x:Key="Editor_Metadata_Date_Description"       >The date this content was created on.</system:String>
+    <system:String x:Key="Editor_Metadata_Description_Description">The full information about this content.</system:String>
+    <system:String x:Key="Editor_Thumbnail"                       >Thumbnail</system:String>
+    <system:String x:Key="Editor_Thumbnail_Description"           >The preview thumbnail for this content in the respective content list.</system:String>
 
     <!-- Metadata Strings -->
     <system:String x:Key="Metadata_Title"      >Title</system:String>
@@ -109,17 +133,15 @@
     <system:String x:Key="Metadata_Author"     >Author</system:String>
     <system:String x:Key="Metadata_Platform"   >Platform</system:String>
     <system:String x:Key="Metadata_Date"       >Date</system:String>
-    <system:String x:Key="Metadata_DLC"        >DLC</system:String>
-    <system:String x:Key="Metadata_Merge"      >Merge</system:String>
     <system:String x:Key="Metadata_Blurb"      >Blurb</system:String>
     <system:String x:Key="Metadata_Description">Description</system:String>
 
     <!-- Mods Strings -->
-    <system:String x:Key="Mods_Configure" >Configure Mod</system:String>
-    <system:String x:Key="Mods_Create"    >Create Mod</system:String>
-    <system:String x:Key="Mods_Edit"      >Edit Mod</system:String>
-    <system:String x:Key="Mods_Delete"    >Delete Mod</system:String>
-    <system:String x:Key="Mods_DragDrop"  >Drag and drop items to change the install order of mods.</system:String>
+    <system:String x:Key="Mods_Configure">Configure Mod</system:String>
+    <system:String x:Key="Mods_Create"   >Create Mod</system:String>
+    <system:String x:Key="Mods_Edit"     >Edit Mod</system:String>
+    <system:String x:Key="Mods_Delete"   >Delete Mod</system:String>
+    <system:String x:Key="Mods_DragDrop" >Drag and drop items to change the install order of mods.</system:String>
 
     <!-- Patches Strings -->
     <system:String x:Key="Patches_Download">Download Patches</system:String>
@@ -127,24 +149,26 @@
     <system:String x:Key="Patches_Create"  >Create Patch</system:String>
     <system:String x:Key="Patches_Edit"    >Edit Patch</system:String>
     <system:String x:Key="Patches_Delete"  >Delete Patch</system:String>
-    <system:String x:Key="Patches_DragDrop">Drag and drop items to change the install order of patches.</system:String>
 
     <!-- Settings Strings -->
+    <system:String x:Key="Settings"                                                  >Settings</system:String>
     <system:String x:Key="Settings_General"                                          >General</system:String>
     <system:String x:Key="Settings_General_Language_Description"                     >The current application language.</system:String>
     <system:String x:Key="Settings_General_Debug"                                    >Debug mode</system:String>
     <system:String x:Key="Settings_Emulator"                                         >Emulator</system:String>
     <system:String x:Key="Settings_Emulator_Backend"                                 >Backend</system:String>
     <system:String x:Key="Settings_Emulator_Backend_Description"                     >The backend the emulator will use.</system:String>
-    <system:String x:Key="Settings_Emulator_Resolution"                              >Resolution</system:String>
-    <system:String x:Key="Settings_Emulator_Resolution_Description"                  >The resolution to render at (may cause visual artefacts above 720p).</system:String>
+    <system:String x:Key="Settings_Emulator_Width"                                   >Width</system:String>
+    <system:String x:Key="Settings_Emulator_Width_Description"                       >The width to render at.</system:String>
+    <system:String x:Key="Settings_Emulator_Height"                                  >Height</system:String>
+    <system:String x:Key="Settings_Emulator_Height_Description"                      >The height to render at.</system:String>
     <system:String x:Key="Settings_Emulator_Language_Description"                    >The system language to be used by the emulated kernel.</system:String>
     <system:String x:Key="Settings_Emulator_Arguments"                               >Arguments</system:String>
     <system:String x:Key="Settings_Emulator_Arguments_Description"                   >User-specific arguments that are fed into the emulator upon launch.</system:String>
     <system:String x:Key="Settings_Emulator_Fullscreen"                              >Fullscreen</system:String>
     <system:String x:Key="Settings_Emulator_Fullscreen_Description"                  >Launches the emulator in fullscreen.</system:String>
     <system:String x:Key="Settings_Emulator_GammaCorrect"                            >Gamma correction</system:String>
-    <system:String x:Key="Settings_Emulator_GammaCorrect_Description"                >Uses BT.709 (HDTV) gamma - makes the game look less washed out.</system:String>
+    <system:String x:Key="Settings_Emulator_GammaCorrect_Description"                >Uses BT.709 (HDTV) gamma (makes the game look less washed out).</system:String>
     <system:String x:Key="Settings_Emulator_LaunchAfterInstallingContent"            >Launch after installing content</system:String>
     <system:String x:Key="Settings_Emulator_LaunchAfterInstallingContent_Description">Launches the emulator after the installation process.</system:String>
     <system:String x:Key="Settings_Paths"                                            >Paths</system:String>
@@ -158,13 +182,7 @@
     <system:String x:Key="Settings_About_Credits"                                    >Credits</system:String>
 
     <!-- Credits Strings -->
-    <system:String x:Key="Credits_SonicNextModManager_Description">enhancing the experience since June 27th, 2019</system:String>
-    <system:String x:Key="Credits_SonicNextModLoader_Description" >injecting your powerful code</system:String>
-    <system:String x:Key="Credits_Sprint_Description"             >powering the patch engine</system:String>
-    <system:String x:Key="Credits_Marathon_Description"           >unlocking modding potential for patches and beyond</system:String>
-    <system:String x:Key="Credits_Translators"                    >Translators</system:String>
-    <system:String x:Key="Credits_Translators_Description"        >if you can understand this, thank these people</system:String>
-    <system:String x:Key="Credits_Miscellaneous"                  >Miscellaneous</system:String>
-    <system:String x:Key="Credits_Miscellaneous_Description"      >our honourable mentions</system:String>
+    <system:String x:Key="Credits_Translators"  >Translators</system:String>
+    <system:String x:Key="Credits_Miscellaneous">Miscellaneous</system:String>
 
 </ResourceDictionary>
