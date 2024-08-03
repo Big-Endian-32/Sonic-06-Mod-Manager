@@ -1,4 +1,7 @@
-﻿using System.Collections.ObjectModel;
+﻿using Marathon.IO;
+using SonicNextModManager.Helpers;
+using System.Collections.ObjectModel;
+using System.Threading.Tasks;
 
 namespace SonicNextModManager
 {
@@ -37,9 +40,84 @@ namespace SonicNextModManager
         public void Write()
 			=> Write(this, Path);
 
-        public void Install()
+        public async Task Install(string gameDirectory)
         {
-            // TODO
+            // Get this mod's directory.
+            string modDirectory = System.IO.Path.GetDirectoryName(Path);
+
+            // Loop through each file in this mod.
+            foreach (string modFile in Directory.GetFiles(modDirectory, "*.*", SearchOption.AllDirectories))
+            {
+                // Skip the mod json and thumbnail.
+                // TODO: Skip patch stuff as well once the new system is in place.
+                if (System.IO.Path.GetFileName(modFile) == "mod.json" ||
+                    System.IO.Path.GetFileName(modFile) == "patch.mlua" ||
+                    System.IO.Path.GetFileNameWithoutExtension(modFile) == "thumbnail")
+                    continue;
+
+                // Get the relative path to this file.
+                string relativePath = modFile.Replace(modDirectory, "");
+
+                // Check if this file is a custom one.
+                if (System.IO.Path.GetFileName(modFile).StartsWith('#'))
+                {
+                    // Copy this file to the game directory, removing the # symbol.
+                    File.Copy(modFile, $@"{gameDirectory}{relativePath.Replace("#", "")}", true);
+
+                    // Continue to the next file rather than running the rest of this loop.
+                    continue;
+                }
+
+                // Check if this file is a merge one.
+                // TODO: Safe guard against other file types? While this should only be used on archives I wouldn't put it past someone to screw this up.
+                if (System.IO.Path.GetFileName(modFile).StartsWith('+'))
+                {
+                    // Load the base game archive.
+                    Marathon.Formats.Archive.U8Archive baseArchive = await Task.Run(() => ArchiveHelper.ReadArchive($@"{gameDirectory}{relativePath.Replace("+", "")}"));
+                    
+                    // Load our mod archive.
+                    Marathon.Formats.Archive.U8Archive mergeArchive = new(modFile, ReadMode.IndexOnly);
+
+                    // Merge the two archives together.
+                    Marathon.Helpers.ArchiveHelper.MergeWith(baseArchive.Root, mergeArchive.Root);
+
+                    // Continue to the next file rather than running the rest of this loop.
+                    continue;
+                }
+
+                // Check if this file exists in the game directory.
+                if (File.Exists($@"{gameDirectory}{relativePath}"))
+                {
+                    // If we haven't already, take a backup of the original file.
+                    if (!File.Exists($@"{gameDirectory}{relativePath}.06mm_backup"))
+                        File.Move($@"{gameDirectory}{relativePath}", $@"{gameDirectory}{relativePath}.06mm_backup");
+
+                    // Copy this file to the game directory.
+                    File.Copy(modFile, $@"{gameDirectory}{relativePath}", true);
+
+                    // If we've previously loaded this file for a merge or patch, then erase it from the list so we don't overwrite this with an old version.
+                    // TODO: Show a notification that some mods had their files replaced maybe?
+                    if (App.Archives.ContainsKey($@"{gameDirectory}{relativePath}"))
+                        App.Archives.Remove($@"{gameDirectory}{relativePath}");
+                }
+            }
+        }
+
+        public async Task Uninstall(string gameDirectory)
+        {
+            // Get this mod's directory.
+            string modDirectory = System.IO.Path.GetDirectoryName(Path);
+
+            // Loop through each additive file in this mod.
+            foreach (string modFile in Directory.GetFiles(modDirectory, "#*.*", SearchOption.AllDirectories))
+            {
+                // Get the relative path to this file.
+                string relativePath = modFile.Replace(modDirectory, "");
+
+                // If this file exists in the game's directory, then delete it.
+                if (File.Exists($@"{gameDirectory}{relativePath.Replace("#", "")}"))
+                    File.Delete($@"{gameDirectory}{relativePath.Replace("#", "")}");
+            }
         }
     }
 

@@ -30,7 +30,7 @@ namespace SonicNextModManager.SiS
 
             // Loop through each patch in the requiredPatches CSV string and add it to our new list, appending a + to indicate its required in the new system.
             foreach (var patch in requiredPatches)
-                mod.Patches.Add($"+{patch}");
+                mod.Patches.Add($"+{Path.GetFileNameWithoutExtension(patch)}");
 
             foreach (var file in Directory.EnumerateFiles(Path.GetDirectoryName(in_file), "*", SearchOption.AllDirectories))
             {

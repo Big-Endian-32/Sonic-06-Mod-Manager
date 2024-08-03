@@ -53,6 +53,8 @@ namespace SonicNextModManager
             { "make_fself", Path.Combine(Directories["Resources"], "Libraries", "PlayStation", "make_fself.exe") }
         };
 
+        public static Dictionary<string, Marathon.Formats.Archive.U8Archive> Archives = new();
+
         /// <summary>
         /// Returns the assembly informational version from the entry assembly. 
         /// </summary>

@@ -5,6 +5,7 @@ using System.Windows.Shapes;
 using SonicNextModManager.UI.Components;
 using SonicNextModManager.UI.Dialogs;
 using CommunityToolkit.Mvvm.Input;
+using System.Threading.Tasks;
 
 namespace SonicNextModManager.UI
 {
@@ -183,27 +184,45 @@ namespace SonicNextModManager.UI
                 selectedItem.InfoDisplay ^= true;
         }
 
-        /// <summary>
-        /// TODO: https://github.com/hyperbx/SonicNextModManager/projects/3#card-72800882
-        /// </summary>
-        private void Install_Click(object sender, RoutedEventArgs e)
+        private async void Install_Click(object sender, RoutedEventArgs e)
         {
+            // Set the view model state.
             ViewModel.State = InstallState.Installing;
-            
+
+            // Get the game directory.
+            string gameDirectory = System.IO.Path.GetDirectoryName(App.Settings.Path_GameExecutable);
+                        
+            // Loop through each mod, if its enabled, run its install task.
             foreach (var mod in ViewModel.Database.Mods)
-                mod.Install();
+                if (mod.Enabled)
+                    await Task.Run(() => mod.Install(gameDirectory));
 
+            // Loop through each patch, if its enabled, run its install task.
+            // TODO: Patches are a myth right now.
             foreach (var patch in ViewModel.Database.Patches)
-                patch.Install();
+                if (patch.Enabled)
+                    patch.Install();
 
+            // Repackage the archives left in memory from merge mods and patches.
+            await Task.Run(() => Helpers.ArchiveHelper.PackArchives());
+
+            // Reset the view model state.
             ViewModel.State = InstallState.Idle;
         }
 
-        /// <summary>
-        /// TODO: https://github.com/hyperbx/SonicNextModManager/projects/3#card-73379659
-        /// </summary>
-        private void Uninstall_Click(object sender, RoutedEventArgs e)
-            => throw new NotImplementedException();
+        private async void Uninstall_Click(object sender, RoutedEventArgs e)
+        {
+            // Get the game directory.
+            string gameDirectory = System.IO.Path.GetDirectoryName(App.Settings.Path_GameExecutable);
+
+            // Loop through each of the files that have the mod manager's backup extension and restore them.
+            foreach (string backupFile in Directory.GetFiles(gameDirectory, "*.06mm_backup", SearchOption.AllDirectories))
+                File.Move(backupFile, backupFile.Replace(".06mm_backup", ""), true);
+
+            // Loop through each mod and run its uninstall task.
+            foreach (var mod in ViewModel.Database.Mods)
+                await Task.Run(() => mod.Uninstall(gameDirectory));
+        }
 
         /// <summary>
         /// Performs a hard refresh of the content database.
