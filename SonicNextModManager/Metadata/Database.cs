@@ -187,7 +187,7 @@ namespace SonicNextModManager.Metadata
                     patch.Install();
 
                     ContentProcessedEvent?.Invoke(this,
-                        new ContentProcessedEventArgs(patch.Title!, i, contentCount));
+                        new ContentProcessedEventArgs(patch.Title!, Mods.Count + i, contentCount));
                 }
             }
 
@@ -231,7 +231,7 @@ namespace SonicNextModManager.Metadata
                 mod.Uninstall();
 
                 ContentProcessedEvent?.Invoke(this,
-                    new ContentProcessedEventArgs(mod.Title!, i, ActiveContent!.GetTotalContent()));
+                    new ContentProcessedEventArgs(mod.Title!, i, Mods.Count));
             }
 
 #if DEBUG
