@@ -9,7 +9,7 @@ namespace SonicNextModManager
 
         private string _config = $"{App.GetAssemblyName()}.json";
 
-        public bool Setup_IsComplete { get; set; }
+        public bool Setup_IsComplete { get; set; } = false;
 
         public string? General_Language { get; set; } = "en-GB";
 
@@ -17,25 +17,25 @@ namespace SonicNextModManager
 
         public EXeniaBackend Emulator_Xenia_Backend { get; set; } = EXeniaBackend.D3D12;
 
-        public int Emulator_Xenia_Width { get; set; }
+        public int Emulator_Xenia_Width { get; set; } = 0;
 
-        public int Emulator_Xenia_Height { get; set; }
+        public int Emulator_Xenia_Height { get; set; } = 0;
 
         public EXeniaLanguage Emulator_Xenia_Language { get; set; } = EXeniaLanguage.English;
 
-        public string? Emulator_Arguments { get; set; }
+        public string? Emulator_Arguments { get; set; } = "";
 
-        public bool Emulator_Xenia_IsFullscreen { get; set; }
+        public bool Emulator_Xenia_IsFullscreen { get; set; } = false;
 
         public bool Emulator_Xenia_IsGammaCorrection { get; set; } = true;
 
-        public bool Emulator_IsLaunchAfterInstallingContent { get; set; }
+        public bool Emulator_IsLaunchAfterInstallingContent { get; set; } = false;
 
-        public string? Path_ModsDirectory { get; set; }
+        public string? Path_ModsDirectory { get; set; } = "";
 
-        public string? Path_GameExecutable { get; set; }
+        public string? Path_GameExecutable { get; set; } = "";
 
-        public string? Path_EmulatorExecutable { get; set; }
+        public string? Path_EmulatorExecutable { get; set; } = "";
 
         public void OnPropertyChanged(PropertyChangedEventArgs in_args)
         {
