@@ -5,7 +5,7 @@ namespace SonicNextModManager.Lua
 {
     public static class Patcher
     {
-        private static Dictionary<string, string> Symbols = new();
+        private static Dictionary<string, string> _symbols { get; } = [];
 
         /// <summary>
         /// Initialises the input Lua interpreter with the default exposed functions.
@@ -14,42 +14,45 @@ namespace SonicNextModManager.Lua
         public static Script Initialise(this Script L)
         {
             // Set up callback functions.
-            L.PushExposedFunctions<UtilityFunctions>();
+            L.PushExposedFunctions<AssemblyFunctions>();
             L.PushExposedFunctions<IOFunctions>();
+            L.PushExposedFunctions<MemoryFunctions>();
+            L.PushExposedFunctions<UtilityFunctions>();
 
             return L;
         }
 
         /// <summary>
-        /// Adds a new symbol to the dictionary and returns the actual value.
+        /// Adds or replaces a new symbol to the dictionary.
         /// <para>Symbols are used to create shortcut phrases for what would otherwise be long strings.</para>
         /// </summary>
-        /// <param name="symbol">Symbol name.</param>
-        /// <param name="value">Value of this symbol.</param>
-        public static string AddSymbol(string symbol, string value)
+        /// <param name="in_name">The name of the symbol to add or replace.</param>
+        /// <param name="in_value">The value of the symbol.</param>
+        /// <returns>The value of the symbol.</returns>
+        public static string AddSymbol(string in_name, string in_value)
         {
-            if (Symbols.ContainsKey(symbol))
+            if (_symbols.ContainsKey(in_name))
             {
-                Symbols[symbol] = value;
-                return value;
+                _symbols[in_name] = in_value;
+                return in_value;
             }
 
-            Symbols.Add(symbol, value);
+            _symbols.Add(in_name, in_value);
 
-            return value;
+            return in_value;
         }
 
         /// <summary>
-        /// Returns the value of a symbol.
-        /// <para>If the symbol does not exist, it'll return the input string.</para>
+        /// Gets the value of a symbol.
         /// </summary>
-        /// <param name="symbol">Symbol name.</param>
-        public static string GetSymbol(string symbol)
+        /// <param name="in_symbol">The name of the symbol to get.</param>
+        /// <returns>If it exists, the value of the specified symbol; otherwise, the symbol name.</returns>
+        public static string GetSymbol(string in_name)
         {
-            if (Symbols.ContainsKey(symbol))
-                return Symbols[symbol];
+            if (_symbols.ContainsKey(in_name))
+                return _symbols[in_name];
 
-            return symbol;
+            return in_name;
         }
     }
 }

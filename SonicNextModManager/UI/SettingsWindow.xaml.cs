@@ -5,11 +5,11 @@ using SonicNextModManager.UI.Dialogs;
 namespace SonicNextModManager.UI
 {
     /// <summary>
-    /// Interaction logic for Settings.xaml
+    /// Interaction logic for SettingsWindow.xaml
     /// </summary>
-    public partial class Settings : ImmersiveWindow
+    public partial class SettingsWindow : ImmersiveWindow
     {
-        public Settings()
+        public SettingsWindow()
         {
             InitializeComponent();
 

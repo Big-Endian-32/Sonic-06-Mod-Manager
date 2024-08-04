@@ -3,10 +3,10 @@ using SonicNextModManager.Metadata;
 
 namespace SonicNextModManager.Interop
 {
-    public class MetadataConverter
+    public class ModConverter
     {
         /// <summary>
-        /// Converts older metadata to the new format.
+        /// Converts an old mod to the new format.
         /// </summary>
         /// <param name="in_file">File to parse metadata from.</param>
         public static Mod Convert(string in_file)
@@ -52,7 +52,7 @@ namespace SonicNextModManager.Interop
             }
 
             // Write the mod's configuration to a mod.json file.
-            mod.Write(mod, StringHelper.ReplaceFilename(in_file, "mod.json"));
+            Mod.Write(mod, StringHelper.ReplaceFilename(in_file, "mod.json"));
 
             // Delete the old, now useless, mod.ini file.
             File.Delete(in_file);

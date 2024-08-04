@@ -1,0 +1,64 @@
+﻿<c:ImmersiveWindow x:Class="SonicNextModManager.UI.DebugWindow"
+                   xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                   xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                   xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+                   xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+                   xmlns:local="clr-namespace:SonicNextModManager"
+                   xmlns:c="clr-namespace:SonicNextModManager.UI.Components"
+                   xmlns:hc="https://handyorg.github.io/handycontrol"
+                   mc:Ignorable="d"
+                   Title="Debug"
+                   Background="#131313"
+                   Height="450" Width="800">
+
+    <Grid>
+
+        <hc:SideMenu Name="SideMenu" Width="46" HorizontalAlignment="Left" MouseEnter="SideMenu_MouseEnter">
+            <hc:SideMenuItem Header="Menu">
+                <hc:SideMenuItem.Icon>
+                    <TextBlock Text="menu" FontFamily="{StaticResource MaterialIcons}" FontSize="32"/>
+                </hc:SideMenuItem.Icon>
+            </hc:SideMenuItem>
+            <hc:SideMenuItem Header="Mods">
+                <hc:SideMenuItem.Icon>
+                    <TextBlock Text="widgets" FontFamily="{StaticResource MaterialIcons}" FontSize="32"/>
+                </hc:SideMenuItem.Icon>
+            </hc:SideMenuItem>
+            <hc:SideMenuItem Header="Patches">
+                <hc:SideMenuItem.Icon>
+                    <TextBlock Text="auto_awesome" FontFamily="{StaticResource MaterialIcons}" FontSize="32"/>
+                </hc:SideMenuItem.Icon>
+            </hc:SideMenuItem>
+            <hc:SideMenuItem Header="Tweaks">
+                <hc:SideMenuItem.Icon>
+                    <TextBlock Text="tune" FontFamily="{StaticResource MaterialIcons}" FontSize="32"/>
+                </hc:SideMenuItem.Icon>
+            </hc:SideMenuItem>
+            <hc:SideMenuItem Header="Updates">
+                <hc:SideMenuItem.Icon>
+                    <TextBlock Text="update" FontFamily="{StaticResource MaterialIcons}" FontSize="32"/>
+                </hc:SideMenuItem.Icon>
+            </hc:SideMenuItem>
+            <hc:SideMenuItem Header="Settings">
+                <hc:SideMenuItem.Icon>
+                    <TextBlock Text="settings" FontFamily="{StaticResource MaterialIcons}" FontSize="32"/>
+                </hc:SideMenuItem.Icon>
+            </hc:SideMenuItem>
+        </hc:SideMenu>
+
+        <StackPanel>
+            <StackPanel Margin="5">
+                <Button Name="NextMessageBox_None" Click="NextMessageBox_Test_OnClick" Content="Open NextMessageBox"/>
+                <Button Name="NextMessageBox_Error" Click="NextMessageBox_Test_OnClick" Content="Open NextMessageBox with Error"/>
+                <Button Name="NextMessageBox_Question" Click="NextMessageBox_Test_OnClick" Content="Open NextMessageBox with Question"/>
+                <Button Name="NextMessageBox_Warning" Click="NextMessageBox_Test_OnClick" Content="Open NextMessageBox with Warning"/>
+                <Button Name="NextMessageBox_Information" Click="NextMessageBox_Test_OnClick" Content="Open NextMessageBox with Information"/>
+            </StackPanel>
+
+            <StackPanel Margin="5">
+                <Button Click="NextTaskDialog_Test_OnClick" Content="Open NextTaskDialog"/>
+            </StackPanel>
+        </StackPanel>
+    </Grid>
+
+</c:ImmersiveWindow>

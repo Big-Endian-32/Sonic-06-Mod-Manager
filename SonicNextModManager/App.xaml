@@ -5,7 +5,7 @@
              xmlns:system="clr-namespace:System;assembly=mscorlib"
              xmlns:local="clr-namespace:SonicNextModManager"
              xmlns:converters="clr-namespace:SonicNextModManager.UI.Converters"
-             StartupUri="UI/Setup.xaml"
+             StartupUri="UI/SetupWindow.xaml"
              ShutdownMode="OnExplicitShutdown">
     
     <Application.Resources>

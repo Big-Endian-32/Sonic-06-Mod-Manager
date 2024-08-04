@@ -30,5 +30,45 @@ namespace SonicNextModManager.Helpers
                 _      => Platform.Xbox,
             };
         }
+
+        /// <summary>
+        /// Omits a prefix from the file name in a given path.
+        /// </summary>
+        /// <param name="in_path">The path containing the file name with the prefix.</param>
+        /// <param name="in_prefix">The prefix to omit.</param>
+        /// <returns>The full path with the file name without the prefix.</returns>
+        public static string OmitFileNamePrefix(string in_path, string in_prefix)
+        {
+            if (string.IsNullOrEmpty(in_path))
+                return in_path;
+
+            var dir  = Path.GetDirectoryName(in_path);
+            var name = Path.GetFileName(in_path)[in_prefix.Length..];
+
+            if (string.IsNullOrEmpty(dir))
+                return name;
+
+            return Path.Combine(dir, name);
+        }
+
+        /// <summary>
+        /// Omits a prefix from the file name in a given path.
+        /// </summary>
+        /// <param name="in_path">The path containing the file name with the prefix.</param>
+        /// <param name="in_prefix">The prefix to omit.</param>
+        /// <returns>The full path with the file name without the prefix.</returns>
+        public static string OmitFileNamePrefix(string in_path, char in_prefix)
+        {
+            if (string.IsNullOrEmpty(in_path))
+                return in_path;
+
+            var dir = Path.GetDirectoryName(in_path);
+            var name = Path.GetFileName(in_path).TrimStart(in_prefix);
+
+            if (string.IsNullOrEmpty(dir))
+                return name;
+
+            return Path.Combine(dir, name);
+        }
     }
 }

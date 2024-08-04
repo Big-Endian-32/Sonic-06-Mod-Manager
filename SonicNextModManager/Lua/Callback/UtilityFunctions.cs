@@ -7,11 +7,13 @@ namespace SonicNextModManager.Lua.Callback
     public class UtilityFunctions
     {
         /// <summary>
-        /// Returns a UTF8 string converted from hexadecimal.
+        /// Transforms a hexadecimal string to UTF-8 string.
         /// </summary>
-        /// <param name="in_hexStr">Hexadecimal to convert.</param>
+        /// <param name="in_hexStr">The hexadecimal string with UTF-8 bytes.</param>
         public static string ToString(string in_hexStr)
-            => Encoding.UTF8.GetString(MemoryHelper.HexStringToByteArray(in_hexStr));
+        {
+            return Encoding.UTF8.GetString(MemoryHelper.HexStringToByteArray(in_hexStr));
+        }
 
         /// <summary>
         /// Transforms a virtual memory address to a physical executable address.
@@ -50,11 +52,29 @@ namespace SonicNextModManager.Lua.Callback
         }
 
         /// <summary>
-        /// Returns the value of a symbol.
-        /// <para>If the symbol does not exist, it'll return the input string.</para>
+        /// Gets the value of a symbol.
         /// </summary>
-        /// <param name="in_symbol">Symbol name.</param>
+        /// <param name="in_symbol">The name of the symbol to get.</param>
+        /// <returns>If it exists, the value of the specified symbol; otherwise, the symbol name.</returns>
         public static string GetSymbol(string in_symbol)
-            => Patcher.GetSymbol(in_symbol);
+        {
+            return Patcher.GetSymbol(in_symbol);
+        }
+
+        /// <summary>
+        /// Combines an array of strings into a path.
+        /// </summary>
+        /// <param name="in_paths">An array of parts of the path.</param>
+        /// <returns>The combined paths.</returns>
+        public static string PathCombine(params string[] in_paths)
+        {
+            for (int i = 0; i < in_paths.Length; i++)
+            {
+                if (in_paths[i].Contains('\\'))
+                    in_paths[i].Replace('\\', '/');
+            }
+
+            return Path.Combine(in_paths);
+        }
     }
 }

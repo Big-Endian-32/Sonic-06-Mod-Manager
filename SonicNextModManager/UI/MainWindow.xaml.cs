@@ -7,15 +7,19 @@ using CommunityToolkit.Mvvm.Input;
 using System.Threading.Tasks;
 using SonicNextModManager.Metadata;
 using SonicNextModManager.Helpers;
+using System.Threading;
+using System.Diagnostics;
 
 namespace SonicNextModManager.UI
 {
     /// <summary>
     /// Interaction logic for MainWindow.xaml
     /// </summary>
-    public partial class Manager : ImmersiveWindow
+    public partial class MainWindow : ImmersiveWindow
     {
-        ManagerViewModel ViewModel { get; set; } = new();
+        private CancellationTokenSource _cts = new();
+
+        private MainWindowViewModel _viewModel { get; set; } = new();
 
         /// <summary>
         /// Property storage for <see cref="InfoDisplayMargin"/>.
@@ -24,7 +28,7 @@ namespace SonicNextModManager.UI
         (
             nameof(InfoDisplayMargin),
             typeof(Thickness),
-            typeof(Manager),
+            typeof(MainWindow),
             new PropertyMetadata(new Thickness(-40, 15, -930, 0))
         );
 
@@ -37,13 +41,28 @@ namespace SonicNextModManager.UI
             set => SetValue(InfoDisplayMarginProperty, value);
         }
 
-        public Manager()
+        public MainWindow()
         {
             InitializeComponent();
             RefreshUI();
 
+            // Set title to include the assembly informational version.
+            Title = $"Sonic '06 Mod Manager (Version {App.GetInformationalVersion()})";
+
             // Set data context to new view model.
-            DataContext = ViewModel;
+            DataContext = _viewModel;
+        }
+
+        protected override void OnKeyDown(KeyEventArgs e)
+        {
+            base.OnKeyDown(e);
+
+#if DEBUG
+            if (e.Key == Key.F1)
+            {
+                new DebugWindow().ShowDialog();
+            }
+#endif
         }
 
         protected override void OnClosed(EventArgs in_args)
@@ -61,9 +80,6 @@ namespace SonicNextModManager.UI
 
         private void RefreshUI()
         {
-            // Set title to include the assembly informational version.
-            Title = $"Sonic '06 Mod Manager (Version {App.GetInformationalVersion()})";
-
             /* Set visibility of the emulator launcher depending on if there's an emulator specified.
                There's no point in displaying this option if the user is installing for real hardware. */
             Emulator_Launcher.Visibility = string.IsNullOrEmpty(App.Settings.Path_EmulatorExecutable)
@@ -85,10 +101,10 @@ namespace SonicNextModManager.UI
                 {
                     // Flip enabled state for each selected item.
                     foreach (MetadataBase item in in_sender.SelectedItems)
-                        item.Enabled ^= true;
+                        item.IsEnabled ^= true;
 
                     // Save updated content list.
-                    ViewModel.Database.Save();
+                    _viewModel.Database.Save();
 
                     break;
                 }
@@ -113,21 +129,21 @@ namespace SonicNextModManager.UI
         private void Content_CheckBox_CheckedChanged(object in_sender, RoutedEventArgs in_args)
         {
             // Save content database.
-            ViewModel.Database.Save();
+            _viewModel.Database.Save();
 
-            if (ViewModel.State == InstallState.Installing)
+            if (_viewModel.State == InstallState.Installing)
             {
                 var metadata = ((CheckBox)in_sender).DataContext as MetadataBase;
 
                 if (metadata is Mod)
                 {
                     // Set up item for the mods database.
-                    InsertQueuedItem(ViewModel.Database.Mods);
+                    InsertQueuedItem(_viewModel.Database.Mods);
                 }
                 else if (metadata is Patch)
                 {
                     // Set up item for the patches database.
-                    InsertQueuedItem(ViewModel.Database.Patches);
+                    InsertQueuedItem(_viewModel.Database.Patches);
                 }
 
                 void InsertQueuedItem<T>(ObservableCollection<T> collection) where T : MetadataBase
@@ -159,12 +175,12 @@ namespace SonicNextModManager.UI
             if (selectedItem is Mod)
             {
                 // Close all info displays in the mods list.
-                CloseAllInfoDisplays(ViewModel.Database.Mods);
+                CloseAllInfoDisplays(_viewModel.Database.Mods);
             }
             else if (selectedItem is Patch)
             {
                 // Close all info displays in the patches list.
-                CloseAllInfoDisplays(ViewModel.Database.Patches);
+                CloseAllInfoDisplays(_viewModel.Database.Patches);
             }
 
             void CloseAllInfoDisplays<T>(ObservableCollection<T> collection) where T : MetadataBase
@@ -173,67 +189,138 @@ namespace SonicNextModManager.UI
                 foreach (T item in collection)
                 {
                     // Don't close the current info display - we invert it later.
-                    if (item == selectedItem && selectedItem.InfoDisplay)
+                    if (item == selectedItem && selectedItem.IsInfoDisplay)
                         continue;
 
-                    item.InfoDisplay = false;
+                    item.IsInfoDisplay = false;
                 }
             }
 
             // Invert info display visibility (description required).
             if (!string.IsNullOrEmpty(selectedItem.Description))
-                selectedItem.InfoDisplay ^= true;
+                selectedItem.IsInfoDisplay ^= true;
         }
 
-        private async Task InstallContent()
+        private void SetInstallState(InstallState in_state)
         {
-            // TODO: change install button to cancel button with progress bar.
-            if (ViewModel.State == InstallState.Installing)
-                return;
+            _viewModel.State = in_state;
 
-            ViewModel.State = InstallState.Installing;
-            Uninstall.IsEnabled = false;
+            Dispatcher.Invoke
+            (
+                () =>
+                {
+                    switch (in_state)
+                    {
+                        case InstallState.Idle:
+                            Install.IsEnabled = Uninstall.IsEnabled = true;
+                            Install.Content = LocaleService.Localise("Main_Install");
+                            break;
 
-            await Task.Run(ViewModel.Database.Install);
+                        case InstallState.Installing:
+                            Install.IsEnabled = true;
+                            Uninstall.IsEnabled = false;
+                            Install.Content = LocaleService.Localise("Common_Cancel");
+                            break;
 
-            Uninstall.IsEnabled = true;
-            ViewModel.State = InstallState.Idle;
-        }
+                        case InstallState.Uninstalling:
+                            Install.IsEnabled = Uninstall.IsEnabled = false;
+                            Install.Content = LocaleService.Localise("Main_Install");
+                            break;
 
-        private async Task UninstallContent()
-        {
-            ViewModel.State = InstallState.Uninstalling;
-            Install.IsEnabled = false;
-
-            await Task.Run(ViewModel.Database.Uninstall);
-
-            Install.IsEnabled = true;
-            ViewModel.State = InstallState.Idle;
+                        case InstallState.Cancelling:
+                            Install.IsEnabled = Uninstall.IsEnabled = false;
+                            Install.Content = LocaleService.Localise("Common_Cancelling");
+                            break;
+                    }
+                }
+            );
         }
 
         private async void Install_Click(object in_sender, RoutedEventArgs in_args)
         {
-            await Dispatcher.Invoke(UninstallContent);
-            await Dispatcher.Invoke(InstallContent);
+            var isCancelled = false;
+
+            if (_viewModel.State == InstallState.Installing)
+            {
+                SetInstallState(InstallState.Cancelling);
+
+                _cts.Cancel();
+
+                isCancelled = true;
+            }
+            else
+            {
+                SetInstallState(InstallState.Uninstalling);
+
+                // Uninstall content before installing to prevent stacking.
+                await Task.Run(_viewModel.Database.Uninstall);
+
+                SetInstallState(InstallState.Installing);
+            }
+
+            try
+            {
+                void OnCancel()
+                {
+                    _viewModel.Database.Uninstall();
+
+                    SetInstallState(InstallState.Idle);
+                }
+
+                await Task.Run(() => _viewModel.Database.Install(_cts.Token, OnCancel), _cts.Token);
+            }
+            catch (TaskCanceledException)
+            {
+                _cts = new();
+
+#if DEBUG
+                Debug.WriteLine("Installation cancelled...");
+#endif
+            }
+            catch (Exception out_ex)
+            {
+                NextMessageBox.Show
+                (
+                    LocaleService.Localise("Exception_InstallError", out_ex),
+                    LocaleService.Localise("Exception_InstallFailed"),
+                    in_icon: NextMessageBoxIcon.Error
+                );
+            }
+
+            /* Reset mod states back to idle to
+               restore the checkboxes post-install. */
+            foreach (var mod in _viewModel!.Database!.Mods!)
+                mod.State = InstallState.Idle;
+
+            if (!isCancelled)
+                SetInstallState(InstallState.Idle);
+
+            _viewModel.ResetProgress();
         }
 
         private async void Uninstall_Click(object in_sender, RoutedEventArgs in_args)
         {
-            await Dispatcher.Invoke(UninstallContent);
+            SetInstallState(InstallState.Uninstalling);
+
+            await Task.Run(_viewModel.Database.Uninstall);
+
+            SetInstallState(InstallState.Idle);
+
+            _viewModel.ResetProgress();
         }
 
         /// <summary>
         /// Performs a hard refresh of the content database.
         /// </summary>
         private void Refresh_Click(object in_sender, RoutedEventArgs in_args)
-            => ViewModel.InvokeDatabaseContentUpdate();
+            => _viewModel.InvokeDatabaseContentUpdate();
 
         /// <summary>
         /// Opens the mod editor to create a new mod.
         /// </summary>
         private void Add_Click(object in_sender, RoutedEventArgs in_args)
         {
-            new Editor { Owner = this }.ShowDialog();
+            new EditorWindow { Owner = this }.ShowDialog();
         }
 
         /// <summary>
@@ -269,7 +356,7 @@ namespace SonicNextModManager.UI
                 if (metadata is Mod)
                 {
                     // Pass current metadata through to the editor.
-                    new Editor(metadata) { Owner = this }.ShowDialog();
+                    new EditorWindow(metadata) { Owner = this }.ShowDialog();
                 }
                 else if (metadata is Patch)
                 {
@@ -298,7 +385,7 @@ namespace SonicNextModManager.UI
 
                 // Delete selected content.
                 if (result == NextDialogResult.Yes)
-                    ViewModel.Database.Delete(metadata);
+                    _viewModel.Database.Delete(metadata);
             }
         }
 
@@ -310,10 +397,10 @@ namespace SonicNextModManager.UI
             // Always deselect the menu button.
             SidebarMenu.IsSelected = false;
 
-            if (!ViewModel.IsSidebarOpen)
+            if (!_viewModel.IsSidebarOpen)
             {
                 (Sidebar.Resources["SidebarOpening"] as Storyboard).Begin();
-                ViewModel.IsSidebarOpen = true;
+                _viewModel.IsSidebarOpen = true;
             }
         }
 
@@ -325,10 +412,10 @@ namespace SonicNextModManager.UI
             // Always deselect the menu button.
             SidebarMenu.IsSelected = false;
 
-            if (ViewModel.IsSidebarOpen)
+            if (_viewModel.IsSidebarOpen)
             {
                 (Sidebar.Resources["SidebarClosing"] as Storyboard).Begin();
-                ViewModel.IsSidebarOpen = false;
+                _viewModel.IsSidebarOpen = false;
             }
         }
 
@@ -337,7 +424,7 @@ namespace SonicNextModManager.UI
         /// </summary>
         private void SidebarMenu_Click()
         {
-            if (ViewModel.IsSidebarOpen)
+            if (_viewModel.IsSidebarOpen)
             {
                 CloseSidebar();
             }
@@ -384,9 +471,11 @@ namespace SonicNextModManager.UI
         private void OpenSettings()
         {
             CloseSidebar();
+
             Sidebar_Settings.IsSelected = false;
 
-            new Settings { Owner = this }.ShowDialog();
+            new SettingsWindow { Owner = this }.ShowDialog();
+
             RefreshUI();
         }
     }

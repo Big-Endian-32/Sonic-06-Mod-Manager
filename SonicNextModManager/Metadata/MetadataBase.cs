@@ -51,13 +51,13 @@ namespace SonicNextModManager.Metadata
         /// Determines if this content is enabled.
         /// </summary>
         [JsonIgnore]
-        public bool Enabled { get; set; }
+        public bool IsEnabled { get; set; }
 
         /// <summary>
         /// Determines if this content's information is being displayed.
         /// </summary>
         [JsonIgnore]
-        public bool InfoDisplay { get; set; }
+        public bool IsInfoDisplay { get; set; }
 
         /// <summary>
         /// The state of this content's installation process.

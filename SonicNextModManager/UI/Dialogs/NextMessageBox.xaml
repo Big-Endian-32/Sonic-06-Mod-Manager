@@ -22,12 +22,24 @@
 
         <Grid Background="#191919">
             <Grid.ColumnDefinitions>
-                <ColumnDefinition Name="IconColumn" Width="72"/>
+                <ColumnDefinition Name="IconColumn" Width="64"/>
                 <ColumnDefinition/>
             </Grid.ColumnDefinitions>
             
-            <Image Name="MessageIcon" Height="48" HorizontalAlignment="Right" Margin="0,24,0,24" RenderOptions.BitmapScalingMode="HighQuality" Width="48"/>
-            <TextBlock Grid.Column="1" HorizontalAlignment="Center" Margin="16,16,16,16" Text="{Binding Message}" TextWrapping="WrapWithOverflow" VerticalAlignment="Center"/>
+            <Image Name="MessageIcon"
+                   Height="48"
+                   HorizontalAlignment="Right"
+                   VerticalAlignment="Top"
+                   Margin="0,16,0,16"
+                   RenderOptions.BitmapScalingMode="HighQuality"
+                   Width="48"/>
+            
+            <TextBlock Grid.Column="1"
+                       HorizontalAlignment="Center"
+                       Margin="16,16,16,16"
+                       Text="{Binding Message}"
+                       TextWrapping="Wrap"
+                       VerticalAlignment="Center"/>
         </Grid>
 
         <c:ButtonStackPanel ButtonWidth="{Binding ButtonWidth}" Grid.Row="1" x:Name="DialogButtons"/>

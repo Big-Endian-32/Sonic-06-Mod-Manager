@@ -5,22 +5,27 @@
     "Contributors": [
       {
         "Name": "Hyper",
-        "Description": "Lead developer and designer",
+        "Description": "Programming, design",
         "URL": "https://github.com/hyperbx"
       },
       {
+        "Name": "Knuxfan24",
+        "Description": "Programming",
+        "URL": "https://github.com/Knuxfan24"
+      },
+      {
         "Name": "Sajid",
-        "Description": "GitHub API",
+        "Description": "Programming",
         "URL": "https://github.com/Sajidur78"
       },
       {
         "Name": "SuperSonic16",
-        "Description": "GameBanana API",
+        "Description": "Programming",
         "URL": "https://github.com/thesupersonic16"
       },
       {
         "Name": "LJSTAR",
-        "Description": "Logo designer",
+        "Description": "Logo design",
         "URL": "https://twitter.com/LJSTAR_"
       }
     ]
@@ -30,42 +35,42 @@
     "Contributors": [
       {
         "Name": "Hyper",
-        "Description": "Lead developer and reverse-engineer",
+        "Description": "Programming, research",
         "URL": "https://github.com/hyperbx"
       },
       {
         "Name": "Knuxfan24",
-        "Description": "API developer and reverse-engineer",
+        "Description": "Programming, research",
         "URL": "https://github.com/Knuxfan24"
       },
       {
         "Name": "Sajid",
-        "Description": "API developer, reverse-engineer and debugging assistance",
+        "Description": "Programming, research",
         "URL": "https://github.com/Sajidur78"
       },
       {
         "Name": "GerbilSoft",
-        "Description": "ZlibStream developer and reverse-engineer",
+        "Description": "Programming, research",
         "URL": "https://github.com/GerbilSoft"
       },
       {
         "Name": "Labryz",
-        "Description": "Reverse-engineer",
+        "Description": "Research",
         "URL": "https://github.com/labreezy"
       },
       {
         "Name": "Radfordhound",
-        "Description": "Wrote HedgeLib - used as a base for Marathon",
+        "Description": "Research",
         "URL": "https://github.com/Radfordhound"
       },
       {
         "Name": "Shadow LAG",
-        "Description": "Ported unluac to Java - used as a base for the C# port",
+        "Description": "Research",
         "URL": "https://github.com/lllsondowlll"
       },
       {
         "Name": "LJSTAR",
-        "Description": "Logo designer",
+        "Description": "Logo design",
         "URL": "https://twitter.com/LJSTAR_"
       }
     ]

@@ -7,16 +7,16 @@
         Written by Hyper
         
         If you're using this as a template and some text in your language exceeds the boundaries of the UI,
-        please let me know and I'll expand any elements you need. Also, feel free to remove any extra phrasing
+        let me know and I'll expand any elements you need. Feel free to also remove any extra phrasing
         that doesn't need to be there.
         
-        Before making a pull request, don't forget to add this resource to 'Languages.xaml' and add yourself to
-        the credits!
+        Before making a pull request, add this resource to the language resource dictionary, as well as
+        yourself to the credits.
         
         To add this resource to 'Langauges.xaml', see the documentation in the header for that file.
         
-        To add a credit, simply add a new entry to the 'Translators' section in '.\SonicNextModManager\Resources\Credits\Credits.json'
-        using the template below;
+        To add a credit, add a new entry to the 'Translators' section in '.\SonicNextModManager\Resources\Credits\Credits.json'
+        using the following template;
         
         {
           "Name": "Hyper",
@@ -26,14 +26,13 @@
         
         If you don't have a URL to link, just remove that field entirely.
         
-        Don't worry if you make any errors, I'll review any changes made and let you know what to fix.
-        
-        p.s. do not translate this header.
+        (do not localise this header)
     -->
 
     <!-- Common Strings -->
     <system:String x:Key="Common_OK"          >OK</system:String>
     <system:String x:Key="Common_Cancel"      >Cancel</system:String>
+    <system:String x:Key="Common_Cancelling"  >Cancelling...</system:String>
     <system:String x:Key="Common_Yes"         >Yes</system:String>
     <system:String x:Key="Common_No"          >No</system:String>
     <system:String x:Key="Common_Next"        >Next</system:String>
@@ -53,9 +52,11 @@
     <system:String x:Key="Common_PleaseWait"  >Please wait...</system:String>
 
     <!-- Exception Strings -->
-    <system:String x:Key="Exception_Fatal"         >A fatal error has occurred and the application has been halted...</system:String>
+    <system:String x:Key="Exception_Fatal"         >An unhandled exception has occurred and the application has been halted...</system:String>
     <system:String x:Key="Exception_MissingModules">Unable to locate the required modules for mod installation. Please redownload Sonic '06 Mod Manager...</system:String>
     <system:String x:Key="Exception_NetworkError"  >Network error</system:String>
+    <system:String x:Key="Exception_InstallFailed" >Installation failed</system:String>
+    <system:String x:Key="Exception_InstallError"  >An exception has occurred during installation.\n\n{0}</system:String>
 
     <!-- Query Strings -->
     <system:String x:Key="Query_ModsDirectory"     >Please select your mods directory...</system:String>
@@ -74,6 +75,7 @@
     <system:String x:Key="Message_MigrateMods_Body"   >Detected {0} legacy mods that need to be migrated.\n\nThis action is irreversible, do you want to proceed?</system:String>
 
     <!-- Setup Strings -->
+    <!-- TODO: rewrite all of this, it's very corny. -->
     <system:String x:Key="Setup_Step_Welcome"            >Welcome</system:String>
     <system:String x:Key="Setup_Step_Game"               >Game</system:String>
     <system:String x:Key="Setup_Step_Emulator"           >Emulator</system:String>
@@ -106,26 +108,25 @@
     <system:String x:Key="Setup_Finish_OK"               >Let's go</system:String>
 
     <!-- Main Strings -->
-    <system:String x:Key="Main_Mods"             >Mods</system:String>
-    <system:String x:Key="Main_Patches"          >Patches</system:String>
-    <system:String x:Key="Main_Tweaks"           >Tweaks</system:String>
-    <system:String x:Key="Main_Updates"          >Updates</system:String>
-    <system:String x:Key="Main_Install"          >Install</system:String>
-    <system:String x:Key="Main_Installing"       >Installing...</system:String>
-    <system:String x:Key="Main_Uninstall"        >Uninstall</system:String>
-    <system:String x:Key="Main_Emulator_Launcher">Launch Sonic '06</system:String>
+    <system:String x:Key="Main_Mods"      >Mods</system:String>
+    <system:String x:Key="Main_Patches"   >Patches</system:String>
+    <system:String x:Key="Main_Tweaks"    >Tweaks</system:String>
+    <system:String x:Key="Main_Updates"   >Updates</system:String>
+    <system:String x:Key="Main_Install"   >Install</system:String>
+    <system:String x:Key="Main_Installing">Installing...</system:String>
+    <system:String x:Key="Main_Uninstall" >Uninstall</system:String>
 
     <!-- Editor Strings -->
     <system:String x:Key="Editor"                                 >Editor</system:String>
     <system:String x:Key="Editor_Editing"                         >Editing {0}</system:String>
     <system:String x:Key="Editor_Metadata"                        >Metadata</system:String>
     <system:String x:Key="Editor_Metadata_Title_Description"      >The name of this content.</system:String>
-    <system:String x:Key="Editor_Metadata_Author_Description"     >The creator of this content.</system:String>
+    <system:String x:Key="Editor_Metadata_Author_Description"     >The author of this content.</system:String>
     <system:String x:Key="Editor_Metadata_Platform_Description"   >The target platform for this content.</system:String>
     <system:String x:Key="Editor_Metadata_Date_Description"       >The date this content was created on.</system:String>
-    <system:String x:Key="Editor_Metadata_Description_Description">The full information about this content.</system:String>
+    <system:String x:Key="Editor_Metadata_Description_Description">The description of this content.</system:String>
     <system:String x:Key="Editor_Thumbnail"                       >Thumbnail</system:String>
-    <system:String x:Key="Editor_Thumbnail_Description"           >The preview thumbnail for this content in the respective content list.</system:String>
+    <system:String x:Key="Editor_Thumbnail_Description"           >The preview thumbnail for this content in the list.</system:String>
 
     <!-- Metadata Strings -->
     <system:String x:Key="Metadata_Title"      >Title</system:String>
@@ -164,7 +165,7 @@
     <system:String x:Key="Settings_Emulator_Height_Description"                      >The height to render at.</system:String>
     <system:String x:Key="Settings_Emulator_Language_Description"                    >The system language to be used by the emulated kernel.</system:String>
     <system:String x:Key="Settings_Emulator_Arguments"                               >Arguments</system:String>
-    <system:String x:Key="Settings_Emulator_Arguments_Description"                   >User-specific arguments that are fed into the emulator upon launch.</system:String>
+    <system:String x:Key="Settings_Emulator_Arguments_Description"                   >User-specific arguments that are passed into the emulator upon launch.</system:String>
     <system:String x:Key="Settings_Emulator_Fullscreen"                              >Fullscreen</system:String>
     <system:String x:Key="Settings_Emulator_Fullscreen_Description"                  >Launches the emulator in fullscreen.</system:String>
     <system:String x:Key="Settings_Emulator_GammaCorrect"                            >Gamma correction</system:String>

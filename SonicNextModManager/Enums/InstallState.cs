@@ -5,6 +5,7 @@
         Idle,
         Installing,
         Installed,
-        Uninstalling = Installing
+        Uninstalling,
+        Cancelling
     }
 }

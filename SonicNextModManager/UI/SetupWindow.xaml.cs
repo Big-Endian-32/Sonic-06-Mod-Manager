@@ -1,7 +1,6 @@
 ﻿using HandyControl.Controls;
 using SonicNextModManager.Helpers;
 using SonicNextModManager.Networking;
-using SonicNextModManager.Services;
 using SonicNextModManager.UI.Components;
 using SonicNextModManager.UI.Dialogs;
 using System.Threading.Tasks;
@@ -10,11 +9,11 @@ using System.Windows.Media.Imaging;
 namespace SonicNextModManager.UI
 {
     /// <summary>
-    /// Interaction logic for Setup.xaml
+    /// Interaction logic for SetupWindow.xaml
     /// </summary>
-    public partial class Setup : ImmersiveWindow
+    public partial class SetupWindow : ImmersiveWindow
     {
-        public Setup()
+        public SetupWindow()
         {
             InitializeComponent();
         }
@@ -176,7 +175,7 @@ namespace SonicNextModManager.UI
                     App.Settings.Setup_Complete = true;
 
                     // Load mod manager window.
-                    new Manager().Show();
+                    new MainWindow().Show();
 
                     // Close current window.
                     Close();

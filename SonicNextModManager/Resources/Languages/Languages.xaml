@@ -5,23 +5,24 @@
     <!--
         Language Resources
     
-        To add a language, simply add a new entry to the 'local:Languages' section using the
-        template below;
+        To add a language, add a new entry to the 'local:Languages' section using the following template;
         
         <local:Language FileName="en-GB" Name="English (United Kingdom)"/>
     
         Ensure that your language's XAML resource is named after the culture code for your region
-        and correctly describes the translation you have provided for your region. For a list of
-        officially supported culture codes, please visit the link below;
+        and correctly describes the localisation you have provided. For a list of officially supported
+        culture codes, visit the following link;
     
-        https://lonewolfonline.net/list-net-culture-country-codes
+        https://azuliadesigns.com/c-sharp-tutorials/list-net-culture-country-codes
     
-        Set the file name to the name of the XAML you created containing your language's text.
-        As for the name, set it to the name of your language in your actual culture and describe
-        either the region or the English version of the language next to it in brackets.
+        Set the FileName key to the name of the XAML file you created containing your language's text.
     
-        For example, a Russian translation would use the 'ru-RU' culture code and the name would
-        appear in the languages list as 'Русский (Russia)'.
+        Set the Name key to the localised name of your language and describe either the region or the
+        English version of the language next to it in brackets.
+    
+        For example, a Russian localisation would look like the following;
+    
+        <local:Language FileName="ru-RU" Name="Русский (Russia)"/>
     -->
     
     <local:Languages x:Key="Languages">

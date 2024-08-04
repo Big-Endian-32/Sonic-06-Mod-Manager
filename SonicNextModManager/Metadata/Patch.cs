@@ -1,5 +1,4 @@
-﻿using SonicNextModManager.Helpers;
-using SonicNextModManager.Lua;
+﻿using SonicNextModManager.Lua;
 using System.Collections.ObjectModel;
 
 namespace SonicNextModManager.Metadata
@@ -27,51 +26,52 @@ namespace SonicNextModManager.Metadata
         public ObservableCollection<Declaration> Declarations { get; set; } = new();
 
         [JsonIgnore]
-        public string Code { get; set; }
+        public string? Code { get; set; }
 
         public Patch() { }
 
-        public Patch(string in_file)
+        public Patch(string? in_file)
         {
+            if (!File.Exists(in_file))
+                throw new FileNotFoundException($"Patch does not exist: {in_file}");
+
             var lines = File.ReadAllLines(in_file);
 
             var json = new StringBuilder();
             var lua = new StringBuilder();
 
             var i = 0;
-            var isJSONReached = false;
+            var isJsonReached = false;
 
-            for (i = 0; i < lines.Length; i++)
+            // Extract JSON from header.
+            for (; i < lines.Length; i++)
             {
                 var line = lines[i];
 
-                if (line == "{")
+                if (line.StartsWith('{'))
                 {
                     json.AppendLine(line);
 
-                    isJSONReached = true;
+                    isJsonReached = true;
 
                     continue;
                 }
 
-                if (isJSONReached)
+                if (isJsonReached)
                 {
                     json.AppendLine(line);
 
-                    if (line == "}")
-                    {
-                        i++;
+                    if (line.StartsWith('}'))
                         break;
-                    }
                 }
             }
 
-            for (; i < lines.Length; i++)
-            {
+            // Extract Lua code from the remainder of the file.
+            for (i++; i < lines.Length; i++)
                 lua.AppendLine(lines[i]);
-            }
 
-            var patch = JsonConvert.DeserializeObject<Patch>(json.ToString());
+            var patch = JsonConvert.DeserializeObject<Patch>(json.ToString()) ??
+                throw new JsonException("Failed to parse patch metadata.");
 
             Title        = patch.Title;
             Author       = patch.Author;
@@ -86,50 +86,53 @@ namespace SonicNextModManager.Metadata
             Location     = in_file;
         }
 
-        /// <summary>
-        /// Returns patch metadata parsed from the input file.
-        /// </summary>
-        /// <param name="in_file">Lua script to pull metadata from.</param>
-        public static Patch Parse(string in_file)
+        public static Patch Parse(string? in_file)
         {
             return new Patch(in_file);
         }
 
-        public void Write(Patch in_mod, string in_file)
-            => File.WriteAllText(in_file, JsonConvert.SerializeObject(in_mod, Formatting.Indented));
+        public static void Write(Patch in_mod, string? in_file)
+        {
+            ArgumentException.ThrowIfNullOrEmpty(in_file);
 
-        public void Write(string in_file)
-            => Write(this, in_file);
+            File.WriteAllText(in_file, JsonConvert.SerializeObject(in_mod, Formatting.Indented));
+        }
+
+        public void Write(string? in_file)
+        {
+            Write(this, in_file);
+        }
 
         public void Write()
-            => Write(this, Location);
+        {
+            Write(this, Location);
+        }
 
         public void Install()
         {
             // Initialise patch symbols.
-            Patcher.AddSymbol("Executable", App.Settings.Path_GameExecutable);
+            Patcher.AddSymbol("Executable", App.Settings.Path_GameExecutable!);
             Patcher.AddSymbol("Platform", App.CurrentPlatform.ToString());
+            Patcher.AddSymbol("Root", App.Settings.GetGameDirectory()!);
+            Patcher.AddSymbol("Work", Path.GetDirectoryName(Location)!);
 
             // Initialise script interpreter.
-            Script interpreter = new();
-
-            // Run script.
-            interpreter.Initialise();
+            var l = new Script().Initialise();
 
             // Initialise global declarations.
             foreach (var decl in Declarations)
             {
                 // TODO: use config values.
-                interpreter.Globals[decl.Name] = decl.DefaultValue;
+                l.Globals[decl.Name] = decl.DefaultValue;
             }
 
-            interpreter.DoString(Code);
+            l.DoString(Code);
 
             if (string.IsNullOrEmpty(Function))
                 return;
 
             // Call the user-specified function.
-            interpreter.Call(interpreter.Globals[Function]);
+            l.Call(l.Globals[Function]);
         }
     }
 }

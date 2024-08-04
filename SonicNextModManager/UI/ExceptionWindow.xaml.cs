@@ -3,19 +3,19 @@
 namespace SonicNextModManager.UI
 {
     /// <summary>
-    /// Interaction logic for ErrorHandler.xaml
+    /// Interaction logic for ExceptionWindow.xaml
     /// </summary>
-    public partial class ErrorHandler : ImmersiveWindow
+    public partial class ExceptionWindow : ImmersiveWindow
     {
         private Exception Exception { get; set; }
 
         private bool Fatal { get; set; }
 
-        public ErrorHandler(Exception ex)
+        public ExceptionWindow(Exception ex)
         {
             InitializeComponent();
 
-            Exception = ex;
+            Exception  = ex;
             Error.Text = BuildExceptionLog();
         }
 
@@ -30,7 +30,7 @@ namespace SonicNextModManager.UI
             if (in_isMarkdown)
                 exception.AppendLine("```");
 
-            exception.AppendLine("Sonic '06 Mod Manager " + $"({App.GetAssemblyVersion()})");
+            exception.AppendLine("Sonic '06 Mod Manager " + $"({App.GetInformationalVersion()})");
 
             if (!string.IsNullOrEmpty(Exception.GetType().Name))
                 exception.AppendLine($"\nType: {Exception.GetType().Name}");
@@ -57,7 +57,9 @@ namespace SonicNextModManager.UI
         }
 
         private void Copy_Click(object in_sender, RoutedEventArgs in_args)
-            => Clipboard.SetText(BuildExceptionLog(true));
+        {
+            Clipboard.SetText(BuildExceptionLog(true));
+        }
 
         private void Report_Click(object in_sender, RoutedEventArgs in_args)
         {
@@ -68,11 +70,13 @@ namespace SonicNextModManager.UI
 
                 BuildExceptionLog(true),
 
-                new List<string>() { "bug", Fatal ? "fatal" : "unhandled" }
+                ["bug", Fatal ? "fatal" : "unhandled"]
             );
         }
 
         private void Ignore_Click(object in_sender, RoutedEventArgs in_args)
-            => Close();
+        {
+            Close();
+        }
     }
 }

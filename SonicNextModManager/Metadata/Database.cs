@@ -1,26 +1,34 @@
 ﻿using Marathon.Formats.Archive;
 using Marathon.IO;
+using SonicNextModManager.Helpers;
 using SonicNextModManager.Interop;
+using SonicNextModManager.Metadata.Events;
 using SonicNextModManager.UI.Dialogs;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
+using System.Diagnostics;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace SonicNextModManager.Metadata
 {
     public class Database : INotifyPropertyChanged
     {
+        private string _location { get; } = Directory.Exists(App.Settings.Path_ModsDirectory)
+            ? Path.Combine(App.Settings.Path_ModsDirectory, "content.json")
+            : "content.json";
+
         public event PropertyChangedEventHandler? PropertyChanged;
 
         /// <summary>
         /// A collection of mods with their relevant information.
         /// </summary>
-        public ObservableCollection<Mod> Mods { get; set; } = new();
+        public ObservableCollection<Mod>? Mods { get; set; } = [];
 
         /// <summary>
         /// A collection of patches with their relevant information.
         /// </summary>
-        public ObservableCollection<Patch> Patches { get; set; } = new();
+        public ObservableCollection<Patch>? Patches { get; set; } = [];
 
         /// <summary>
         /// Active content data for JSON serialisation.
@@ -30,18 +38,26 @@ namespace SonicNextModManager.Metadata
             /// <summary>
             /// A collection of relative paths to active mods.
             /// </summary>
-            public List<string> Mods { get; set; } = new();
+            public List<string>? Mods { get; set; } = [];
 
             /// <summary>
             /// A collection of relative paths to active patches.
             /// </summary>
-            public List<string> Patches { get; set; } = new();
+            public List<string>? Patches { get; set; } = [];
+
+            /// <summary>
+            /// Gets the total amount of mods and patches.
+            /// </summary>
+            public int GetTotalContent()
+            {
+                return Mods!.Count + Patches!.Count;
+            }
         }
 
         /// <summary>
         /// Instance of active content data.
         /// </summary>
-        public ActiveContentData ActiveContent { get; set; } = new();
+        public ActiveContentData? ActiveContent { get; set; } = new();
 
         /// <summary>
         /// The current content data being installed.
@@ -51,23 +67,17 @@ namespace SonicNextModManager.Metadata
         /// <summary>
         /// A collection of archives currently in use.
         /// </summary>
-        public static Dictionary<string, U8Archive> Archives { get; set; } = new();
+        public static Dictionary<string, U8Archive>? Archives { get; set; } = [];
 
-        /// <summary>
-        /// Location of the content database.
-        /// </summary>
-        private string Location { get; } = Directory.Exists(App.Settings.Path_ModsDirectory)
-                                               ? Path.Combine(App.Settings.Path_ModsDirectory, "content.json")
-                                               : "content.json";
+        public event ContentProcessedEventHandler? ContentProcessedEvent;
 
-        public Database(bool loadActiveContent = true)
+        public Database(bool in_isInitActiveContent = true)
         {
-            // Initialise content data upon construction.
-            Mods = InitMods();
+            Mods    = InitMods();
             Patches = InitPatches();
 
             // Load database and set up checked content.
-            if (loadActiveContent)
+            if (in_isInitActiveContent)
                 Load();
         }
 
@@ -79,22 +89,21 @@ namespace SonicNextModManager.Metadata
             if (!Directory.Exists(App.Settings.Path_ModsDirectory))
                 goto Finish;
 
-            // Clear mods list before writing to it.
-            Mods.Clear();
+            Mods!.Clear();
 
-            // Get the count of mods using the old INI system.
+            // Get mods using the old metadata format.
             var inis = Directory.GetFiles(App.Settings.Path_ModsDirectory, "mod.ini", SearchOption.AllDirectories);
 
-            // Check if we've found any mods using the old INI system.
             if (inis.Length > 0)
             {
-                // Ask the user if they want to migrate the old mods to the new system.
-                var result = NextMessageBox.Show(LocaleService.Localise("Message_MigrateMods_Body", inis.Length),
+                var result = NextMessageBox.Show
+                (
+                    LocaleService.Localise("Message_MigrateMods_Body", inis.Length),
                     LocaleService.Localise("Message_MigrateMods_Title"),
                     NextMessageBoxButton.YesNo,
-                    NextMessageBoxIcon.Warning);
+                    NextMessageBoxIcon.Warning
+                );
 
-                // If the user agrees, then convert all the old mods to the new system.
                 if (result == NextDialogResult.Yes)
                 {
                     var progressDlg = new ProgressDialog("Common_PleaseWait", "Message_MigrateMods_Title")
@@ -108,10 +117,10 @@ namespace SonicNextModManager.Metadata
                         {
                             var ini = inis[i];
 
-                            progressDlg.SetDescription(Path.GetFileName(Path.GetDirectoryName(ini)));
+                            progressDlg.SetDescription(Path.GetFileName(Path.GetDirectoryName(ini))!);
                             progressDlg.SetProgress(i);
 
-                            MetadataConverter.Convert(ini);
+                            ModConverter.Convert(ini);
                         }
                     };
 
@@ -119,12 +128,11 @@ namespace SonicNextModManager.Metadata
                 }
             }
 
-            // Parse all mods from the mods directory.
             foreach (string mod in Directory.EnumerateFiles(App.Settings.Path_ModsDirectory, "mod.json", SearchOption.AllDirectories))
-                Mods.Add(Mod.Parse(mod));
+                Mods!.Add(Mod.Parse(mod));
 
         Finish:
-            return Mods;
+            return Mods!;
         }
 
         /// <summary>
@@ -135,44 +143,100 @@ namespace SonicNextModManager.Metadata
             if (!Directory.Exists(App.Directories["Patches"]))
                 goto Finish;
 
-            // Clear patches list before writing to it.
-            Patches.Clear();
+            Patches!.Clear();
 
-            // Parse all patches from the patches directory.
             foreach (string patch in Directory.EnumerateFiles(App.Directories["Patches"], "patch.lua", SearchOption.AllDirectories))
                 Patches.Add(Patch.Parse(patch));
 
         Finish:
-            return Patches;
+            return Patches!;
         }
 
         /// <summary>
         /// Installs all content asynchronously.
         /// </summary>
-        public async Task Install()
+        public async Task Install(CancellationToken? in_cancellationToken = null, Action? in_onCancelCallback = null)
         {
-            foreach (var mod in Mods)
+            var contentCount = ActiveContent!.GetTotalContent();
+
+            for (int i = 0; i < Mods!.Count; i++)
             {
-                if (mod.Enabled)
-                    await Task.Run(mod.Install);
+                if (in_cancellationToken?.IsCancellationRequested == true)
+                    break;
+
+                var mod = Mods[i];
+
+                if (mod.IsEnabled)
+                {
+                    mod.Install();
+
+                    ContentProcessedEvent?.Invoke(this,
+                        new ContentProcessedEventArgs(mod.Title!, i, contentCount));
+                }
             }
 
-            foreach (var patch in Patches)
+            for (int i = 0; i < Patches!.Count; i++)
             {
-                if (patch.Enabled)
+                if (in_cancellationToken?.IsCancellationRequested == true)
+                    break;
+
+                var patch = Patches[i];
+
+                if (patch.IsEnabled)
+                {
                     patch.Install();
+
+                    ContentProcessedEvent?.Invoke(this,
+                        new ContentProcessedEventArgs(patch.Title!, i, contentCount));
+                }
             }
 
-            await Task.Run(WriteArchives);
+            if (in_cancellationToken?.IsCancellationRequested == true)
+            {
+                in_onCancelCallback?.Invoke();
+            }
+            else
+            {
+                WriteArchives();
+
+#if DEBUG
+                Debug.WriteLine("Install complete.");
+#endif
+            }
         }
 
         /// <summary>
         /// Uninstalls all content asynchronously.
         /// </summary>
-        public async Task Uninstall()
+        public void Uninstall()
         {
-            foreach (var mod in Mods)
-                await Task.Run(mod.Uninstall);
+            var gameDirectory = App.Settings.GetGameDirectory();
+
+            if (string.IsNullOrEmpty(gameDirectory))
+                return;
+
+            // Restore backed up files.
+            foreach (var file in Directory.GetFiles(gameDirectory, "*.06mm_backup", SearchOption.AllDirectories))
+            {
+                if (!File.Exists(file))
+                    continue;
+
+                File.Move(file, file.Replace(".06mm_backup", ""), true);
+            }
+
+            for (int i = 0; i < Mods!.Count; i++)
+            {
+                var mod = Mods[i];
+
+                mod.Uninstall();
+
+                ContentProcessedEvent?.Invoke(this,
+                    new ContentProcessedEventArgs(mod.Title!, i, ActiveContent!.GetTotalContent()));
+            }
+
+#if DEBUG
+            Debug.WriteLine("Uninstall complete.");
+#endif
         }
 
         /// <summary>
@@ -185,7 +249,7 @@ namespace SonicNextModManager.Metadata
             // Compute last index of installing or installed content.
             for (int i = collection.Count - 1; i > 0; i--)
             {
-                if (collection[i] is T { Enabled: true })
+                if (collection[i] is T { IsEnabled: true })
                     return i;
             }
 
@@ -215,19 +279,26 @@ namespace SonicNextModManager.Metadata
         /// <param name="metadata">Metadata to delete.</param>
         public void Delete(MetadataBase metadata)
         {
-            if (metadata is Mod)
-            {
-                Mods.Remove((Mod)metadata);
+            if (string.IsNullOrEmpty(metadata.Location))
+                return;
 
-                // Delete mod directory recursively.
-                Directory.Delete(Path.GetDirectoryName(metadata.Location), true);
+            if (metadata is Mod out_mod)
+            {
+                Mods!.Remove(out_mod);
+
+                if (string.IsNullOrEmpty(out_mod.Location))
+                    return;
+
+                Directory.Delete(Path.GetDirectoryName(out_mod.Location)!, true);
             }
-            else if (metadata is Patch)
+            else if (metadata is Patch out_patch)
             {
-                Patches.Remove((Patch)metadata);
+                Patches!.Remove(out_patch);
 
-                // Delete patch.
-                File.Delete(metadata.Location);
+                if (string.IsNullOrEmpty(out_patch.Location))
+                    return;
+
+                File.Delete(out_patch.Location);
             }
         }
 
@@ -236,47 +307,51 @@ namespace SonicNextModManager.Metadata
         /// </summary>
         public void Load()
         {
-            if
-            (
-                !File.Exists(Location) ||
+            if (!File.Exists(_location) ||
                 !Directory.Exists(App.Settings.Path_ModsDirectory) ||
-                !Directory.Exists(App.Directories["Patches"])
-            )
+                !Directory.Exists(App.Directories["Patches"]))
             {
                 return;
             }
 
-            // Deserialise JSON to content.
-            ActiveContent = JsonConvert.DeserializeObject<ActiveContentData>(File.ReadAllText(Location));
+            ActiveContent = JsonConvert.DeserializeObject<ActiveContentData>(File.ReadAllText(_location))!;
 
-            foreach (var modRelativePath in ActiveContent.Mods.AsEnumerable().Reverse())
+            if (ActiveContent == null)
+                return;
+
+            foreach (var modRelativePath in ActiveContent!.Mods!.AsEnumerable().Reverse())
             {
-                Mod mod = Mods.SingleOrDefault
+                var mod = Mods!.SingleOrDefault
                 (
                     // Combine with mods directory with the relative path to get the full path.
                     mod => mod.Location == Path.Combine(App.Settings.Path_ModsDirectory, modRelativePath.ToString())
                 );
 
-                SetMetadataEnabledState(mod, Mods);
+                if (mod == null)
+                    continue;
+
+                SetMetadataEnabledState(mod!, Mods!);
             }
 
-            foreach (var patchRelativePath in ActiveContent.Patches.AsEnumerable().Reverse())
+            foreach (var patchRelativePath in ActiveContent!.Patches!.AsEnumerable().Reverse())
             {
-                Patch patch = Patches.SingleOrDefault
+                var patch = Patches!.SingleOrDefault
                 (
                     // Combine with patches directory with the relative path to get the full path.
                     patch => patch.Location == Path.Combine(App.Directories["Patches"], patchRelativePath.ToString())
                 );
 
-                SetMetadataEnabledState(patch, Patches);
+                if (patch == null)
+                    continue;
+
+                SetMetadataEnabledState(patch!, Patches!);
             }
 
-            void SetMetadataEnabledState<T>(T metadata, ObservableCollection<T> collection) where T : MetadataBase
+            static void SetMetadataEnabledState<T>(T metadata, ObservableCollection<T> collection) where T : MetadataBase
             {
                 if (metadata != null)
                 {
-                    // Set enabled state.
-                    metadata.Enabled = true;
+                    metadata.IsEnabled = true;
 
                     // Insert to the beginning of the collection.
                     collection.Remove(metadata);
@@ -291,51 +366,59 @@ namespace SonicNextModManager.Metadata
         public void Save()
         {
             // Clear active content lists.
-            ActiveContent.Mods.Clear();
-            ActiveContent.Patches.Clear();
+            ActiveContent?.Mods!.Clear();
+            ActiveContent?.Patches!.Clear();
 
-            foreach (var mod in Mods)
+            foreach (var mod in Mods!)
             {
-                if (mod.Enabled)
-                    ActiveContent.Mods.Add(Path.GetRelativePath(App.Settings.Path_ModsDirectory, mod.Location));
+                if (mod.IsEnabled)
+                    ActiveContent?.Mods!.Add(Path.GetRelativePath(App.Settings.Path_ModsDirectory!, mod.Location!));
             }
 
-            foreach (var patch in Patches)
+            foreach (var patch in Patches!)
             {
-                if (patch.Enabled)
-                    ActiveContent.Patches.Add(Path.GetRelativePath(App.Directories["Patches"], patch.Location));
+                if (patch.IsEnabled)
+                    ActiveContent?.Patches!.Add(Path.GetRelativePath(App.Directories["Patches"], patch.Location!));
             }
 
-            File.WriteAllText(Location, JsonConvert.SerializeObject(ActiveContent, Formatting.Indented));
+            File.WriteAllText(_location, JsonConvert.SerializeObject(ActiveContent, Formatting.Indented));
         }
 
         /// <summary>
-        /// Reads a requested archive.
-        /// If it has not been previously read, then we store it for future access.
+        /// Loads an archive from the specified location.
         /// </summary>
-        /// <param name="in_path">The path to the archive to read.</param>
-        public static async Task<U8Archive> ReadArchive(string in_path)
+        /// <param name="in_path">The path to the archive to load.</param>
+        public static U8Archive? LoadArchive(string in_path)
         {
-            if (!Archives.ContainsKey(in_path))
+            var gameDirectory = App.Settings.GetGameDirectory();
+
+            if (string.IsNullOrEmpty(gameDirectory))
+                return null;
+
+            // Replace Unix path separators from Lua.
+            if (!in_path.StartsWith(gameDirectory))
+                in_path = Path.Combine(gameDirectory, in_path.Replace('/', '\\'));
+
+            if (!Archives!.ContainsKey(in_path))
                 Archives.Add(in_path, new(in_path, ReadMode.IndexOnly));
 
             return Archives[in_path];
         }
 
         /// <summary>
-        /// Repacks any archives waiting in memory.
+        /// Writes all archives resident in memory.
         /// </summary>
-        public static async Task WriteArchives()
+        public static void WriteArchives()
         {
-            foreach (var archive in Archives)
+            foreach (var arc in Archives!)
             {
-                if (!File.Exists($"{archive.Key}.06mm_backup"))
-                    File.Copy($"{archive.Key}", $"{archive.Key}.06mm_backup");
+                IOHelper.Backup(arc.Key);
 
-                archive.Value.Save(archive.Key);
+                arc.Value.Save(arc.Key);
+                arc.Value.Dispose();
             }
 
-            Archives.Clear();
+            Archives!.Clear();
         }
     }
 }

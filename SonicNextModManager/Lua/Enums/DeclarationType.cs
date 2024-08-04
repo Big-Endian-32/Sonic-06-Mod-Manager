@@ -1,5 +1,6 @@
 ﻿namespace SonicNextModManager.Lua
 {
+    [JsonConverter(typeof(StringEnumConverter))]
     public enum DeclarationType
     {
         Boolean,

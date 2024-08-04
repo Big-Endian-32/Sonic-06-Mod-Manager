@@ -1,14 +1,16 @@
 ﻿using GongSolutions.Wpf.DragDrop;
 using SonicNextModManager.Metadata;
+using SonicNextModManager.Metadata.Events;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
+using System.Diagnostics;
 
 namespace SonicNextModManager.UI.ViewModel
 {
     /// <summary>
     /// View model for Manager.xaml
     /// </summary>
-    public class ManagerViewModel : INotifyPropertyChanged, IDropTarget
+    public class MainWindowViewModel : INotifyPropertyChanged, IDropTarget
     {
         public event PropertyChangedEventHandler? PropertyChanged;
 
@@ -28,10 +30,57 @@ namespace SonicNextModManager.UI.ViewModel
         public bool IsSidebarOpen { get; set; } = false;
 
         /// <summary>
+        /// The progress value for the Install button.
+        /// </summary>
+        public double InstallProgress { get; set; }
+
+        /// <summary>
+        /// The progress value for the Uninstall button.
+        /// </summary>
+        public double UninstallProgress { get; set; }
+
+        public MainWindowViewModel()
+        {
+            Database.ContentProcessedEvent += Database_ContentProcessedEvent;
+        }
+
+        private void Database_ContentProcessedEvent(object in_sender, ContentProcessedEventArgs in_args)
+        {
+            var progress = (double)in_args.Index / (double)in_args.Total * 100;
+#if DEBUG
+            Debug.WriteLine($"{State}: {progress}%");
+#endif
+            if (State == InstallState.Installing)
+            {
+                InstallProgress = progress;
+                UninstallProgress = 0;
+            }
+            else if (State == InstallState.Uninstalling)
+            {
+                InstallProgress = 0;
+                UninstallProgress = progress;
+            }
+            else
+            {
+                ResetProgress();
+            }
+
+            if (progress < 100)
+                return;
+
+            ResetProgress();
+        }
+
+        public void ResetProgress()
+        {
+            InstallProgress = UninstallProgress = 0;
+        }
+
+        /// <summary>
         /// Updates the database by reloading everything.
         /// </summary>
         public void InvokeDatabaseContentUpdate()
-            => Database = new Database();
+            => Database = new();
 
         /// <summary>
         /// Updates the database by reparsing it.

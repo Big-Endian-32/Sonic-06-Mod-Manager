@@ -6,9 +6,9 @@ using SonicNextModManager.UI.Dialogs;
 namespace SonicNextModManager.UI
 {
     /// <summary>
-    /// Interaction logic for Editor.xaml
+    /// Interaction logic for EditorWindow.xaml
     /// </summary>
-    public partial class Editor : ImmersiveWindow
+    public partial class EditorWindow : ImmersiveWindow
     {
         protected internal MetadataBase? Metadata { get; set; } = new();
 
@@ -16,7 +16,7 @@ namespace SonicNextModManager.UI
 
         protected internal bool IsINI { get; private set; } = false;
 
-        public Editor(MetadataBase? in_metadata = null)
+        public EditorWindow(MetadataBase? in_metadata = null)
         {
             InitializeComponent();
 

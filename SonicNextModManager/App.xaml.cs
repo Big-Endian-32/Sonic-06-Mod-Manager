@@ -16,6 +16,7 @@ global using System.Windows.Input;
 
 using SonicNextModManager.Helpers;
 using SonicNextModManager.Metadata;
+using SonicNextModManager.UI;
 
 namespace SonicNextModManager
 {
@@ -57,20 +58,32 @@ namespace SonicNextModManager
         /// <summary>
         /// Returns the assembly informational version from the entry assembly. 
         /// </summary>
-        public static string GetInformationalVersion()
-            => Assembly.GetEntryAssembly().GetCustomAttribute<AssemblyInformationalVersionAttribute>().InformationalVersion;
+        public static string? GetInformationalVersion()
+        {
+            var version = Assembly.GetEntryAssembly()!.GetCustomAttribute<AssemblyInformationalVersionAttribute>()!.InformationalVersion;
+            var split   = version.Split('+', StringSplitOptions.RemoveEmptyEntries);
+
+            if (split.Length <= 0 || split.Length == 1)
+                return version;
+
+            return $"{split[0]}-{split[1][..7]}";
+        }
 
         /// <summary>
         /// Returns the current assembly name.
         /// </summary>
-        public static string GetAssemblyName()
-            => Assembly.GetEntryAssembly().GetName().Name;
+        public static string? GetAssemblyName()
+        {
+            return Assembly.GetEntryAssembly()!.GetName()!.Name;
+        }
 
         /// <summary>
         /// Returns the current assembly version.
         /// </summary>
-        public static string GetAssemblyVersion()
-            => Assembly.GetEntryAssembly().GetName().Version.ToString();
+        public static string? GetAssemblyVersion()
+        {
+            return Assembly.GetEntryAssembly()!.GetName()!.Version!.ToString();
+        }
 
         /// <summary>
         /// Creates the exception handler to provide a friendly interface for errors.
@@ -80,7 +93,7 @@ namespace SonicNextModManager
 #if !DEBUG
             AppDomain.CurrentDomain.UnhandledException += (sender, e) =>
             {
-                new ErrorHandler((Exception)e.ExceptionObject).ShowDialog();
+                new ExceptionWindow((Exception)e.ExceptionObject).ShowDialog();
             };
 #endif
         }
@@ -144,9 +157,9 @@ namespace SonicNextModManager
             // Set up language settings.
             Language.LoadCultureResources();
 
-            // Start with Manager.xaml if the step-by-step guide has been completed already.
+            // Start with MainWindow.xaml if the step-by-step guide has been completed already.
             if (Settings.Setup_Complete)
-                StartupUri = new Uri("pack://application:,,,/SonicNextModManager;component/UI/Manager.xaml");
+                StartupUri = new Uri("pack://application:,,,/SonicNextModManager;component/UI/MainWindow.xaml");
 
             base.OnStartup(in_args);
         }
