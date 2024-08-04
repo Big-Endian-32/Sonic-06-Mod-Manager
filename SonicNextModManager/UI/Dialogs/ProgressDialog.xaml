@@ -22,8 +22,8 @@
         </Grid.RowDefinitions>
 
         <TextBlock Margin="0,15,0,5" HorizontalAlignment="Center" VerticalAlignment="Center" Text="{Binding Description}"/>
-        <ProgressBar Grid.Row="1" Margin="15,0,15,0" Value="{Binding Progress}" Minimum="{Binding Minimum}" Maximum="{Binding Maximum}"/>
-        <Button Grid.Row="2" Click="Cancel_Click" Content="{DynamicResource Common_Cancel}" HorizontalAlignment="Right" Margin="0,0,15,0" Height="32" Width="90"/>
+        <ProgressBar Grid.Row="1" Margin="15,0,15,0" Value="{Binding Progress}" Minimum="{Binding Minimum}" Maximum="{Binding Maximum}" Height="32"/>
+        <Button x:Name="Cancel" Grid.Row="2" Click="Cancel_Click" Content="{DynamicResource Common_Cancel}" HorizontalAlignment="Right" Margin="0,0,15,10" Height="32" Width="90"/>
     </Grid>
     
 </c:ImmersiveWindow>

@@ -58,6 +58,10 @@
             <StackPanel Margin="5">
                 <Button Click="NextTaskDialog_Test_OnClick" Content="Open NextTaskDialog"/>
             </StackPanel>
+
+            <StackPanel Margin="5">
+                <Button Click="ProgressDialog_Test_OnClick" Content="Open ProgressDialog"/>
+            </StackPanel>
         </StackPanel>
     </Grid>
 

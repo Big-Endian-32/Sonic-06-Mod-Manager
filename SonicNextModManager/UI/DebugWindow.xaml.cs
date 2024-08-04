@@ -79,5 +79,10 @@ namespace SonicNextModManager.UI
         {
             SideMenu.Width = 240;
         }
+
+        private void ProgressDialog_Test_OnClick(object sender, RoutedEventArgs e)
+        {
+            new ProgressDialog().ShowDialog();
+        }
     }
 }

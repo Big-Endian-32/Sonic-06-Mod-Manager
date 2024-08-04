@@ -69,12 +69,13 @@
     <system:String x:Key="Filter_PlayStation">PlayStation 3 executable</system:String>
 
     <!-- Dialog Strings -->
-    <system:String x:Key="Message_DeleteContent_Title">Content Deletion</system:String>
-    <system:String x:Key="Message_DeleteContent_Body" >Are you sure you want to delete '{0}'?</system:String>
-    <system:String x:Key="Message_MigrateMods_Title"  >Migrate Mods</system:String>
-    <system:String x:Key="Message_MigrateMods_Body"   >Detected {0} legacy mods that need to be migrated.\n\nThis action is irreversible, do you want to proceed?</system:String>
-    <system:String x:Key="Message_NoEmulator_Title"   >Emulator</system:String>
-    <system:String x:Key="Message_NoEmulator_Body"    >There is no emulator specified to launch the game.\n\nWould you like to set this up now?</system:String>
+    <system:String x:Key="Message_DeleteContent_Title" >Content Deletion</system:String>
+    <system:String x:Key="Message_DeleteContent_Body"  >Are you sure you want to delete '{0}'?</system:String>
+    <system:String x:Key="Message_MigrateMods_Title"   >Migrate Mods</system:String>
+    <system:String x:Key="Message_MigrateMods_Body"    >Detected {0} legacy mods that need to be migrated.\n\nThis action is irreversible, do you want to proceed?</system:String>
+    <system:String x:Key="Message_NoEmulator_Title"    >Emulator</system:String>
+    <system:String x:Key="Message_NoEmulator_Body"     >There is no emulator specified to launch the game.\n\nWould you like to set this up now?</system:String>
+    <system:String x:Key="Message_CancelOperation_Body">Are you sure you want to cancel this operation?</system:String>
     
     <!-- Setup Strings -->
     <!-- TODO: rewrite all of this, it's very corny. -->

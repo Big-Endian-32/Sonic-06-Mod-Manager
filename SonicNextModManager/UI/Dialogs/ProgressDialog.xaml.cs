@@ -1,5 +1,6 @@
 ﻿using SonicNextModManager.Helpers;
 using SonicNextModManager.UI.Components;
+using System.ComponentModel;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -129,6 +130,9 @@ namespace SonicNextModManager.UI.Dialogs
 
         public void SetDescription(string in_desc)
         {
+            if (_cts.IsCancellationRequested)
+                return;
+
             Dispatcher.Invoke(() => Description = in_desc);
         }
 
@@ -139,6 +143,21 @@ namespace SonicNextModManager.UI.Dialogs
 
         private void Cancel_Click(object sender, RoutedEventArgs e)
         {
+            var result = NextMessageBox.Show
+            (
+                LocaleService.Localise("Message_CancelOperation_Body"),
+                LocaleService.Localise("Common_Cancel"),
+                NextMessageBoxButton.YesNo,
+                NextMessageBoxIcon.Question
+            );
+
+            if (result == NextDialogResult.No)
+                return;
+
+            Cancel.IsEnabled = false;
+
+            SetDescription(LocaleService.Localise("Common_Cancelling"));
+
             _cts.Cancel();
         }
     }
