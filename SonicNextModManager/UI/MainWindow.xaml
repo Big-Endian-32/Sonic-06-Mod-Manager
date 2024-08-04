@@ -11,7 +11,7 @@
                    xmlns:dd="urn:gong-wpf-dragdrop"
                    xmlns:hc="https://handyorg.github.io/handycontrol"
                    xmlns:viewmodel="clr-namespace:SonicNextModManager.UI.ViewModel"
-                   d:DataContext="{d:DesignInstance Type=viewmodel:ManagerViewModel}"
+                   d:DataContext="{d:DesignInstance Type=viewmodel:MainWindowViewModel}"
                    mc:Ignorable="d"
                    Title="Sonic '06 Mod Manager"
                    Width="790" MinWidth="790"
@@ -19,7 +19,7 @@
                    Background="#191919"
                    SizeChanged="SizeChanged"
                    WindowStartupLocation="CenterScreen"
-                   WindowState="{Binding Mode=TwoWay, Source={x:Static local:App.Settings}, Path=Manager_WindowState}">
+                   WindowState="{Binding Mode=TwoWay, Source={x:Static local:App.Settings}, Path=MainWindow_WindowState}">
 
     <Window.Resources>
 
