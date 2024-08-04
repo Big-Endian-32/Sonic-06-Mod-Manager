@@ -109,10 +109,13 @@ namespace SonicNextModManager.Metadata
                         Maximum = inis.Length
                     };
 
-                    progressDlg.Callback = () =>
+                    progressDlg.Callback = (t) =>
                     {
                         for (int i = 0; i < inis.Length; i++)
                         {
+                            if (t.IsCancellationRequested)
+                                break;
+
                             var ini = inis[i];
 
                             progressDlg.SetDescription(Path.GetFileName(Path.GetDirectoryName(ini))!);

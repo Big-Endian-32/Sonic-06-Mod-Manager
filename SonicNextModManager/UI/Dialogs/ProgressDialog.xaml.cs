@@ -1,5 +1,6 @@
 ﻿using SonicNextModManager.Helpers;
 using SonicNextModManager.UI.Components;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace SonicNextModManager.UI.Dialogs
@@ -9,6 +10,8 @@ namespace SonicNextModManager.UI.Dialogs
     /// </summary>
     public partial class ProgressDialog : ImmersiveWindow
     {
+        private CancellationTokenSource _cts = new();
+
         public static readonly DependencyProperty CaptionProperty = DependencyProperty.Register
         (
             nameof(Caption),
@@ -79,7 +82,7 @@ namespace SonicNextModManager.UI.Dialogs
             set => SetValue(MaximumProperty, value);
         }
 
-        public Action Callback { get; set; }
+        public Action<CancellationToken> Callback { get; set; }
 
         public ProgressDialog()
         {
@@ -112,7 +115,7 @@ namespace SonicNextModManager.UI.Dialogs
                 (
                     () =>
                     {
-                        Callback();
+                        Callback(_cts.Token);
                         Dispatcher.Invoke(() => Close());
                     }
                 );
@@ -132,6 +135,11 @@ namespace SonicNextModManager.UI.Dialogs
         public void SetProgress(double in_value)
         {
             Dispatcher.Invoke(() => Progress = in_value);
+        }
+
+        private void Cancel_Click(object sender, RoutedEventArgs e)
+        {
+            _cts.Cancel();
         }
     }
 }
