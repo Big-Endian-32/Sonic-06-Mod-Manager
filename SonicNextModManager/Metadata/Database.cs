@@ -14,9 +14,7 @@ namespace SonicNextModManager.Metadata
 {
     public class Database : INotifyPropertyChanged
     {
-        private string _location { get; } = Directory.Exists(App.Settings.Path_ModsDirectory)
-            ? Path.Combine(App.Settings.Path_ModsDirectory, "content.json")
-            : "content.json";
+        private string _location { get; } = App.Configurations["Content"];
 
         public event PropertyChangedEventHandler? PropertyChanged;
 

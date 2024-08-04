@@ -26,9 +26,9 @@ namespace SonicNextModManager
     {
         public static Configuration Settings { get; } = new Configuration().Import();
 
-        public static Languages SupportedCultures { get; set; }
+        public static Languages? SupportedCultures { get; set; }
 
-        public static Language CurrentCulture { get; set; }
+        public static Language? CurrentCulture { get; set; }
 
         public static Dictionary<string, string> Directories { get; } = new()
         {
@@ -39,8 +39,7 @@ namespace SonicNextModManager
 
         public static Dictionary<string, string> Configurations { get; } = new()
         {
-            { "Content", Path.Combine(Settings.Path_ModsDirectory, "content.json") },
-            { "Data", Path.Combine(Settings.Path_ModsDirectory, "data.json") }
+            { "Content", Path.Combine(Settings.Path_ModsDirectory, "content.json") }
         };
 
         public static Dictionary<string, string> Modules { get; } = new()
@@ -92,7 +91,7 @@ namespace SonicNextModManager
         /// <summary>
         /// Creates the exception handler to provide a friendly interface for errors.
         /// </summary>
-        private void CreateExceptionHandler()
+        private static void CreateExceptionHandler()
         {
 #if !DEBUG
             AppDomain.CurrentDomain.UnhandledException += (sender, e) =>
