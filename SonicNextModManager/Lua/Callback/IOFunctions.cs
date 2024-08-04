@@ -21,7 +21,7 @@ namespace SonicNextModManager.Lua.Callback
 
             IOHelper.Backup(executablePath);
 
-            switch (App.CurrentPlatform)
+            switch (App.GetCurrentPlatform())
             {
                 case Platform.Xbox:
                 {
@@ -72,7 +72,7 @@ namespace SonicNextModManager.Lua.Callback
 
             IOHelper.Backup(executablePath);
 
-            switch (App.CurrentPlatform)
+            switch (App.GetCurrentPlatform())
             {
                 case Platform.Xbox:
                 {

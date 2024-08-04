@@ -73,7 +73,9 @@
     <system:String x:Key="Message_DeleteContent_Body" >Are you sure you want to delete '{0}'?</system:String>
     <system:String x:Key="Message_MigrateMods_Title"  >Migrate Mods</system:String>
     <system:String x:Key="Message_MigrateMods_Body"   >Detected {0} legacy mods that need to be migrated.\n\nThis action is irreversible, do you want to proceed?</system:String>
-
+    <system:String x:Key="Message_NoEmulator_Title"   >Emulator</system:String>
+    <system:String x:Key="Message_NoEmulator_Body"    >There is no emulator specified to launch the game.\n\nWould you like to set this up now?</system:String>
+    
     <!-- Setup Strings -->
     <!-- TODO: rewrite all of this, it's very corny. -->
     <system:String x:Key="Setup_Step_Welcome"            >Welcome</system:String>
@@ -165,13 +167,13 @@
     <system:String x:Key="Settings_Emulator_Height_Description"                      >The height to render at.</system:String>
     <system:String x:Key="Settings_Emulator_Language_Description"                    >The system language to be used by the emulated kernel.</system:String>
     <system:String x:Key="Settings_Emulator_Arguments"                               >Arguments</system:String>
-    <system:String x:Key="Settings_Emulator_Arguments_Description"                   >User-specific arguments that are passed into the emulator upon launch.</system:String>
+    <system:String x:Key="Settings_Emulator_Arguments_Description"                   >Additional arguments to pass into the emulator upon launch.</system:String>
     <system:String x:Key="Settings_Emulator_Fullscreen"                              >Fullscreen</system:String>
     <system:String x:Key="Settings_Emulator_Fullscreen_Description"                  >Launches the emulator in fullscreen.</system:String>
     <system:String x:Key="Settings_Emulator_GammaCorrect"                            >Gamma correction</system:String>
-    <system:String x:Key="Settings_Emulator_GammaCorrect_Description"                >Uses BT.709 (HDTV) gamma (makes the game look less washed out).</system:String>
+    <system:String x:Key="Settings_Emulator_GammaCorrect_Description"                >Uses BT.709 (HDTV) gamma for a less washed out look.</system:String>
     <system:String x:Key="Settings_Emulator_LaunchAfterInstallingContent"            >Launch after installing content</system:String>
-    <system:String x:Key="Settings_Emulator_LaunchAfterInstallingContent_Description">Launches the emulator after the installation process.</system:String>
+    <system:String x:Key="Settings_Emulator_LaunchAfterInstallingContent_Description">Launches the emulator after installation.</system:String>
     <system:String x:Key="Settings_Paths"                                            >Paths</system:String>
     <system:String x:Key="Settings_Paths_GameExecutable"                             >Game Executable</system:String>
     <system:String x:Key="Settings_Paths_GameExecutable_Description"                 >The path to your game's executable file.</system:String>

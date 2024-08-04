@@ -29,6 +29,7 @@
 
             <!-- Set up converters -->
             <converters:InstallStateToVisibilityConverter x:Key="InstallStateToVisibilityConverter"/>
+            <converters:EnumToIntConverter x:Key="EnumToIntConverter"/>
             <converters:MultiplyConverter x:Key="MultiplyConverter"/>
 
             <!-- Font used for displaying icons with text -->

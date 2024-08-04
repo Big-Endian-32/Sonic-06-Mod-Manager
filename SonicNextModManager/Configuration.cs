@@ -1,4 +1,5 @@
-﻿using System.ComponentModel;
+﻿using SonicNextModManager.Emulation;
+using System.ComponentModel;
 
 namespace SonicNextModManager
 {
@@ -8,29 +9,27 @@ namespace SonicNextModManager
 
         private string _config = $"{App.GetAssemblyName()}.json";
 
-        public bool Setup_Complete { get; set; }
+        public bool Setup_IsComplete { get; set; }
 
         public string? General_Language { get; set; } = "en-GB";
 
         public WindowState MainWindow_WindowState { get; set; } = WindowState.Normal;
 
-        public bool General_Debug { get; set; }
+        public EXeniaBackend Emulator_Xenia_Backend { get; set; } = EXeniaBackend.D3D12;
 
-        public int Emulator_Backend { get; set; }
+        public int Emulator_Xenia_Width { get; set; }
 
-        public int Emulator_Width { get; set; }
+        public int Emulator_Xenia_Height { get; set; }
 
-        public int Emulator_Height { get; set; }
-
-        public int Emulator_Language { get; set; }
+        public EXeniaLanguage Emulator_Xenia_Language { get; set; } = EXeniaLanguage.English;
 
         public string? Emulator_Arguments { get; set; }
 
-        public bool Emulator_Fullscreen { get; set; }
+        public bool Emulator_Xenia_IsFullscreen { get; set; }
 
-        public bool Emulator_GammaCorrect { get; set; } = true;
+        public bool Emulator_Xenia_IsGammaCorrection { get; set; } = true;
 
-        public bool Emulator_LaunchAfterInstallingContent { get; set; }
+        public bool Emulator_IsLaunchAfterInstallingContent { get; set; }
 
         public string? Path_ModsDirectory { get; set; }
 

@@ -112,7 +112,7 @@ namespace SonicNextModManager.Metadata
         {
             // Initialise patch symbols.
             Patcher.AddSymbol("Executable", App.Settings.Path_GameExecutable!);
-            Patcher.AddSymbol("Platform", App.CurrentPlatform.ToString());
+            Patcher.AddSymbol("Platform", App.GetCurrentPlatform().ToString());
             Patcher.AddSymbol("Root", App.Settings.GetGameDirectory()!);
             Patcher.AddSymbol("Work", Path.GetDirectoryName(Location)!);
 

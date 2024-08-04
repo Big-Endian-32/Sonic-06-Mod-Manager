@@ -21,7 +21,7 @@ namespace SonicNextModManager.Lua.Callback
         /// <param name="in_addr">The address to transform.</param>
         public static uint ToPhysical(uint in_addr)
         {
-            switch (App.CurrentPlatform)
+            switch (App.GetCurrentPlatform())
             {
                 case Platform.Xbox:
                     return (in_addr - 0x82000000) + 0x3000;
@@ -39,7 +39,7 @@ namespace SonicNextModManager.Lua.Callback
         /// <param name="in_addr">The address to transform.</param>
         public static uint ToVirtual(uint in_addr)
         {
-            switch (App.CurrentPlatform)
+            switch (App.GetCurrentPlatform())
             {
                 case Platform.Xbox:
                     return (in_addr + 0x82000000) - 0x3000;

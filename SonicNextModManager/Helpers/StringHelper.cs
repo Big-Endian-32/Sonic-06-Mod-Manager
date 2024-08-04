@@ -21,8 +21,11 @@ namespace SonicNextModManager.Helpers
         /// Returns a platform type from the extension of a file path.
         /// </summary>
         /// <param name="in_path">Path to file.</param>
-        public static Platform GetPlatformFromFilePath(string in_path)
+        public static Platform GetPlatformFromFilePath(string? in_path)
         {
+            if (string.IsNullOrEmpty(in_path))
+                return Platform.Xbox;
+
             return Path.GetExtension(in_path).ToLower() switch
             {
                 ".xex" => Platform.Xbox,

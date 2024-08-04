@@ -16,7 +16,6 @@ global using System.Windows.Input;
 
 using SonicNextModManager.Helpers;
 using SonicNextModManager.Metadata;
-using SonicNextModManager.UI;
 
 namespace SonicNextModManager
 {
@@ -30,10 +29,6 @@ namespace SonicNextModManager
         public static Languages SupportedCultures { get; set; }
 
         public static Language CurrentCulture { get; set; }
-
-        public static Platform CurrentPlatform { get; } = StringHelper.GetPlatformFromFilePath(Settings.Path_GameExecutable);
-
-        public static string CurrentInformationalVersion { get; private set; }
 
         public static Dictionary<string, string> Directories { get; } = new()
         {
@@ -56,7 +51,7 @@ namespace SonicNextModManager
         };
 
         /// <summary>
-        /// Returns the assembly informational version from the entry assembly. 
+        /// Gets the assembly informational version from the entry assembly. 
         /// </summary>
         public static string? GetInformationalVersion()
         {
@@ -70,7 +65,7 @@ namespace SonicNextModManager
         }
 
         /// <summary>
-        /// Returns the current assembly name.
+        /// Gets the current assembly name.
         /// </summary>
         public static string? GetAssemblyName()
         {
@@ -78,11 +73,20 @@ namespace SonicNextModManager
         }
 
         /// <summary>
-        /// Returns the current assembly version.
+        /// Gets the current assembly version.
         /// </summary>
         public static string? GetAssemblyVersion()
         {
             return Assembly.GetEntryAssembly()!.GetName()!.Version!.ToString();
+        }
+
+        /// <summary>
+        /// Gets the current platform from the game executable path.
+        /// </summary>
+        /// <returns></returns>
+        public static Platform GetCurrentPlatform()
+        {
+            return StringHelper.GetPlatformFromFilePath(Settings.Path_GameExecutable);
         }
 
         /// <summary>
@@ -93,7 +97,7 @@ namespace SonicNextModManager
 #if !DEBUG
             AppDomain.CurrentDomain.UnhandledException += (sender, e) =>
             {
-                new ExceptionWindow((Exception)e.ExceptionObject).ShowDialog();
+                new UI.ExceptionWindow((Exception)e.ExceptionObject).ShowDialog();
             };
 #endif
         }
@@ -141,9 +145,6 @@ namespace SonicNextModManager
 
         protected override void OnStartup(StartupEventArgs in_args)
         {
-            // Set current informational version for binding.
-            CurrentInformationalVersion = GetInformationalVersion();
-
             // Set up exception handler.
             CreateExceptionHandler();
 
@@ -158,7 +159,7 @@ namespace SonicNextModManager
             Language.LoadCultureResources();
 
             // Start with MainWindow.xaml if the step-by-step guide has been completed already.
-            if (Settings.Setup_Complete)
+            if (Settings.Setup_IsComplete)
                 StartupUri = new Uri("pack://application:,,,/SonicNextModManager;component/UI/MainWindow.xaml");
 
             base.OnStartup(in_args);

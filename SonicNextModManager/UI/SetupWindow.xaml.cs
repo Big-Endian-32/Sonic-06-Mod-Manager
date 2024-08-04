@@ -18,6 +18,16 @@ namespace SonicNextModManager.UI
             InitializeComponent();
         }
 
+        protected override void OnClosed(EventArgs e)
+        {
+            base.OnClosed(e);
+
+            if (App.Settings.Setup_IsComplete)
+                return;
+
+            Environment.Exit(0);
+        }
+
         private void Language_SelectionChanged(object in_sender, SelectionChangedEventArgs in_args)
             => SonicNextModManager.Language.UpdateCultureResources();
 
@@ -77,8 +87,8 @@ namespace SonicNextModManager.UI
             }
             else if (MajorStepPages.SelectedItem == MajorStep_Game)
             {
-                DialogButtons.AddButton(LocaleService.Localise("Common_Next"), () => SetCurrentStep(1)).IsEnabled = Game_Path.Text.Length != 0;
                 DialogButtons.AddButton(LocaleService.Localise("Common_Back"), () => SetCurrentStep(-1));
+                DialogButtons.AddButton(LocaleService.Localise("Common_Next"), () => SetCurrentStep(1)).IsEnabled = Game_Path.Text.Length != 0;
             }
             else if (MajorStepPages.SelectedItem == MajorStep_Emulator)
             {
@@ -143,8 +153,8 @@ namespace SonicNextModManager.UI
                 }
                 else if (EmulatorStepPages.SelectedItem == EmulatorStep_Xenia)
                 {
-                    DialogButtons.AddButton(LocaleService.Localise("Common_Next"), () => EmulatorStepPages.SelectedItem = EmulatorStep_Setup);
                     DialogButtons.AddButton(LocaleService.Localise("Common_Back"), () => ToEmulatorStepRoot());
+                    DialogButtons.AddButton(LocaleService.Localise("Common_Next"), () => EmulatorStepPages.SelectedItem = EmulatorStep_Setup);
                 }
                 else if (EmulatorStepPages.SelectedItem == EmulatorStep_RPCS3)
                 {
@@ -152,13 +162,13 @@ namespace SonicNextModManager.UI
                 }
                 else if (EmulatorStepPages.SelectedItem == EmulatorStep_NetworkError)
                 {
-                    DialogButtons.AddButton(LocaleService.Localise("Common_Next"), () => SetCurrentStep(1));
                     DialogButtons.AddButton(LocaleService.Localise("Common_Back"), () => ToEmulatorStepRoot());
+                    DialogButtons.AddButton(LocaleService.Localise("Common_Next"), () => SetCurrentStep(1));
                 }
                 else if (EmulatorStepPages.SelectedItem == EmulatorStep_Setup)
                 {
-                    DialogButtons.AddButton(LocaleService.Localise("Common_Next"), () => SetCurrentStep(1)).IsEnabled = Emulator_Path.Text.Length != 0;
                     DialogButtons.AddButton(LocaleService.Localise("Common_Back"), () => SetCurrentStep(-1));
+                    DialogButtons.AddButton(LocaleService.Localise("Common_Next"), () => SetCurrentStep(1)).IsEnabled = Emulator_Path.Text.Length != 0;
                 }
 
                 void ToEmulatorStepRoot()
@@ -172,7 +182,7 @@ namespace SonicNextModManager.UI
                 DialogButtons.AddButton(LocaleService.Localise("Setup_Finish_OK"), () =>
                 {
                     // Set completion flag.
-                    App.Settings.Setup_Complete = true;
+                    App.Settings.Setup_IsComplete = true;
 
                     // Load mod manager window.
                     new MainWindow().Show();

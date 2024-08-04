@@ -9,10 +9,9 @@
                    xmlns:hc="https://handyorg.github.io/handycontrol"
                    mc:Ignorable="d"
                    Title="{DynamicResource Settings}"
-                   Height="600" Width="600"
+                   Width="475" Height="450"
                    Background="#131313"
-                   WindowStartupLocation="CenterOwner"
-                   MinWidth="600" MinHeight="600">
+                   WindowStartupLocation="CenterOwner">
 
     <Grid>
 
@@ -44,91 +43,99 @@
                         <ComboBox ItemsSource="{Binding SupportedCultures, Source={x:Static Application.Current}}" SelectedItem="{Binding CurrentCulture, Source={x:Static Application.Current}}" SelectionChanged="Language_SelectionChanged"/>
                     </StackPanel>
 
-                    <CheckBox Content="{DynamicResource Settings_General_Debug}" IsChecked="{Binding Mode=TwoWay, Source={x:Static local:App.Settings}, Path=General_Debug}"/>
-
                 </StackPanel>
             </hc:TabItem>
 
             <hc:TabItem Header="{DynamicResource Settings_Emulator}" Style="{StaticResource TabItemInLineAccentColour}">
                 <StackPanel Margin="10">
 
-                    <!-- Backend -->
-                    <StackPanel Margin="0,0,0,10">
-                        <c:HorizontalFieldLabel Caption="{DynamicResource Settings_Emulator_Backend}" Description="{DynamicResource Settings_Emulator_Backend_Description}" Margin="0,0,0,5"/>
-                        <ComboBox SelectedIndex="{Binding Mode=TwoWay, Source={x:Static local:App.Settings}, Path=Emulator_Backend}">
-                            <ComboBoxItem Content="DirectX 12"/>
-                            <ComboBoxItem Content="Vulkan"/>
-                        </ComboBox>
-                    </StackPanel>
-
-                    <!-- Resolution -->
-                    <Grid>
-                        <Grid.ColumnDefinitions>
-                            <ColumnDefinition/>
-                            <ColumnDefinition/>
-                        </Grid.ColumnDefinitions>
-
-                        <StackPanel Margin="0,0,5,10">
-                            <c:HorizontalFieldLabel Caption="{DynamicResource Settings_Emulator_Width}" Description="{DynamicResource Settings_Emulator_Width_Description}" Margin="0,0,0,5"/>
-                            <ComboBox IsEnabled="{Binding Source={x:Static local:App.Settings}, Path=Emulator_Backend, Converter={StaticResource IntToInvertedBoolConverter}}" SelectedIndex="{Binding Mode=TwoWay, Source={x:Static local:App.Settings}, Path=Emulator_Width}">
-                                <ComboBoxItem Content="1280"/>
-                                <ComboBoxItem Content="2560"/>
-                                <ComboBoxItem Content="3840"/>
-                                <ComboBoxItem Content="5120"/>
-                                <ComboBoxItem Content="6400"/>
-                                <ComboBoxItem Content="7680"/>
-                                <ComboBoxItem Content="8960"/>
-                            </ComboBox>
-                        </StackPanel>
-
-                        <StackPanel Grid.Column="1" Margin="5,0,0,10">
-                            <c:HorizontalFieldLabel Caption="{DynamicResource Settings_Emulator_Height}" Description="{DynamicResource Settings_Emulator_Height_Description}" Margin="0,0,0,5"/>
-                            <ComboBox IsEnabled="{Binding Source={x:Static local:App.Settings}, Path=Emulator_Backend, Converter={StaticResource IntToInvertedBoolConverter}}" SelectedIndex="{Binding Mode=TwoWay, Source={x:Static local:App.Settings}, Path=Emulator_Height}">
-                                <ComboBoxItem Content="720"/>
-                                <ComboBoxItem Content="1440"/>
-                                <ComboBoxItem Content="2160"/>
-                                <ComboBoxItem Content="2880"/>
-                                <ComboBoxItem Content="3600"/>
-                                <ComboBoxItem Content="4320"/>
-                                <ComboBoxItem Content="5040"/>
-                            </ComboBox>
-                        </StackPanel>
-                    </Grid>
-
-                    <!-- Language -->
-                    <StackPanel Margin="0,0,0,10">
-                        <c:HorizontalFieldLabel Caption="{DynamicResource Common_Language}" Description="{DynamicResource Settings_Emulator_Language_Description}" Margin="0,0,0,5"/>
-                        <ComboBox SelectedIndex="{Binding Mode=TwoWay, Source={x:Static local:App.Settings}, Path=Emulator_Language}">
-                            <ComboBoxItem Content="English"/>
-                            <ComboBoxItem Content="French"/>
-                            <ComboBoxItem Content="German"/>
-                            <ComboBoxItem Content="Italian"/>
-                            <ComboBoxItem Content="Japanese"/>
-                            <ComboBoxItem Content="Spanish"/>
-                        </ComboBox>
-                    </StackPanel>
-
                     <!-- Arguments -->
-                    <StackPanel Margin="0,0,0,15">
+                    <StackPanel Name="RPCS3Frontend" Margin="0,0,0,15" Visibility="Collapsed">
                         <c:HorizontalFieldLabel Caption="{DynamicResource Settings_Emulator_Arguments}" Description="{DynamicResource Settings_Emulator_Arguments_Description}" Margin="0,0,0,5"/>
                         <TextBox Text="{Binding Mode=TwoWay, Source={x:Static local:App.Settings}, Path=Emulator_Arguments}"/>
                     </StackPanel>
 
-                    <!-- Fullscreen -->
-                    <Grid Margin="0,0,0,10">
-                        <CheckBox Content="{DynamicResource Settings_Emulator_Fullscreen}" IsChecked="{Binding Mode=TwoWay, Source={x:Static local:App.Settings}, Path=Emulator_Fullscreen}"/>
-                        <TextBlock HorizontalAlignment="Right" FontStyle="Italic" Foreground="Gray" Text="{DynamicResource Settings_Emulator_Fullscreen_Description}" VerticalAlignment="Center"/>
-                    </Grid>
+                    <StackPanel Name="XeniaFrontend">
+                        
+                        <!-- Backend -->
+                        <StackPanel Margin="0,0,0,10">
+                            <c:HorizontalFieldLabel Caption="{DynamicResource Settings_Emulator_Backend}" Description="{DynamicResource Settings_Emulator_Backend_Description}" Margin="0,0,0,5"/>
+                            <ComboBox SelectedIndex="{Binding Mode=TwoWay, Source={x:Static local:App.Settings}, Path=Emulator_Xenia_Backend, Converter={StaticResource EnumToIntConverter}}">
+                                <ComboBoxItem Content="DirectX 12"/>
+                                <ComboBoxItem Content="Vulkan"/>
+                            </ComboBox>
+                        </StackPanel>
 
-                    <!-- Gamma correction -->
-                    <Grid Margin="0,0,0,10">
-                        <CheckBox Content="{DynamicResource Settings_Emulator_GammaCorrect}" IsChecked="{Binding Mode=TwoWay, Source={x:Static local:App.Settings}, Path=Emulator_GammaCorrect}"/>
-                        <TextBlock HorizontalAlignment="Right" FontStyle="Italic" Foreground="Gray" Text="{DynamicResource Settings_Emulator_GammaCorrect_Description}" VerticalAlignment="Center"/>
-                    </Grid>
+                        <!-- Resolution -->
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition/>
+                                <ColumnDefinition/>
+                            </Grid.ColumnDefinitions>
+
+                            <StackPanel Margin="0,0,5,10">
+                                <c:HorizontalFieldLabel Caption="{DynamicResource Settings_Emulator_Width}" Description="{DynamicResource Settings_Emulator_Width_Description}" Margin="0,0,0,5"/>
+                                <ComboBox IsEnabled="{Binding Source={x:Static local:App.Settings}, Path=Emulator_Backend, Converter={StaticResource IntToInvertedBoolConverter}}" SelectedIndex="{Binding Mode=TwoWay, Source={x:Static local:App.Settings}, Path=Emulator_Xenia_Width}">
+                                    <ComboBoxItem Content="1280"/>
+                                    <ComboBoxItem Content="2560"/>
+                                    <ComboBoxItem Content="3840"/>
+                                    <ComboBoxItem Content="5120"/>
+                                    <ComboBoxItem Content="6400"/>
+                                    <ComboBoxItem Content="7680"/>
+                                    <ComboBoxItem Content="8960"/>
+                                </ComboBox>
+                            </StackPanel>
+
+                            <StackPanel Grid.Column="1" Margin="5,0,0,10">
+                                <c:HorizontalFieldLabel Caption="{DynamicResource Settings_Emulator_Height}" Description="{DynamicResource Settings_Emulator_Height_Description}" Margin="0,0,0,5"/>
+                                <ComboBox IsEnabled="{Binding Source={x:Static local:App.Settings}, Path=Emulator_Backend, Converter={StaticResource IntToInvertedBoolConverter}}" SelectedIndex="{Binding Mode=TwoWay, Source={x:Static local:App.Settings}, Path=Emulator_Xenia_Height}">
+                                    <ComboBoxItem Content="720"/>
+                                    <ComboBoxItem Content="1440"/>
+                                    <ComboBoxItem Content="2160"/>
+                                    <ComboBoxItem Content="2880"/>
+                                    <ComboBoxItem Content="3600"/>
+                                    <ComboBoxItem Content="4320"/>
+                                    <ComboBoxItem Content="5040"/>
+                                </ComboBox>
+                            </StackPanel>
+                        </Grid>
+
+                        <!-- Language -->
+                        <StackPanel Margin="0,0,0,10">
+                            <c:HorizontalFieldLabel Caption="{DynamicResource Common_Language}" Description="{DynamicResource Settings_Emulator_Language_Description}" Margin="0,0,0,5"/>
+                            <ComboBox SelectedIndex="{Binding Mode=TwoWay, Source={x:Static local:App.Settings}, Path=Emulator_Xenia_Language, Converter={StaticResource EnumToIntConverter}}">
+                                <ComboBoxItem Content="English"/>
+                                <ComboBoxItem Content="Japanese"/>
+                                <ComboBoxItem Content="German"/>
+                                <ComboBoxItem Content="French"/>
+                                <ComboBoxItem Content="Spanish"/>
+                                <ComboBoxItem Content="Italian"/>
+                            </ComboBox>
+                        </StackPanel>
+
+                        <!-- Arguments -->
+                        <StackPanel Margin="0,0,0,15">
+                            <c:HorizontalFieldLabel Caption="{DynamicResource Settings_Emulator_Arguments}" Description="{DynamicResource Settings_Emulator_Arguments_Description}" Margin="0,0,0,5"/>
+                            <TextBox Text="{Binding Mode=TwoWay, Source={x:Static local:App.Settings}, Path=Emulator_Arguments}"/>
+                        </StackPanel>
+
+                        <!-- Fullscreen -->
+                        <Grid Margin="0,0,0,10">
+                            <CheckBox Content="{DynamicResource Settings_Emulator_Fullscreen}" IsChecked="{Binding Mode=TwoWay, Source={x:Static local:App.Settings}, Path=Emulator_Xenia_IsFullscreen}"/>
+                            <TextBlock HorizontalAlignment="Right" FontStyle="Italic" Foreground="Gray" Text="{DynamicResource Settings_Emulator_Fullscreen_Description}" VerticalAlignment="Center"/>
+                        </Grid>
+
+                        <!-- Gamma correction -->
+                        <Grid Margin="0,0,0,10">
+                            <CheckBox Content="{DynamicResource Settings_Emulator_GammaCorrect}" IsChecked="{Binding Mode=TwoWay, Source={x:Static local:App.Settings}, Path=Emulator_Xenia_IsGammaCorrection}"/>
+                            <TextBlock HorizontalAlignment="Right" FontStyle="Italic" Foreground="Gray" Text="{DynamicResource Settings_Emulator_GammaCorrect_Description}" VerticalAlignment="Center"/>
+                        </Grid>
+                        
+                    </StackPanel>
 
                     <!-- Launch after installing content -->
                     <Grid Margin="0,0,0,10">
-                        <CheckBox Content="{DynamicResource Settings_Emulator_LaunchAfterInstallingContent}" IsChecked="{Binding Mode=TwoWay, Source={x:Static local:App.Settings}, Path=Emulator_LaunchAfterInstallingContent}"/>
+                        <CheckBox Content="{DynamicResource Settings_Emulator_LaunchAfterInstallingContent}" IsChecked="{Binding Mode=TwoWay, Source={x:Static local:App.Settings}, Path=Emulator_IsLaunchAfterInstallingContent}"/>
                         <TextBlock HorizontalAlignment="Right" FontStyle="Italic" Foreground="Gray" Text="{DynamicResource Settings_Emulator_LaunchAfterInstallingContent_Description}" VerticalAlignment="Center"/>
                     </Grid>
 
@@ -139,13 +146,25 @@
                 <StackPanel Margin="10">
 
                     <!-- Mods Directory -->
-                    <c:PathField Browse="Path_ModsDirectory_Browse" Caption="{DynamicResource Settings_Paths_ModsDirectory}" Description="{DynamicResource Settings_Paths_ModsDirectory_Description}" Property="{Binding Mode=TwoWay, Source={x:Static local:App.Settings}, Path=Path_ModsDirectory}" Margin="0,0,0,15"/>
+                    <c:PathField Browse="Path_ModsDirectory_Browse"
+                                 Caption="{DynamicResource Settings_Paths_ModsDirectory}"
+                                 Description="{DynamicResource Settings_Paths_ModsDirectory_Description}"
+                                 Property="{Binding Mode=TwoWay, Source={x:Static local:App.Settings}, Path=Path_ModsDirectory}"
+                                 Margin="0,0,0,15"/>
 
                     <!-- Game Executable -->
-                    <c:PathField Browse="Path_GameExecutable_Browse" Caption="{DynamicResource Settings_Paths_GameExecutable}" Description="{DynamicResource Settings_Paths_GameExecutable_Description}" Property="{Binding Mode=TwoWay, Source={x:Static local:App.Settings}, Path=Path_GameExecutable}" Margin="0,0,0,15"/>
+                    <c:PathField Browse="Path_GameExecutable_Browse"
+                                 Caption="{DynamicResource Settings_Paths_GameExecutable}"
+                                 Description="{DynamicResource Settings_Paths_GameExecutable_Description}"
+                                 Property="{Binding Mode=TwoWay, Source={x:Static local:App.Settings}, Path=Path_GameExecutable}"
+                                 Margin="0,0,0,15"/>
 
                     <!-- Emulator Executable -->
-                    <c:PathField Browse="Path_EmulatorExecutable_Browse" Caption="{DynamicResource Settings_Paths_EmulatorExecutable}" Description="{DynamicResource Settings_Paths_EmulatorExecutable_Description}" Property="{Binding Mode=TwoWay, Source={x:Static local:App.Settings}, Path=Path_EmulatorExecutable}" Margin="0,0,0,15"/>
+                    <c:PathField Browse="Path_EmulatorExecutable_Browse"
+                                 Caption="{DynamicResource Settings_Paths_EmulatorExecutable}"
+                                 Description="{DynamicResource Settings_Paths_EmulatorExecutable_Description}"
+                                 Property="{Binding Mode=TwoWay, Source={x:Static local:App.Settings}, Path=Path_EmulatorExecutable}"
+                                 Margin="0,0,0,15"/>
 
                 </StackPanel>
             </hc:TabItem>

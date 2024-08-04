@@ -1,4 +1,5 @@
 ﻿using SonicNextModManager.Helpers;
+using SonicNextModManager.Metadata;
 using SonicNextModManager.UI.Components;
 using SonicNextModManager.UI.Dialogs;
 
@@ -12,6 +13,8 @@ namespace SonicNextModManager.UI
         public SettingsWindow()
         {
             InitializeComponent();
+
+            UpdateXeniaFrontendVisibility();
 
             // Create credits list.
             foreach (var credits in SonicNextModManager.Credits.Parse())
@@ -28,9 +31,26 @@ namespace SonicNextModManager.UI
             => PropertyHelper.SetStringWithNullCheck(s => App.Settings.Path_ModsDirectory = s, DirectoryQueries.QueryModsDirectory());
 
         private void Path_GameExecutable_Browse(object in_sender, EventArgs in_args)
-            => PropertyHelper.SetStringWithNullCheck(s => App.Settings.Path_GameExecutable = s, FileQueries.QueryGameExecutable());
+        {
+            PropertyHelper.SetStringWithNullCheck(s => App.Settings.Path_GameExecutable = s, FileQueries.QueryGameExecutable());
+
+            UpdateXeniaFrontendVisibility();
+        }
 
         private void Path_EmulatorExecutable_Browse(object in_sender, EventArgs in_args)
             => PropertyHelper.SetStringWithNullCheck(s => App.Settings.Path_EmulatorExecutable = s, FileQueries.QueryEmulatorExecutable());
+
+        private void UpdateXeniaFrontendVisibility()
+        {
+            var isXbox = App.GetCurrentPlatform() == Platform.Xbox;
+
+            XeniaFrontend.Visibility = isXbox
+                ? Visibility.Visible
+                : Visibility.Collapsed;
+
+            RPCS3Frontend.Visibility = isXbox
+                ? Visibility.Collapsed
+                : Visibility.Visible;
+        }
     }
 }

@@ -239,7 +239,7 @@
 
                 <!-- Set up emulator launcher -->
                 <StackPanel Name="Emulator_Launcher" Orientation="Horizontal" Margin="8,0,8,0">
-                    <Button Width="32" Height="32">
+                    <Button Width="32" Height="32" Click="Emulator_Launcher_Click">
                         <c:IconFontControl Text="play_arrow"/>
                     </Button>
                 </StackPanel>

@@ -1,14 +1,15 @@
-﻿using SonicNextModManager.UI.ViewModel;
-using System.Collections.ObjectModel;
-using System.Windows.Media.Animation;
+﻿using CommunityToolkit.Mvvm.Input;
+using SonicNextModManager.Emulation;
+using SonicNextModManager.Helpers;
+using SonicNextModManager.Metadata;
 using SonicNextModManager.UI.Components;
 using SonicNextModManager.UI.Dialogs;
-using CommunityToolkit.Mvvm.Input;
-using System.Threading.Tasks;
-using SonicNextModManager.Metadata;
-using SonicNextModManager.Helpers;
-using System.Threading;
+using SonicNextModManager.UI.ViewModel;
+using System.Collections.ObjectModel;
 using System.Diagnostics;
+using System.Threading;
+using System.Threading.Tasks;
+using System.Windows.Media.Animation;
 
 namespace SonicNextModManager.UI
 {
@@ -296,6 +297,9 @@ namespace SonicNextModManager.UI
                 SetInstallState(InstallState.Idle);
 
             _viewModel.ResetProgress();
+
+            if (App.Settings.Emulator_IsLaunchAfterInstallingContent)
+                Process.Start(EmulatorFactory.GetStartInfo());
         }
 
         private async void Uninstall_Click(object in_sender, RoutedEventArgs in_args)
@@ -307,6 +311,33 @@ namespace SonicNextModManager.UI
             SetInstallState(InstallState.Idle);
 
             _viewModel.ResetProgress();
+        }
+
+        private void Emulator_Launcher_Click(object in_sender, RoutedEventArgs in_args)
+        {
+            var emuPath = App.Settings.Path_EmulatorExecutable;
+
+            if (string.IsNullOrEmpty(emuPath) || !File.Exists(emuPath))
+            {
+                var result = NextMessageBox.Show
+                (
+                    LocaleService.Localise("Message_NoEmulator_Body"),
+                    LocaleService.Localise("Message_NoEmulator_Title"),
+                    NextMessageBoxButton.YesNo,
+                    NextMessageBoxIcon.Question
+                );
+
+                if (result == NextDialogResult.No)
+                    return;
+
+                App.Settings.Path_EmulatorExecutable = FileQueries.QueryEmulatorExecutable();
+
+                Emulator_Launcher_Click(in_sender, in_args);
+
+                return;
+            }
+
+            Process.Start(EmulatorFactory.GetStartInfo());
         }
 
         /// <summary>

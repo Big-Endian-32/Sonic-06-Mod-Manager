@@ -16,13 +16,6 @@
                    MinHeight="540" MinWidth="500"
                    ResizeMode="CanMinimize">
 
-    <c:ImmersiveWindow.Resources>
-
-        <!-- Set up converters -->
-        <converters:EnumToIntConverter x:Key="EnumToIntConverter"/>
-
-    </c:ImmersiveWindow.Resources>
-
     <Grid>
         <Grid.Resources>
 
