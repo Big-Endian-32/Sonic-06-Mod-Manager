@@ -1,5 +1,5 @@
 ﻿using SonicNextModManager.Extensions;
-using SonicNextModManager.Lua.Callback;
+using SonicNextModManager.Metadata;
 
 namespace SonicNextModManager.Lua
 {
@@ -13,11 +13,14 @@ namespace SonicNextModManager.Lua
         /// <param name="L">Lua interpreter to initialise.</param>
         public static Script Initialise(this Script L)
         {
-            // Set up callback functions.
-            L.PushExposedFunctions<AssemblyFunctions>();
-            L.PushExposedFunctions<IOFunctions>();
-            L.PushExposedFunctions<MemoryFunctions>();
-            L.PushExposedFunctions<UtilityFunctions>();
+            L.RegisterCallbacks();
+            L.RegisterDescriptors();
+            L.RegisterUserData();
+
+            // Initialise patch symbols.
+            AddSymbol("Executable", App.Settings.Path_GameExecutable!);
+            AddSymbol("Platform", App.GetCurrentPlatform() == Platform.Xbox ? "xenon" : "ps3");
+            AddSymbol("Root", App.Settings.GetGameDirectory()!);
 
             return L;
         }

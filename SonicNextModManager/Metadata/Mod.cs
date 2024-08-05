@@ -110,7 +110,7 @@ namespace SonicNextModManager.Metadata
                         throw new Exception("Failed to merge archives as the base archive returned null.");
 
                     // Merge the two archives together.
-                    ArchiveHelper.MergeWith(baseArchive.Root, mergeArchive.Root);
+                    Marathon.Helpers.ArchiveHelper.MergeWith(baseArchive.Root, mergeArchive.Root);
 
                     continue;
                 }

@@ -1,4 +1,5 @@
 ﻿using SonicNextModManager.Helpers;
+using SonicNextModManager.Lua.Attributes;
 
 namespace SonicNextModManager.Lua.Callback
 {
@@ -11,6 +12,7 @@ namespace SonicNextModManager.Lua.Callback
         /// <param name="in_addr">The address in the file to read from.</param>
         /// <param name="in_count">The amount of bytes to read.</param>
         /// <returns>A hexadecimal string representing the buffer.</returns>
+        [LuaCallback]
         public static string ReadBytes(string in_file, uint in_addr, int in_count)
         {
 #if !DEBUG
@@ -47,6 +49,7 @@ namespace SonicNextModManager.Lua.Callback
         /// <param name="in_file">The path to the file to read from.</param>
         /// <param name="in_addr">The address in the file to read from.</param>
         /// <param name="in_hexStr">The bytes to write in a hexadecimal string.</param>
+        [LuaCallback]
         public static bool WriteBytes(string in_file, uint in_addr, string in_hexStr)
         {
 #if !DEBUG
@@ -88,6 +91,7 @@ namespace SonicNextModManager.Lua.Callback
         /// <param name="in_file">The path to the file to read from.</param>
         /// <param name="in_addr">The address in the file to read from.</param>
         /// <param name="in_data">The bytes to write.</param>
+        [LuaCallback]
         public static bool WriteBytes(string in_file, uint in_addr, byte[] in_data)
         {
             return WriteBytes(in_file, in_addr, MemoryHelper.ByteArrayToHexString(in_data));
@@ -100,6 +104,7 @@ namespace SonicNextModManager.Lua.Callback
         /// <param name="in_addr">The address in the file to read from.</param>
         /// <param name="in_str">The string to write.</param>
         /// <returns>The string that was written to the file.</returns>
+        [LuaCallback]
         public static string WriteString(string in_file, uint in_addr, string in_str)
         {
             WriteBytes(in_file, in_addr, Encoding.UTF8.GetBytes(in_str));
@@ -113,6 +118,7 @@ namespace SonicNextModManager.Lua.Callback
         /// <param name="in_addr">The address in the file to read from.</param>
         /// <param name="in_str">The string to write.</param>
         /// <returns>The string that was written to the file.</returns>
+        [LuaCallback]
         public static string WriteUnicodeString(string in_file, uint in_addr, string in_str)
         {
             WriteBytes(in_file, in_addr, Encoding.BigEndianUnicode.GetBytes(in_str));

@@ -1,20 +1,20 @@
-﻿using HandyControl.Expression.Shapes;
-using Marathon.Exceptions;
+﻿using Marathon.Exceptions;
 using Marathon.Formats.Archive;
 using Marathon.Formats.Script.Lua;
+using Marathon.Helpers;
 using SonicNextModManager.Helpers;
+using SonicNextModManager.Lua.Attributes;
 using SonicNextModManager.Metadata;
 using System.Diagnostics;
-using System.Threading.Tasks;
 
 namespace SonicNextModManager.Lua.Callback
 {
-    [MoonSharpUserData]
     public class IOFunctions
     {
         /// <summary>
         /// Encrypts the game executable.
         /// </summary>
+        [LuaCallback]
         public static void EncryptExecutable()
         {
             var executablePath = App.Settings.Path_GameExecutable!;
@@ -66,6 +66,7 @@ namespace SonicNextModManager.Lua.Callback
         /// <summary>
         /// Decrypts the game executable.
         /// </summary>
+        [LuaCallback]
         public static void DecryptExecutable()
         {
             string executablePath = App.Settings.Path_GameExecutable!;
@@ -113,6 +114,7 @@ namespace SonicNextModManager.Lua.Callback
         /// </summary>
         /// <param name="in_path">The path to the Lua script to decompile.</param>
         /// <returns><c>true</c> if the Lua script was decompiled successfully; otherwise, <c>false</c>.</returns>
+        [LuaCallback]
         public static bool DecompileLua(string in_path)
         {
             LuaBinary lub = new();
@@ -135,6 +137,7 @@ namespace SonicNextModManager.Lua.Callback
         /// </summary>
         /// <param name="in_destination">The path to write to.</param>
         /// <param name="in_source">The path to the file on the local disk to write to the archive.</param>
+        [LuaCallback]
         public static void WriteFile(string in_destination, string in_source)
         {
             var source = Path.Combine(UtilityFunctions.GetSymbol("Work"), in_source);
@@ -147,24 +150,14 @@ namespace SonicNextModManager.Lua.Callback
                     return;
             }
 
-            if (in_destination.Contains(".arc/"))
+            if (Helpers.ArchiveHelper.IsInternalArchivePath(in_destination))
             {
-                var arcIndex = in_destination.IndexOf(".arc/") + 5;
-                var arcPath  = in_destination[..(arcIndex - 1)];
-                var filePath = in_destination[arcIndex..];
+                var dir = Helpers.ArchiveHelper.GetArchiveDirectory(Path.GetDirectoryName(in_destination)!);
 
-                var arc = Database.LoadArchive(arcPath);
-
-                if (arc == null)
+                if (dir == null)
                     return;
 
-                arc.Root.CreateDirectories(Path.GetDirectoryName(filePath)).Add
-                (
-                    new U8ArchiveFile(source)
-                    {
-                        Name = Path.GetFileName(in_destination)
-                    }
-                );
+                dir.Add(new U8ArchiveFile(source) { Name = Path.GetFileName(in_destination) });
             }
             else
             {
