@@ -23,16 +23,12 @@ namespace SonicNextModManager.Lua.Callback
         [LuaCallback]
         public static uint ToPhysical(uint in_addr)
         {
-            switch (App.GetCurrentPlatform())
+            return App.GetCurrentPlatform() switch
             {
-                case Platform.Xbox:
-                    return (in_addr - 0x82000000) + 0x3000;
-
-                case Platform.PlayStation:
-                    return in_addr - 0x10000;
-            }
-
-            return in_addr;
+                Platform.Xbox        => (in_addr - 0x82000000) + 0x3000,
+                Platform.PlayStation => in_addr - 0x10000,
+                _                    => in_addr,
+            };
         }
 
         /// <summary>
@@ -42,16 +38,12 @@ namespace SonicNextModManager.Lua.Callback
         [LuaCallback]
         public static uint ToVirtual(uint in_addr)
         {
-            switch (App.GetCurrentPlatform())
+            return App.GetCurrentPlatform() switch
             {
-                case Platform.Xbox:
-                    return (in_addr + 0x82000000) - 0x3000;
-
-                case Platform.PlayStation:
-                    return in_addr + 0x10000;
-            }
-
-            return in_addr;
+                Platform.Xbox        => (in_addr + 0x82000000) - 0x3000,
+                Platform.PlayStation => in_addr + 0x10000,
+                _                    => in_addr,
+            };
         }
 
         /// <summary>
