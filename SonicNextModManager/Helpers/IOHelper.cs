@@ -33,6 +33,9 @@ namespace SonicNextModManager.Helpers
         /// <param name="in_data">The buffer to read from.</param>
         public static T LoadMarathonTypeFromBuffer<T>(byte[] in_data) where T : FileBase, new()
         {
+            if (in_data == null)
+                return default;
+
             using var ms = new MemoryStream(in_data);
 
             T t = new();
@@ -52,7 +55,7 @@ namespace SonicNextModManager.Helpers
 
             in_instance.Save(ms);
 
-            return ms.GetBuffer();
+            return ms.ToArray();
         }
     }
 }
