@@ -76,7 +76,7 @@ namespace SonicNextModManager.Lua.Callback
             for (int i = 0; i < in_paths.Length; i++)
             {
                 if (in_paths[i].Contains('\\'))
-                    in_paths[i].Replace('\\', '/');
+                    in_paths[i] = in_paths[i].Replace('\\', '/');
             }
 
             return Path.Combine(in_paths);
