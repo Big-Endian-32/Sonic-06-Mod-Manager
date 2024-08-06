@@ -14,7 +14,10 @@ namespace SonicNextModManager.Emulation
             };
 
             if (!string.IsNullOrEmpty(App.Settings.Emulator_Arguments))
-                result.ArgumentList.Add(App.Settings.Emulator_Arguments);
+            {
+                foreach (var arg in App.Settings.Emulator_Arguments.Split(' '))
+                    result.ArgumentList.Add(arg);
+            }
 
             switch (App.GetCurrentPlatform())
             {
