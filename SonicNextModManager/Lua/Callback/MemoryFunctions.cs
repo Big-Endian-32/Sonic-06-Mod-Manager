@@ -46,8 +46,8 @@ namespace SonicNextModManager.Lua.Callback
         /// <summary>
         /// Writes a buffer to a file.
         /// </summary>
-        /// <param name="in_file">The path to the file to read from.</param>
-        /// <param name="in_addr">The address in the file to read from.</param>
+        /// <param name="in_file">The path to the file to write to.</param>
+        /// <param name="in_addr">The address in the file to write to.</param>
         /// <param name="in_hexStr">The bytes to write in a hexadecimal string.</param>
         [LuaCallback]
         public static bool WriteBytes(string in_file, uint in_addr, string in_hexStr)
@@ -88,8 +88,8 @@ namespace SonicNextModManager.Lua.Callback
         /// <summary>
         /// Writes a buffer to a file.
         /// </summary>
-        /// <param name="in_file">The path to the file to read from.</param>
-        /// <param name="in_addr">The address in the file to read from.</param>
+        /// <param name="in_file">The path to the file to write to.</param>
+        /// <param name="in_addr">The address in the file to write to.</param>
         /// <param name="in_data">The bytes to write.</param>
         [LuaCallback]
         public static bool WriteBytes(string in_file, uint in_addr, byte[] in_data)
@@ -98,10 +98,28 @@ namespace SonicNextModManager.Lua.Callback
         }
 
         /// <summary>
+        /// Writes null bytes to a file.
+        /// </summary>
+        /// <param name="in_file">The path to the file to write to.</param>
+        /// <param name="in_addr">The address in the file to write to.</param>
+        /// <param name="in_data">The amount of null bytes to write.</param>
+        [LuaCallback]
+        public static bool WriteNulls(string in_file, uint in_addr, int in_count)
+        {
+            for (uint i = 0; i < in_count; i++)
+            {
+                if (!WriteBytes(in_file, in_addr + i, [0x00]))
+                    return false;
+            }
+
+            return true;
+        }
+
+        /// <summary>
         /// Writes a UTF-8 string to a file.
         /// </summary>
-        /// <param name="in_file">The path to the file to read from.</param>
-        /// <param name="in_addr">The address in the file to read from.</param>
+        /// <param name="in_file">The path to the file to write to.</param>
+        /// <param name="in_addr">The address in the file to write to.</param>
         /// <param name="in_str">The string to write.</param>
         /// <returns>The string that was written to the file.</returns>
         [LuaCallback]
@@ -114,8 +132,8 @@ namespace SonicNextModManager.Lua.Callback
         /// <summary>
         /// Writes a Unicode string to a file.
         /// </summary>
-        /// <param name="in_file">The path to the file to read from.</param>
-        /// <param name="in_addr">The address in the file to read from.</param>
+        /// <param name="in_file">The path to the file to write to.</param>
+        /// <param name="in_addr">The address in the file to write to.</param>
         /// <param name="in_str">The string to write.</param>
         /// <returns>The string that was written to the file.</returns>
         [LuaCallback]
