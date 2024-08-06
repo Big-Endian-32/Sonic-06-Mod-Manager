@@ -20,7 +20,7 @@ namespace SonicNextModManager.Helpers
         /// <param name="in_path">The path to a file inside the given archive in the path.</param>
         public static string GetArchivePath(string in_path)
         {
-            if (in_path.Contains(".arc/"))
+            if (IsInternalArchivePath(in_path))
             {
                 var arcIndex = in_path.IndexOf(".arc/") + 5;
                 var arcPath = in_path[..(arcIndex - 1)];
