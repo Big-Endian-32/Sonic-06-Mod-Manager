@@ -1,6 +1,7 @@
 ﻿using SonicNextModManager.Helpers;
 using SonicNextModManager.Lua.Attributes;
 using SonicNextModManager.Metadata;
+using SonicNextModManager.UI.Dialogs;
 
 namespace SonicNextModManager.Lua.Callback
 {
@@ -75,14 +76,30 @@ namespace SonicNextModManager.Lua.Callback
         }
 
         /// <summary>
-        /// Gets the root directory name for the current platform.
+        /// Displays a message box to the user.
         /// </summary>
+        /// <param name="in_message">The message to display.</param>
+        /// <param name="in_caption">The caption to display.</param>
+        /// <param name="in_buttons">The buttons to display.</param>
+        /// <param name="in_icon">The icon to display.</param>
+        /// <returns>The result of the message box (e.g. which button the user clicked).</returns>
         [LuaCallback]
-        public static string GetPlatformDirectory()
+        public static string MessageBox
+        (
+            string in_message,
+            string in_caption = "Sonic '06 Mod Manager",
+            string in_buttons = "OK",
+            string in_icon = "Information"
+        )
         {
-            return GetSymbol("Platform") == "Xbox"
-                ? "xenon"
-                : "ps3";
+            if (!Enum.TryParse(typeof(NextMessageBoxButton), in_buttons, true, out var out_buttons))
+                out_buttons = NextMessageBoxButton.OK;
+
+            if (!Enum.TryParse(typeof(NextMessageBoxIcon), in_icon, true, out var out_icon))
+                out_icon = NextMessageBoxIcon.Information;
+
+            return App.Current.Dispatcher.Invoke(() =>
+                NextMessageBox.Show(in_message, in_caption, (NextMessageBoxButton)out_buttons, (NextMessageBoxIcon)out_icon).ToString());
         }
     }
 }
