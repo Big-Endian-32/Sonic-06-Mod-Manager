@@ -83,7 +83,7 @@ namespace SonicNextModManager.UI
         {
             /* Set visibility of the emulator launcher depending on if there's an emulator specified.
                There's no point in displaying this option if the user is installing for real hardware. */
-            Emulator_Launcher.Visibility = string.IsNullOrEmpty(App.Settings.Path_EmulatorExecutable)
+            EmulatorLauncher.Visibility = string.IsNullOrEmpty(App.Settings.Path_EmulatorExecutable)
                 ? Visibility.Collapsed
                 : Visibility.Visible;
         }
@@ -213,23 +213,23 @@ namespace SonicNextModManager.UI
                     switch (in_state)
                     {
                         case InstallState.Idle:
-                            Install.IsEnabled = Uninstall.IsEnabled = true;
+                            Install.IsEnabled = Uninstall.IsEnabled = EmulatorLauncher.IsEnabled = true;
                             Install.Content = LocaleService.Localise("Main_Install");
                             break;
 
                         case InstallState.Installing:
                             Install.IsEnabled = true;
-                            Uninstall.IsEnabled = false;
+                            Uninstall.IsEnabled = EmulatorLauncher.IsEnabled = false;
                             Install.Content = LocaleService.Localise("Common_Cancel");
                             break;
 
                         case InstallState.Uninstalling:
-                            Install.IsEnabled = Uninstall.IsEnabled = false;
+                            Install.IsEnabled = Uninstall.IsEnabled = EmulatorLauncher.IsEnabled = false;
                             Install.Content = LocaleService.Localise("Main_Install");
                             break;
 
                         case InstallState.Cancelling:
-                            Install.IsEnabled = Uninstall.IsEnabled = false;
+                            Install.IsEnabled = Uninstall.IsEnabled = EmulatorLauncher.IsEnabled = false;
                             Install.Content = LocaleService.Localise("Common_Cancelling");
                             break;
                     }
