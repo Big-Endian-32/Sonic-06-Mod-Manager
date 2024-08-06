@@ -28,6 +28,11 @@ namespace SonicNextModManager.Lua.Wrappers.Text
             return _messageTable.Data.Messages.Where(x => x.Name == in_name).FirstOrDefault()!;
         }
 
+        public Message[] GetMessages()
+        {
+            return [.. _messageTable.Data.Messages];
+        }
+
         public void SetMessage(string in_name, string in_text, params string[] in_placeholders)
         {
             var msg = GetMessage(in_name);
