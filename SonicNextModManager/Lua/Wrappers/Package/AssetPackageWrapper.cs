@@ -7,17 +7,15 @@ using SonicNextModManager.Lua.Interfaces;
 namespace SonicNextModManager.Lua.Wrappers.Package
 {
     [LuaUserData]
-    public class AssetPackageWrapper : ILuaUserDataDescriptor
+    public class AssetPackageWrapper : MarathonWrapper, ILuaUserDataDescriptor
     {
-        private U8ArchiveFile _file;
         private AssetPackage _assetPackage;
 
         public AssetPackageWrapper() { }
 
-        public AssetPackageWrapper(U8ArchiveFile in_file)
+        public AssetPackageWrapper(U8ArchiveFile in_file) : base(in_file)
         {
-            _file = in_file;
-            _assetPackage = IOHelper.LoadMarathonTypeFromBuffer<AssetPackage>(_file.Data);
+            _assetPackage = IOHelper.LoadMarathonTypeFromBuffer<AssetPackage>(File.Data);
         }
 
         public AssetCategoryWrapper this[string in_name]
@@ -34,32 +32,17 @@ namespace SonicNextModManager.Lua.Wrappers.Package
 
         public AssetCategoryWrapper GetCategory(string in_name)
         {
-            return new AssetCategoryWrapper(_assetPackage.Categories.Where(x => x.Name == in_name).Single());
+            return new AssetCategoryWrapper(_assetPackage.Categories.Where(x => x.Name == in_name).FirstOrDefault()!);
         }
 
-        public AssetFile? GetFile(string in_path)
+        public AssetCategoryWrapper[] GetCategories()
         {
-            var paths = in_path.Replace('\\', '/').Split('/');
-
-            if (paths.Length < 2)
-                return null;
-
-            return GetCategory(paths[0]).GetFile(paths[1]);
-        }
-
-        public void DeleteFile(string in_path)
-        {
-            var paths = in_path.Replace('\\', '/').Split('/');
-
-            if (paths.Length < 2)
-                return;
-
-            GetCategory(paths[0]).DeleteFile(paths[1]);
+            return _assetPackage.Categories.Select(x => new AssetCategoryWrapper(x)).ToArray();
         }
 
         public void Save()
         {
-            _file.Data = IOHelper.GetMarathonTypeBuffer(_assetPackage);
+            Save(_assetPackage);
         }
     }
 
@@ -80,9 +63,19 @@ namespace SonicNextModManager.Lua.Wrappers.Package
             get => GetFile(in_name);
         }
 
+        public void AddFile(string in_name, string in_path)
+        {
+            _assetCategory.Files.Add(new AssetFile(in_name, in_path));
+        }
+
         public AssetFile GetFile(string in_name)
         {
-            return _assetCategory.Files.Where(x => x.Name == in_name).Single();
+            return _assetCategory.Files.Where(x => x.Name == in_name).FirstOrDefault()!;
+        }
+
+        public AssetFile[] GetFiles()
+        {
+            return [.. _assetCategory.Files];
         }
 
         public void DeleteFile(string in_name)
