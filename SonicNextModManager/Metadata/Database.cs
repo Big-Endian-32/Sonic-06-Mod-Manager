@@ -235,6 +235,8 @@ namespace SonicNextModManager.Metadata
                     new ContentProcessedEventArgs(mod.Title!, i, Mods.Count));
             }
 
+            DisposeArchives();
+
 #if DEBUG
             Debug.WriteLine("Uninstall complete.");
 #endif
@@ -418,6 +420,17 @@ namespace SonicNextModManager.Metadata
                 arc.Value.Save(arc.Key);
                 arc.Value.Dispose();
             }
+
+            Archives!.Clear();
+        }
+
+        /// <summary>
+        /// Disposes of all archives resident in memory.
+        /// </summary>
+        public static void DisposeArchives()
+        {
+            foreach (var arc in Archives!)
+                arc.Value.Dispose();
 
             Archives!.Clear();
         }

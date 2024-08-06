@@ -278,6 +278,7 @@ namespace SonicNextModManager.UI
                 Debug.WriteLine("Installation cancelled...");
 #endif
             }
+#if !DEBUG
             catch (Exception out_ex)
             {
                 NextMessageBox.Show
@@ -286,7 +287,12 @@ namespace SonicNextModManager.UI
                     LocaleService.Localise("Exception_InstallFailed"),
                     in_icon: NextMessageBoxIcon.Error
                 );
+
+                SetInstallState(InstallState.Uninstalling);
+
+                await Task.Run(_viewModel.Database.Uninstall);
             }
+#endif
 
             /* Reset mod states back to idle to
                restore the checkboxes post-install. */
