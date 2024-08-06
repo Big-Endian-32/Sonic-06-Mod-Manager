@@ -46,9 +46,9 @@ namespace SonicNextModManager.UI.ViewModel
 
         private void Database_ContentProcessedEvent(object in_sender, ContentProcessedEventArgs in_args)
         {
-            var progress = (double)in_args.Index / (double)in_args.Total * 100;
+            var progress = (double)in_args.Index / (double)in_args.Total * 100.0;
 #if DEBUG
-            Debug.WriteLine($"{State}: {progress}%");
+            Debug.WriteLine($"{State}: {progress}% ({in_args.Index} / {in_args.Total})");
 #endif
             if (State == InstallState.Installing)
             {
