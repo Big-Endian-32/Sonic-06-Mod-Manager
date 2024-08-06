@@ -110,29 +110,6 @@ namespace SonicNextModManager.Lua.Callback
         }
 
         /// <summary>
-        /// Decompiles the specified Lua script.
-        /// </summary>
-        /// <param name="in_path">The path to the Lua script to decompile.</param>
-        /// <returns><c>true</c> if the Lua script was decompiled successfully; otherwise, <c>false</c>.</returns>
-        [LuaCallback]
-        public static bool DecompileLua(string in_path)
-        {
-            LuaBinary lub = new();
-
-            try
-            {
-                lub.Load(in_path);
-                lub.Decompile();
-            }
-            catch (InvalidSignatureException)
-            {
-                return false;
-            }
-
-            return true;
-        }
-
-        /// <summary>
         /// Writes a file to the specified location.
         /// </summary>
         /// <param name="in_destination">The path to write to.</param>
