@@ -35,10 +35,17 @@ namespace SonicNextModManager.Lua.Wrappers.Text
 
         public void SetMessage(string in_name, string in_text, params string[] in_placeholders)
         {
-            var msg = GetMessage(in_name);
+            if (_messageTable.Data.Messages.Any(x => x.Name == in_name))
+            {
+                var msg = GetMessage(in_name);
 
-            msg.Text = in_text;
-            msg.Placeholders = in_placeholders;
+                msg.Text = in_text;
+                msg.Placeholders = in_placeholders;
+            }
+            else
+            {
+                _messageTable.Data.Messages.Add(new Message(in_name, in_text, in_placeholders));
+            }
         }
 
         public void Save()
