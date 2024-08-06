@@ -1,7 +1,4 @@
-﻿using Marathon.Exceptions;
-using Marathon.Formats.Archive;
-using Marathon.Formats.Script.Lua;
-using Marathon.Helpers;
+﻿using Marathon.Formats.Archive;
 using SonicNextModManager.Helpers;
 using SonicNextModManager.Lua.Attributes;
 using SonicNextModManager.Metadata;
@@ -11,6 +8,52 @@ namespace SonicNextModManager.Lua.Callback
 {
     public class IOFunctions
     {
+        /// <summary>
+        /// Decrypts the game executable.
+        /// </summary>
+        [LuaCallback]
+        public static void DecryptExecutable()
+        {
+            string executablePath = App.Settings.Path_GameExecutable!;
+
+            IOHelper.Backup(executablePath);
+
+            switch (App.GetCurrentPlatform())
+            {
+                case Platform.Xbox:
+                {
+                    Process.Start
+                    (
+                        new ProcessStartInfo
+                        {
+                            Arguments = $"-e u -c b \"{executablePath}\"",
+                            FileName = App.Modules["xextool"],
+                            WindowStyle = ProcessWindowStyle.Hidden
+                        }
+                    )
+                    !.WaitForExit();
+
+                    break;
+                }
+
+                case Platform.PlayStation:
+                {
+                    Process.Start
+                    (
+                        new ProcessStartInfo
+                        {
+                            Arguments = $"-d \"{executablePath}\" \"{executablePath}\"",
+                            FileName = App.Modules["scetool"],
+                            WindowStyle = ProcessWindowStyle.Hidden
+                        }
+                    )
+                    !.WaitForExit();
+
+                    break;
+                }
+            }
+        }
+
         /// <summary>
         /// Encrypts the game executable.
         /// </summary>
@@ -57,52 +100,6 @@ namespace SonicNextModManager.Lua.Callback
                     // Overwrite decrypted executable with the encrypted result.
                     if (File.Exists(encryptedName))
                         File.Move(encryptedName, executablePath, true);
-
-                    break;
-                }
-            }
-        }
-
-        /// <summary>
-        /// Decrypts the game executable.
-        /// </summary>
-        [LuaCallback]
-        public static void DecryptExecutable()
-        {
-            string executablePath = App.Settings.Path_GameExecutable!;
-
-            IOHelper.Backup(executablePath);
-
-            switch (App.GetCurrentPlatform())
-            {
-                case Platform.Xbox:
-                {
-                    Process.Start
-                    (
-                        new ProcessStartInfo
-                        {
-                            Arguments = $"-e u -c b \"{executablePath}\"",
-                            FileName = App.Modules["xextool"],
-                            WindowStyle = ProcessWindowStyle.Hidden
-                        }
-                    )
-                    !.WaitForExit();
-
-                    break;
-                }
-
-                case Platform.PlayStation:
-                {
-                    Process.Start
-                    (
-                        new ProcessStartInfo
-                        {
-                            Arguments = $"-d \"{executablePath}\" \"{executablePath}\"",
-                            FileName = App.Modules["scetool"],
-                            WindowStyle = ProcessWindowStyle.Hidden
-                        }
-                    )
-                    !.WaitForExit();
 
                     break;
                 }
