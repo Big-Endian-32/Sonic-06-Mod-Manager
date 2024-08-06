@@ -1,5 +1,4 @@
 ﻿using Marathon.Formats.Archive;
-using Marathon.Helpers;
 using Marathon.IO;
 using SonicNextModManager.Helpers;
 using System.Collections.ObjectModel;
@@ -11,7 +10,7 @@ namespace SonicNextModManager.Metadata
         /// <summary>
         /// The version string for this mod.
         /// </summary>
-        public string? Version { get; set; }
+        public string? Version { get; set; } = "1.0.0";
 
         /// <summary>
         /// A collection of patches required by this mod.

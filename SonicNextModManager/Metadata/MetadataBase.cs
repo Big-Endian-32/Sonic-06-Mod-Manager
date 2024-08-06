@@ -9,27 +9,27 @@ namespace SonicNextModManager.Metadata
         /// <summary>
         /// The title of this content.
         /// </summary>
-        public string? Title { get; set; }
+        public string? Title { get; set; } = LocaleService.Localise("Common_NotAvailable");
 
         /// <summary>
         /// The author of this content.
         /// </summary>
-        public string? Author { get; set; }
+        public string? Author { get; set; } = LocaleService.Localise("Common_NotAvailable");
 
         /// <summary>
         /// The platform this content is targeting.
         /// </summary>
-        public Platform Platform { get; set; }
+        public Platform Platform { get; set; } = Platform.Any;
 
         /// <summary>
         /// The date this content was created on.
         /// </summary>
-        public string? Date { get; set; }
+        public string? Date { get; set; } = "14/11/2006";
 
         /// <summary>
         /// Initialiser for <see cref="Description"/>.
         /// </summary>
-        private string? _Description;
+        private string? _Description = LocaleService.Localise("Patches_NoInfo");
 
         /// <summary>
         /// The description of this content.

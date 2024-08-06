@@ -155,6 +155,7 @@
     <system:String x:Key="Patches_Create"  >Create Patch</system:String>
     <system:String x:Key="Patches_Edit"    >Edit Patch</system:String>
     <system:String x:Key="Patches_Delete"  >Delete Patch</system:String>
+    <system:String x:Key="Patches_NoInfo"  >No information available.</system:String>
 
     <!-- Settings Strings -->
     <system:String x:Key="Settings"                                                  >Settings</system:String>

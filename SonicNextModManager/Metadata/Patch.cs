@@ -9,12 +9,12 @@ namespace SonicNextModManager.Metadata
         /// <summary>
         /// The category that represents this patch.
         /// </summary>
-        public string? Category { get; set; }
+        public string? Category { get; set; } = LocaleService.Localise("Common_NotAvailable");
 
         /// <summary>
         /// The short description for this patch.
         /// </summary>
-        public string? Blurb { get; set; }
+        public string? Blurb { get; set; } = LocaleService.Localise("Patches_NoInfo");
 
         /// <summary>
         /// The name of the first function to call in the Lua script - if null, the script in its entirety will be executed.
@@ -24,7 +24,7 @@ namespace SonicNextModManager.Metadata
         /// <summary>
         /// A collection of described declared variables used in the Lua script - used for configuration.
         /// </summary>
-        public ObservableCollection<Declaration> Declarations { get; set; } = new();
+        public ObservableCollection<Declaration> Declarations { get; set; } = [];
 
         [JsonIgnore]
         public string? Code { get; set; }
