@@ -67,24 +67,32 @@ namespace SonicNextModManager.Metadata
                 }
             }
 
+            if (!isJsonReached)
+                i = -1;
+
             // Extract Lua code from the remainder of the file.
             for (i++; i < lines.Length; i++)
                 lua.AppendLine(lines[i]);
 
-            var patch = JsonConvert.DeserializeObject<Patch>(json.ToString()) ??
-                throw new JsonException("Failed to parse patch metadata.");
+            // Only parse JSON if this patch has one.
+            if (isJsonReached)
+            {
+                var patch = JsonConvert.DeserializeObject<Patch>(json.ToString()) ??
+                    throw new JsonException("Failed to parse patch metadata.");
 
-            Title        = patch.Title;
-            Author       = patch.Author;
-            Platform     = patch.Platform;
-            Date         = patch.Date;
-            Description  = patch.Description;
-            Category     = patch.Category;
-            Blurb        = patch.Blurb;
-            Function     = patch.Function;
-            Declarations = patch.Declarations;
-            Code         = lua.ToString();
-            Location     = in_file;
+                Title        = patch.Title;
+                Author       = patch.Author;
+                Platform     = patch.Platform;
+                Date         = patch.Date;
+                Description  = patch.Description;
+                Category     = patch.Category;
+                Blurb        = patch.Blurb;
+                Function     = patch.Function;
+                Declarations = patch.Declarations;
+            }
+
+            Code     = lua.ToString();
+            Location = in_file;
         }
 
         public static Patch Parse(string? in_file)
