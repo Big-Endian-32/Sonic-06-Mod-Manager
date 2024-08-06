@@ -1,4 +1,5 @@
 ﻿using SonicNextModManager.Lua;
+using SonicNextModManager.UI.Dialogs;
 using System.Collections.ObjectModel;
 
 namespace SonicNextModManager.Metadata
@@ -123,7 +124,21 @@ namespace SonicNextModManager.Metadata
                 l.Globals[decl.Name] = decl.DefaultValue;
             }
 
-            l.DoString(Code);
+            try
+            {
+                l.DoString(Code);
+            }
+            catch (ScriptRuntimeException out_ex)
+            {
+                NextMessageBox.Show
+                (
+                    LocaleService.Localise("Exception_LuaError", out_ex),
+                    LocaleService.Localise("Exception_RuntimeError"),
+                    in_icon: NextMessageBoxIcon.Error
+                );
+
+                return;
+            }
 
             if (string.IsNullOrEmpty(Function))
                 return;

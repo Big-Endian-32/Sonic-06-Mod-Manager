@@ -54,9 +54,11 @@
     <!-- Exception Strings -->
     <system:String x:Key="Exception_Fatal"         >An unhandled exception has occurred and the application has been halted...</system:String>
     <system:String x:Key="Exception_MissingModules">Unable to locate the required modules for mod installation. Please redownload Sonic '06 Mod Manager...</system:String>
-    <system:String x:Key="Exception_NetworkError"  >Network error</system:String>
+    <system:String x:Key="Exception_NetworkError"  >Network Error</system:String>
     <system:String x:Key="Exception_InstallFailed" >Installation failed</system:String>
     <system:String x:Key="Exception_InstallError"  >An exception has occurred during installation.\n\n{0}</system:String>
+    <system:String x:Key="Exception_RuntimeError"  >Runtime Error</system:String>
+    <system:String x:Key="Exception_LuaError"      >A runtime error has occurred in the Lua script.\n\n{0}</system:String>
 
     <!-- Query Strings -->
     <system:String x:Key="Query_ModsDirectory"     >Please select your mods directory...</system:String>
