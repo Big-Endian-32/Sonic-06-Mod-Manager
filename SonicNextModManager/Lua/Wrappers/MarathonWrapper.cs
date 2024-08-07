@@ -15,6 +15,21 @@ namespace SonicNextModManager.Lua.Wrappers
             File = in_file;
         }
 
+        public static DynValue RegisterWrapperToArchiveFile<T>(string in_path) where T : MarathonWrapper
+        {
+            var file = ArchiveHelper.GetArchiveFile(in_path);
+
+            if (file == null)
+                return DynValue.Nil;
+
+            var instance = Activator.CreateInstance(typeof(T), file);
+
+            if (instance == null)
+                return DynValue.Nil;
+
+            return UserData.Create((T)instance);
+        }
+
         public void Save<T>(T in_instance) where T : FileBase
         {
             File.Data = IOHelper.GetMarathonTypeBuffer(in_instance);

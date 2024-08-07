@@ -1,5 +1,5 @@
-﻿using SonicNextModManager.Helpers;
-using SonicNextModManager.Lua.Attributes;
+﻿using SonicNextModManager.Lua.Attributes;
+using SonicNextModManager.Lua.Wrappers;
 using SonicNextModManager.Lua.Wrappers.Text;
 
 namespace SonicNextModManager.Lua.Callback
@@ -9,12 +9,7 @@ namespace SonicNextModManager.Lua.Callback
         [LuaCallback]
         public static DynValue LoadMessageTable(string in_path)
         {
-            var file = ArchiveHelper.GetArchiveFile(in_path);
-
-            if (file == null)
-                return DynValue.Nil;
-
-            return UserData.Create(new MessageTableWrapper(file));
+            return MarathonWrapper.RegisterWrapperToArchiveFile<MessageTableWrapper>(in_path);
         }
     }
 }
