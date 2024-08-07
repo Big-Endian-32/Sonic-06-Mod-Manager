@@ -24,7 +24,7 @@ namespace SonicNextModManager.UI
             if (in_metadata != null)
             {
                 Metadata = in_metadata;
-                Directory = in_metadata.Location;
+                Directory = Path.GetDirectoryName(in_metadata.Location);
 
                 // Set title to display the metadata name.
                 Title = LocaleService.Localise("Editor_Editing", in_metadata.Title);
