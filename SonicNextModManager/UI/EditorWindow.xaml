@@ -24,6 +24,8 @@
                 <Setter Property="TransitionMode" Value="Top2Bottom"/>
             </Style>
 
+            <converters:DateTimeConverter x:Key="DateTimeConverter"/>
+
         </Grid.Resources>
 
         <Grid.RowDefinitions>
@@ -61,7 +63,7 @@
 
                             <StackPanel Margin="0,0,0,15">
                                 <c:HorizontalFieldLabel Caption="{DynamicResource Metadata_Date}" Description="{DynamicResource Editor_Metadata_Date_Description}" Margin="0,0,0,5"/>
-                                <DatePicker SelectedDate="{Binding Date}"/>
+                                <DatePicker SelectedDate="{Binding Date, Converter={StaticResource DateTimeConverter}, Mode=TwoWay}"/>
                             </StackPanel>
 
                             <StackPanel Margin="0,0,0,15">

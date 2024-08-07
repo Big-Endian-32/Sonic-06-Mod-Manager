@@ -50,6 +50,7 @@
     <system:String x:Key="Common_OpenFolder"  >Open Folder</system:String>
     <system:String x:Key="Common_Updates"     >Check for Updates</system:String>
     <system:String x:Key="Common_PleaseWait"  >Please wait...</system:String>
+    <system:String x:Key="Common_DateFormat"  >dd/MM/yyyy</system:String>
 
     <!-- Exception Strings -->
     <system:String x:Key="Exception_Fatal"         >An unhandled exception has occurred and the application has been halted...</system:String>
