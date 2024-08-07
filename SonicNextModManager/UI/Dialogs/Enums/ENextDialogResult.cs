@@ -1,6 +1,6 @@
 namespace SonicNextModManager.UI.Dialogs
 {
-    public enum NextDialogResult
+    public enum ENextDialogResult
     {
         None,
         OK,

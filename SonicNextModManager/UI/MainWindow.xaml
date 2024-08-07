@@ -32,9 +32,9 @@
         <!-- Set up template for content metadata -->
         <DataTemplate x:Key="ContentListItem" DataType="{x:Type metadata:MetadataBase}">
             <StackPanel Orientation="Horizontal">
-                <c:IconFontControl Margin="-3,0,6,-1" Height="17" Text="done" Visibility="{Binding State, Converter={StaticResource InstallStateToVisibilityConverter}, ConverterParameter={x:Static local:InstallState.Installed}}" Width="18"/>
-                <hc:LoadingCircle Margin="-3,0,6,-1" DotDiameter="3" Height="17" Visibility="{Binding State, Converter={StaticResource InstallStateToVisibilityConverter}, ConverterParameter={x:Static local:InstallState.Installing}}" Width="18"/>
-                <CheckBox Margin="-3,0,8,0" Checked="Content_CheckBox_CheckedChanged" Unchecked="Content_CheckBox_CheckedChanged" IsChecked="{Binding IsEnabled}" VerticalAlignment="Center" Visibility="{Binding State, Converter={StaticResource InstallStateToVisibilityConverter}, ConverterParameter={x:Static local:InstallState.Idle}}"/>
+                <c:IconFontControl Margin="-3,0,6,-1" Height="17" Text="done" Visibility="{Binding State, Converter={StaticResource InstallStateToVisibilityConverter}, ConverterParameter={x:Static local:EInstallState.Installed}}" Width="18"/>
+                <hc:LoadingCircle Margin="-3,0,6,-1" DotDiameter="3" Height="17" Visibility="{Binding State, Converter={StaticResource InstallStateToVisibilityConverter}, ConverterParameter={x:Static local:EInstallState.Installing}}" Width="18"/>
+                <CheckBox Margin="-3,0,8,0" Checked="Content_CheckBox_CheckedChanged" Unchecked="Content_CheckBox_CheckedChanged" IsChecked="{Binding IsEnabled}" VerticalAlignment="Center" Visibility="{Binding State, Converter={StaticResource InstallStateToVisibilityConverter}, ConverterParameter={x:Static local:EInstallState.Idle}}"/>
                 <TextBlock Text="{Binding Title}" VerticalAlignment="Top"/>
             </StackPanel>
         </DataTemplate>

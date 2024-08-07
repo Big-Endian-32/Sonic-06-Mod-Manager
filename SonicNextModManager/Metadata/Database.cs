@@ -98,11 +98,11 @@ namespace SonicNextModManager.Metadata
                 (
                     LocaleService.Localise("Message_MigrateMods_Body", inis.Length),
                     LocaleService.Localise("Message_MigrateMods_Title"),
-                    NextMessageBoxButton.YesNo,
-                    NextMessageBoxIcon.Warning
+                    ENextMessageBoxButton.YesNo,
+                    ENextMessageBoxIcon.Warning
                 );
 
-                if (result == NextDialogResult.Yes)
+                if (result == ENextDialogResult.Yes)
                 {
                     var progressDlg = new ProgressDialog("Common_PleaseWait", "Message_MigrateMods_Title")
                     {
@@ -269,7 +269,7 @@ namespace SonicNextModManager.Metadata
             // Compute last index of installing or installed content.
             for (int i = collection.Count - 1; i > 0; i--)
             {
-                if (collection[i] is T { State: InstallState.Installing } || collection[i] is T { State: InstallState.Installed })
+                if (collection[i] is T { State: EInstallState.Installing } || collection[i] is T { State: EInstallState.Installed })
                     return i;
             }
 

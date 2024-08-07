@@ -142,7 +142,7 @@ namespace SonicNextModManager.Metadata
                 (
                     LocaleService.Localise("Exception_LuaError", out_ex),
                     LocaleService.Localise("Exception_RuntimeError"),
-                    in_icon: NextMessageBoxIcon.Error
+                    in_icon: ENextMessageBoxIcon.Error
                 );
 
                 return;

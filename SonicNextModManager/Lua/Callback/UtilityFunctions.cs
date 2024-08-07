@@ -26,8 +26,8 @@ namespace SonicNextModManager.Lua.Callback
         {
             return App.GetCurrentPlatform() switch
             {
-                Platform.Xbox        => (in_addr - 0x82000000) + 0x3000,
-                Platform.PlayStation => in_addr - 0x10000,
+                EPlatform.Xbox        => (in_addr - 0x82000000) + 0x3000,
+                EPlatform.PlayStation => in_addr - 0x10000,
                 _                    => in_addr,
             };
         }
@@ -41,8 +41,8 @@ namespace SonicNextModManager.Lua.Callback
         {
             return App.GetCurrentPlatform() switch
             {
-                Platform.Xbox        => (in_addr + 0x82000000) - 0x3000,
-                Platform.PlayStation => in_addr + 0x10000,
+                EPlatform.Xbox        => (in_addr + 0x82000000) - 0x3000,
+                EPlatform.PlayStation => in_addr + 0x10000,
                 _                    => in_addr,
             };
         }
@@ -92,14 +92,14 @@ namespace SonicNextModManager.Lua.Callback
             string in_icon = "Information"
         )
         {
-            if (!Enum.TryParse(typeof(NextMessageBoxButton), in_buttons, true, out var out_buttons))
-                out_buttons = NextMessageBoxButton.OK;
+            if (!Enum.TryParse(typeof(ENextMessageBoxButton), in_buttons, true, out var out_buttons))
+                out_buttons = ENextMessageBoxButton.OK;
 
-            if (!Enum.TryParse(typeof(NextMessageBoxIcon), in_icon, true, out var out_icon))
-                out_icon = NextMessageBoxIcon.Information;
+            if (!Enum.TryParse(typeof(ENextMessageBoxIcon), in_icon, true, out var out_icon))
+                out_icon = ENextMessageBoxIcon.Information;
 
             return App.Current.Dispatcher.Invoke(() =>
-                NextMessageBox.Show(in_message, in_caption, (NextMessageBoxButton)out_buttons, (NextMessageBoxIcon)out_icon).ToString());
+                NextMessageBox.Show(in_message, in_caption, (ENextMessageBoxButton)out_buttons, (ENextMessageBoxIcon)out_icon).ToString());
         }
     }
 }

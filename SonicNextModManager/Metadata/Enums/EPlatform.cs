@@ -1,7 +1,7 @@
 ﻿namespace SonicNextModManager.Metadata
 {
     [JsonConverter(typeof(StringEnumConverter))]
-    public enum Platform
+    public enum EPlatform
     {
         Any,
         Xbox,

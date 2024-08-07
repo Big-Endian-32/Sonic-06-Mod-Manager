@@ -42,7 +42,7 @@ namespace SonicNextModManager.UI
 
         private void UpdateXeniaFrontendVisibility()
         {
-            var isXbox = App.GetCurrentPlatform() == Platform.Xbox;
+            var isXbox = App.GetCurrentPlatform() == EPlatform.Xbox;
 
             XeniaFrontend.Visibility = isXbox
                 ? Visibility.Visible

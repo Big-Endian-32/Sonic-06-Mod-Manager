@@ -21,7 +21,7 @@ namespace SonicNextModManager.UI
                 (
                      "This is a message.",
                      "This is a caption.",
-                     NextMessageBoxButton.OK
+                     ENextMessageBoxButton.OK
                 );
             }
             else if (sender == NextMessageBox_Error)
@@ -30,8 +30,8 @@ namespace SonicNextModManager.UI
                 (
                      "This is an error message.",
                      "This is a caption.",
-                     NextMessageBoxButton.AbortRetryIgnore,
-                     NextMessageBoxIcon.Error
+                     ENextMessageBoxButton.AbortRetryIgnore,
+                     ENextMessageBoxIcon.Error
                 );
             }
             else if (sender == NextMessageBox_Question)
@@ -40,8 +40,8 @@ namespace SonicNextModManager.UI
                 (
                      "This is a question?",
                      "This is a caption.",
-                     NextMessageBoxButton.YesNo,
-                     NextMessageBoxIcon.Question
+                     ENextMessageBoxButton.YesNo,
+                     ENextMessageBoxIcon.Question
                 );
             }
             else if (sender == NextMessageBox_Warning)
@@ -50,8 +50,8 @@ namespace SonicNextModManager.UI
                 (
                      "This is a warning.",
                      "This is a caption.",
-                     NextMessageBoxButton.YesNoCancel,
-                     NextMessageBoxIcon.Warning
+                     ENextMessageBoxButton.YesNoCancel,
+                     ENextMessageBoxIcon.Warning
                 );
             }
             else if (sender == NextMessageBox_Information)
@@ -60,8 +60,8 @@ namespace SonicNextModManager.UI
                 (
                      "This is some information.",
                      "This is a caption.",
-                     NextMessageBoxButton.OK,
-                     NextMessageBoxIcon.Information
+                     ENextMessageBoxButton.OK,
+                     ENextMessageBoxIcon.Information
                 );
             }
         }

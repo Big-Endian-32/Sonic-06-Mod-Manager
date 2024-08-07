@@ -71,7 +71,7 @@ namespace SonicNextModManager.Metadata
             if (string.IsNullOrEmpty(gameDirectory) || string.IsNullOrEmpty(modDirectory))
                 return;
 
-            State = InstallState.Installing;
+            State = EInstallState.Installing;
 
             // Loop through each file in this mod.
             foreach (var file in Directory.GetFiles(modDirectory, "*", SearchOption.AllDirectories))
@@ -159,7 +159,7 @@ namespace SonicNextModManager.Metadata
                 }
             }
 
-            State = InstallState.Installed;
+            State = EInstallState.Installed;
         }
 
         public void Uninstall()
@@ -170,7 +170,7 @@ namespace SonicNextModManager.Metadata
             if (string.IsNullOrEmpty(gameDirectory) || string.IsNullOrEmpty(modDirectory))
                 return;
 
-            State = InstallState.Uninstalling;
+            State = EInstallState.Uninstalling;
 
             // Remove custom files.
             foreach (var file in Directory.GetFiles(modDirectory, "#*", SearchOption.AllDirectories))
@@ -184,7 +184,7 @@ namespace SonicNextModManager.Metadata
                 File.Delete(originalPath);
             }
 
-            State = InstallState.Idle;
+            State = EInstallState.Idle;
         }
     }
 }

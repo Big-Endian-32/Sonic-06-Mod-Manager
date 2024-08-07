@@ -19,7 +19,7 @@ namespace SonicNextModManager.Lua
 
             // Initialise patch symbols.
             AddSymbol("Executable", App.Settings.Path_GameExecutable!);
-            AddSymbol("Platform", App.GetCurrentPlatform() == Platform.Xbox ? "xenon" : "ps3");
+            AddSymbol("Platform", App.GetCurrentPlatform() == EPlatform.Xbox ? "xenon" : "ps3");
             AddSymbol("Root", App.Settings.GetGameDirectory()!);
 
             return L;

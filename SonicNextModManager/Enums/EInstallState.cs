@@ -1,6 +1,6 @@
 ﻿namespace SonicNextModManager
 {
-    public enum InstallState
+    public enum EInstallState
     {
         Idle,
         Installing,

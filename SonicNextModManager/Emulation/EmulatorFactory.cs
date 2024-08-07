@@ -21,7 +21,7 @@ namespace SonicNextModManager.Emulation
 
             switch (App.GetCurrentPlatform())
             {
-                case Platform.Xbox:
+                case EPlatform.Xbox:
                 {
                     result.ArgumentList.Add($"--gpu={App.Settings.Emulator_Xenia_Backend.ToString().ToLower()}");
                     result.ArgumentList.Add($"--draw_resolution_scale_x={App.Settings.Emulator_Xenia_Width + 1}");

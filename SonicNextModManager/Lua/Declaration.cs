@@ -6,7 +6,7 @@
 
         public string? Description { get; set; }
 
-        public DeclarationType? Type { get; set; }
+        public EDeclarationType? Type { get; set; }
 
         public object? DefaultValue { get; set; }
     }

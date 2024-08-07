@@ -51,7 +51,7 @@ namespace SonicNextModManager.UI.Dialogs
             set => SetValue(ButtonWidthProperty, value);
         }
 
-        public NextDialogResult Result { get; private set; }
+        public ENextDialogResult Result { get; private set; }
 
         public NextMessageBox()
         {
@@ -80,12 +80,12 @@ namespace SonicNextModManager.UI.Dialogs
         /// <param name="in_caption">Title bar caption to use.</param>
         /// <param name="in_buttons">Win32 buttons to display.</param>
         /// <param name="in_icon">Win32 icon to display.</param>
-        public static NextDialogResult Show
+        public static ENextDialogResult Show
         (
             string in_message,
             string in_caption = "",
-            NextMessageBoxButton in_buttons = NextMessageBoxButton.OK,
-            NextMessageBoxIcon in_icon = NextMessageBoxIcon.None
+            ENextMessageBoxButton in_buttons = ENextMessageBoxButton.OK,
+            ENextMessageBoxIcon in_icon = ENextMessageBoxIcon.None
         )
         {
             var msg = new NextMessageBox();
@@ -121,46 +121,46 @@ namespace SonicNextModManager.UI.Dialogs
             => DialogButtons.RemoveButton(in_caption);
 
         /// <summary>
-        /// Adds the generic Win32 default buttons using <see cref="NextMessageBoxButton"/>.
+        /// Adds the generic Win32 default buttons using <see cref="ENextMessageBoxButton"/>.
         /// </summary>
         /// <param name="in_buttons">Tasks to use.</param>
-        public void SetButtons(NextMessageBoxButton in_buttons)
+        public void SetButtons(ENextMessageBoxButton in_buttons)
         {
             switch (in_buttons)
             {
-                case NextMessageBoxButton.OK:
-                    SetButtonResultAndClose("Common_OK", NextDialogResult.OK);
+                case ENextMessageBoxButton.OK:
+                    SetButtonResultAndClose("Common_OK", ENextDialogResult.OK);
                     break;
 
-                case NextMessageBoxButton.OKCancel:
-                    SetButtonResultAndClose("Common_Cancel", NextDialogResult.Cancel);
-                    SetButtonResultAndClose("Common_OK", NextDialogResult.OK);
+                case ENextMessageBoxButton.OKCancel:
+                    SetButtonResultAndClose("Common_Cancel", ENextDialogResult.Cancel);
+                    SetButtonResultAndClose("Common_OK", ENextDialogResult.OK);
                     break;
 
-                case NextMessageBoxButton.AbortRetryIgnore:
-                    SetButtonResultAndClose("Common_Ignore", NextDialogResult.Ignore);
-                    SetButtonResultAndClose("Common_Retry", NextDialogResult.Retry);
-                    SetButtonResultAndClose("Common_Abort", NextDialogResult.Abort);
+                case ENextMessageBoxButton.AbortRetryIgnore:
+                    SetButtonResultAndClose("Common_Ignore", ENextDialogResult.Ignore);
+                    SetButtonResultAndClose("Common_Retry", ENextDialogResult.Retry);
+                    SetButtonResultAndClose("Common_Abort", ENextDialogResult.Abort);
                     break;
 
-                case NextMessageBoxButton.YesNoCancel:
-                    SetButtonResultAndClose("Common_Cancel", NextDialogResult.Cancel);
-                    SetButtonResultAndClose("Common_No", NextDialogResult.No);
-                    SetButtonResultAndClose("Common_Yes", NextDialogResult.Yes);
+                case ENextMessageBoxButton.YesNoCancel:
+                    SetButtonResultAndClose("Common_Cancel", ENextDialogResult.Cancel);
+                    SetButtonResultAndClose("Common_No", ENextDialogResult.No);
+                    SetButtonResultAndClose("Common_Yes", ENextDialogResult.Yes);
                     break;
 
-                case NextMessageBoxButton.YesNo:
-                    SetButtonResultAndClose("Common_No", NextDialogResult.No);
-                    SetButtonResultAndClose("Common_Yes", NextDialogResult.Yes);
+                case ENextMessageBoxButton.YesNo:
+                    SetButtonResultAndClose("Common_No", ENextDialogResult.No);
+                    SetButtonResultAndClose("Common_Yes", ENextDialogResult.Yes);
                     break;
 
-                case NextMessageBoxButton.RetryCancel:
-                    SetButtonResultAndClose("Common_Cancel", NextDialogResult.Cancel);
-                    SetButtonResultAndClose("Common_Retry", NextDialogResult.Retry);
+                case ENextMessageBoxButton.RetryCancel:
+                    SetButtonResultAndClose("Common_Cancel", ENextDialogResult.Cancel);
+                    SetButtonResultAndClose("Common_Retry", ENextDialogResult.Retry);
                     break;
             }
 
-            void SetButtonResultAndClose(string in_str, NextDialogResult in_result)
+            void SetButtonResultAndClose(string in_str, ENextDialogResult in_result)
             {
                 AddButton
                 (
@@ -174,36 +174,36 @@ namespace SonicNextModManager.UI.Dialogs
         }
 
         /// <summary>
-        /// Sets the icon used by the message using <see cref="NextMessageBoxIcon"/>.
+        /// Sets the icon used by the message using <see cref="ENextMessageBoxIcon"/>.
         /// </summary>
         /// <param name="in_icon">Icon to display.</param>
-        public void SetIcon(NextMessageBoxIcon in_icon)
+        public void SetIcon(ENextMessageBoxIcon in_icon)
         {
             // Set default width in case this changes whilst the dialog is open.
             IconColumn.Width = new GridLength(72);
 
             switch (in_icon)
             {
-                case NextMessageBoxIcon.None:
+                case ENextMessageBoxIcon.None:
                     IconColumn.Width = new GridLength(0);
                     break;
 
-                case NextMessageBoxIcon.Error:
+                case ENextMessageBoxIcon.Error:
                     SystemSounds.Hand.Play();
                     MessageIcon.Source = ImageHelper.GdiBitmapToBitmapSource(Properties.Resources.Error);
                     break;
 
-                case NextMessageBoxIcon.Question:
+                case ENextMessageBoxIcon.Question:
                     SystemSounds.Question.Play();
                     MessageIcon.Source = ImageHelper.GdiBitmapToBitmapSource(Properties.Resources.Question);
                     break;
 
-                case NextMessageBoxIcon.Warning:
+                case ENextMessageBoxIcon.Warning:
                     SystemSounds.Asterisk.Play();
                     MessageIcon.Source = ImageHelper.GdiBitmapToBitmapSource(Properties.Resources.Warning);
                     break;
 
-                case NextMessageBoxIcon.Information:
+                case ENextMessageBoxIcon.Information:
                     SystemSounds.Asterisk.Play();
                     MessageIcon.Source = ImageHelper.GdiBitmapToBitmapSource(Properties.Resources.Information);
                     break;

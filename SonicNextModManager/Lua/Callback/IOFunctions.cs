@@ -20,7 +20,7 @@ namespace SonicNextModManager.Lua.Callback
 
             switch (App.GetCurrentPlatform())
             {
-                case Platform.Xbox:
+                case EPlatform.Xbox:
                 {
                     Process.Start
                     (
@@ -36,7 +36,7 @@ namespace SonicNextModManager.Lua.Callback
                     break;
                 }
 
-                case Platform.PlayStation:
+                case EPlatform.PlayStation:
                 {
                     Process.Start
                     (
@@ -66,7 +66,7 @@ namespace SonicNextModManager.Lua.Callback
 
             switch (App.GetCurrentPlatform())
             {
-                case Platform.Xbox:
+                case EPlatform.Xbox:
                 {
                     Process.Start
                     (
@@ -82,7 +82,7 @@ namespace SonicNextModManager.Lua.Callback
                     break;
                 }
 
-                case Platform.PlayStation:
+                case EPlatform.PlayStation:
                 {
                     string encryptedName = $"{executablePath}_ENC";
 

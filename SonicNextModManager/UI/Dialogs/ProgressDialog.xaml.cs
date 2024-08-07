@@ -147,11 +147,11 @@ namespace SonicNextModManager.UI.Dialogs
             (
                 LocaleService.Localise("Message_CancelOperation_Body"),
                 LocaleService.Localise("Common_Cancel"),
-                NextMessageBoxButton.YesNo,
-                NextMessageBoxIcon.Question
+                ENextMessageBoxButton.YesNo,
+                ENextMessageBoxIcon.Question
             );
 
-            if (result == NextDialogResult.No)
+            if (result == ENextDialogResult.No)
                 return;
 
             Cancel.IsEnabled = false;

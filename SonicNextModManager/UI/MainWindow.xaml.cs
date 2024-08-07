@@ -132,7 +132,7 @@ namespace SonicNextModManager.UI
             // Save content database.
             _viewModel.Database.Save();
 
-            if (_viewModel.State == InstallState.Installing)
+            if (_viewModel.State == EInstallState.Installing)
             {
                 var metadata = ((CheckBox)in_sender).DataContext as MetadataBase;
 
@@ -202,7 +202,7 @@ namespace SonicNextModManager.UI
                 selectedItem.IsInfoDisplay ^= true;
         }
 
-        private void SetInstallState(InstallState in_state)
+        private void SetInstallState(EInstallState in_state)
         {
             _viewModel.State = in_state;
 
@@ -212,23 +212,23 @@ namespace SonicNextModManager.UI
                 {
                     switch (in_state)
                     {
-                        case InstallState.Idle:
+                        case EInstallState.Idle:
                             Install.IsEnabled = Uninstall.IsEnabled = EmulatorLauncher.IsEnabled = true;
                             Install.Content = LocaleService.Localise("Main_Install");
                             break;
 
-                        case InstallState.Installing:
+                        case EInstallState.Installing:
                             Install.IsEnabled = true;
                             Uninstall.IsEnabled = EmulatorLauncher.IsEnabled = false;
                             Install.Content = LocaleService.Localise("Common_Cancel");
                             break;
 
-                        case InstallState.Uninstalling:
+                        case EInstallState.Uninstalling:
                             Install.IsEnabled = Uninstall.IsEnabled = EmulatorLauncher.IsEnabled = false;
                             Install.Content = LocaleService.Localise("Main_Install");
                             break;
 
-                        case InstallState.Cancelling:
+                        case EInstallState.Cancelling:
                             Install.IsEnabled = Uninstall.IsEnabled = EmulatorLauncher.IsEnabled = false;
                             Install.Content = LocaleService.Localise("Common_Cancelling");
                             break;
@@ -241,9 +241,9 @@ namespace SonicNextModManager.UI
         {
             var isCancelled = false;
 
-            if (_viewModel.State == InstallState.Installing)
+            if (_viewModel.State == EInstallState.Installing)
             {
-                SetInstallState(InstallState.Cancelling);
+                SetInstallState(EInstallState.Cancelling);
 
                 _cts.Cancel();
 
@@ -251,12 +251,12 @@ namespace SonicNextModManager.UI
             }
             else
             {
-                SetInstallState(InstallState.Uninstalling);
+                SetInstallState(EInstallState.Uninstalling);
 
                 // Uninstall content before installing to prevent stacking.
                 await Task.Run(_viewModel.Database.Uninstall);
 
-                SetInstallState(InstallState.Installing);
+                SetInstallState(EInstallState.Installing);
             }
 
             try
@@ -265,7 +265,7 @@ namespace SonicNextModManager.UI
                 {
                     _viewModel.Database.Uninstall();
 
-                    SetInstallState(InstallState.Idle);
+                    SetInstallState(EInstallState.Idle);
                 }
 
                 await Task.Run(() => _viewModel.Database.Install(_cts.Token, OnCancel), _cts.Token);
@@ -297,10 +297,10 @@ namespace SonicNextModManager.UI
             /* Reset mod states back to idle to
                restore the checkboxes post-install. */
             foreach (var mod in _viewModel!.Database!.Mods!)
-                mod.State = InstallState.Idle;
+                mod.State = EInstallState.Idle;
 
             if (!isCancelled)
-                SetInstallState(InstallState.Idle);
+                SetInstallState(EInstallState.Idle);
 
             _viewModel.ResetProgress();
 
@@ -310,11 +310,11 @@ namespace SonicNextModManager.UI
 
         private async void Uninstall_Click(object in_sender, RoutedEventArgs in_args)
         {
-            SetInstallState(InstallState.Uninstalling);
+            SetInstallState(EInstallState.Uninstalling);
 
             await Task.Run(_viewModel.Database.Uninstall);
 
-            SetInstallState(InstallState.Idle);
+            SetInstallState(EInstallState.Idle);
 
             _viewModel.ResetProgress();
         }
@@ -329,11 +329,11 @@ namespace SonicNextModManager.UI
                 (
                     LocaleService.Localise("Message_NoEmulator_Body"),
                     LocaleService.Localise("Message_NoEmulator_Title"),
-                    NextMessageBoxButton.YesNo,
-                    NextMessageBoxIcon.Question
+                    ENextMessageBoxButton.YesNo,
+                    ENextMessageBoxIcon.Question
                 );
 
-                if (result == NextDialogResult.No)
+                if (result == ENextDialogResult.No)
                     return;
 
                 App.Settings.Path_EmulatorExecutable = FileQueries.QueryEmulatorExecutable();
@@ -416,12 +416,12 @@ namespace SonicNextModManager.UI
                 (
                     LocaleService.Localise("Message_DeleteContent_Body", metadata.Title),
                     LocaleService.Localise("Message_DeleteContent_Title"),
-                    NextMessageBoxButton.YesNo,
-                    NextMessageBoxIcon.Question
+                    ENextMessageBoxButton.YesNo,
+                    ENextMessageBoxIcon.Question
                 );
 
                 // Delete selected content.
-                if (result == NextDialogResult.Yes)
+                if (result == ENextDialogResult.Yes)
                     _viewModel.Database.Delete(metadata);
             }
         }

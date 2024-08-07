@@ -17,7 +17,7 @@ namespace SonicNextModManager.UI.ViewModel
         /// <summary>
         /// The current content installation state.
         /// </summary>
-        public InstallState State { get; set; } = InstallState.Idle;
+        public EInstallState State { get; set; } = EInstallState.Idle;
 
         /// <summary>
         /// The current content database containing mods and patches.
@@ -50,12 +50,12 @@ namespace SonicNextModManager.UI.ViewModel
 #if DEBUG
             Debug.WriteLine($"{State}: {progress}% ({in_args.Index} / {in_args.Total})");
 #endif
-            if (State == InstallState.Installing)
+            if (State == EInstallState.Installing)
             {
                 InstallProgress = progress;
                 UninstallProgress = 0;
             }
-            else if (State == InstallState.Uninstalling)
+            else if (State == EInstallState.Uninstalling)
             {
                 InstallProgress = 0;
                 UninstallProgress = progress;

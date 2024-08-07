@@ -19,7 +19,7 @@ namespace SonicNextModManager.Metadata
         /// <summary>
         /// The platform this content is targeting.
         /// </summary>
-        public Platform Platform { get; set; } = Platform.Any;
+        public EPlatform Platform { get; set; } = EPlatform.Any;
 
         /// <summary>
         /// The date this content was created on.
@@ -63,7 +63,7 @@ namespace SonicNextModManager.Metadata
         /// The state of this content's installation process.
         /// </summary>
         [JsonIgnore]
-        public InstallState State { get; set; }
+        public EInstallState State { get; set; }
 
         /// <summary>
         /// The path to this content.

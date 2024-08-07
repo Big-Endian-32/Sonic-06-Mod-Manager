@@ -1,6 +1,6 @@
 namespace SonicNextModManager.UI.Dialogs
 {
-    public enum NextMessageBoxButton
+    public enum ENextMessageBoxButton
     {
         None,
         OK,

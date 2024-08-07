@@ -83,7 +83,7 @@ namespace SonicNextModManager
         /// Gets the current platform from the game executable path.
         /// </summary>
         /// <returns></returns>
-        public static Platform GetCurrentPlatform()
+        public static EPlatform GetCurrentPlatform()
         {
             return StringHelper.GetPlatformFromFilePath(Settings.Path_GameExecutable);
         }
