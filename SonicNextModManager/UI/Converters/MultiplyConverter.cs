@@ -2,20 +2,22 @@
 {
     public class MultiplyConverter : IMultiValueConverter
     {
-        public object Convert(object[] values, Type targetType, object parameter, CultureInfo culture)
+        public object Convert(object[] in_values, Type in_targetType, object in_param, CultureInfo in_culture)
         {
             double result = 1.0;
 
-            for (int i = 0; i < values.Length; i++)
+            for (int i = 0; i < in_values.Length; i++)
             {
-                if (values[i] is double)
-                    result *= (double)values[i];
+                if (in_values[i] is double)
+                    result *= (double)in_values[i];
             }
 
             return result;
         }
 
-        public object[] ConvertBack(object value, Type[] targetTypes, object parameter, CultureInfo culture)
-            => throw new NotImplementedException();
+        public object[] ConvertBack(object in_value, Type[] in_targetTypes, object in_param, CultureInfo in_culture)
+        {
+            throw new NotImplementedException();
+        }
     }
 }

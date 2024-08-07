@@ -6,6 +6,12 @@ namespace SonicNextModManager.Metadata
     {
         public event PropertyChangedEventHandler? PropertyChanged;
 
+        #region Initialisers
+
+        private string? _description = LocaleService.Localise("Patches_NoInfo");
+
+        #endregion
+
         /// <summary>
         /// The title of this content.
         /// </summary>
@@ -24,21 +30,16 @@ namespace SonicNextModManager.Metadata
         /// <summary>
         /// The date this content was created on.
         /// </summary>
-        public string? Date { get; set; } = "14/11/2006";
-
-        /// <summary>
-        /// Initialiser for <see cref="Description"/>.
-        /// </summary>
-        private string? _Description = LocaleService.Localise("Patches_NoInfo");
+        public string? Date { get; set; }
 
         /// <summary>
         /// The description of this content.
         /// </summary>
         public string? Description
         {
-            get => _Description?.Replace("\\n", Environment.NewLine);
+            get => _description?.Replace("\\n", Environment.NewLine);
 
-            set => _Description = value;
+            set => _description = value;
         }
 
         /// <summary>
