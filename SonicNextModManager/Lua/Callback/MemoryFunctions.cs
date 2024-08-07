@@ -48,9 +48,9 @@ namespace SonicNextModManager.Lua.Callback
         /// </summary>
         /// <param name="in_file">The path to the file to write to.</param>
         /// <param name="in_addr">The address in the file to write to.</param>
-        /// <param name="in_hexStr">The bytes to write in a hexadecimal string.</param>
+        /// <param name="in_data">The bytes to write.</param>
         [LuaCallback]
-        public static bool WriteBytes(string in_file, uint in_addr, string in_hexStr)
+        public static bool WriteBytes(string in_file, uint in_addr, byte[] in_data)
         {
 #if !DEBUG
             try
@@ -65,11 +65,7 @@ namespace SonicNextModManager.Lua.Callback
                     using (var writer = new BinaryWriter(fileStream))
                     {
                         writer.BaseStream.Seek(in_addr, SeekOrigin.Begin);
-                        writer.Write(MemoryHelper.HexStringToByteArray(in_hexStr));
-
-#if DEBUG
-                        Console.WriteLine($"Written bytes to 0x{in_addr:X8}: {in_hexStr}");
-#endif
+                        writer.Write(in_data);
                     }
                 }
 #if !DEBUG
@@ -90,11 +86,11 @@ namespace SonicNextModManager.Lua.Callback
         /// </summary>
         /// <param name="in_file">The path to the file to write to.</param>
         /// <param name="in_addr">The address in the file to write to.</param>
-        /// <param name="in_data">The bytes to write.</param>
+        /// <param name="in_hexStr">The bytes to write in a hexadecimal string.</param>
         [LuaCallback]
-        public static bool WriteBytes(string in_file, uint in_addr, byte[] in_data)
+        public static bool WriteBytes(string in_file, uint in_addr, string in_hexStr)
         {
-            return WriteBytes(in_file, in_addr, MemoryHelper.ByteArrayToHexString(in_data));
+            return WriteBytes(in_file, in_addr, MemoryHelper.HexStringToByteArray(in_hexStr));
         }
 
         /// <summary>

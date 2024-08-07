@@ -1,32 +1,18 @@
-﻿using Marathon.Exceptions;
-using Marathon.Formats.Script.Lua;
-using SonicNextModManager.Lua.Attributes;
+﻿using SonicNextModManager.Lua.Attributes;
+using SonicNextModManager.Lua.Wrappers;
+using SonicNextModManager.Lua.Wrappers.Script;
 
 namespace SonicNextModManager.Lua.Callback
 {
-    internal class ScriptFunctions
+    public class ScriptFunctions
     {
-        /// <summary>
-        /// Decompiles the specified Lua script.
-        /// </summary>
-        /// <param name="in_path">The path to the Lua script to decompile.</param>
-        /// <returns><c>true</c> if the Lua script was decompiled successfully; otherwise, <c>false</c>.</returns>
         [LuaCallback]
-        public static bool DecompileLua(string in_path)
+        public static DynValue LoadLuaScript(string in_path)
         {
-            LuaBinary lub = new();
+            if (Path.GetExtension(in_path) == ".lua")
+                in_path = Path.ChangeExtension(in_path, ".lub");
 
-            try
-            {
-                lub.Load(in_path);
-                lub.Decompile();
-            }
-            catch (InvalidSignatureException)
-            {
-                return false;
-            }
-
-            return true;
+            return MarathonWrapper.RegisterWrapperToArchiveFile<LuaBinaryWrapper>(in_path);
         }
     }
 }

@@ -22,7 +22,7 @@ namespace SonicNextModManager.Extensions
         }
 
         /// <summary>
-        /// Registers all classes marked as Lua user data with the interpreter.
+        /// Registers all classes derived from ILuaUserDataDescriptor with the interpreter.
         /// </summary>
         /// <param name="L">The script to push to.</param>
         public static void RegisterDescriptors(this Script L)
@@ -55,6 +55,24 @@ namespace SonicNextModManager.Extensions
 
             foreach (var type in types)
                 UserData.RegisterType(type);
+        }
+
+        /// <summary>
+        /// Registers all enums marked as Lua enums with the interpreter.
+        /// </summary>
+        /// <param name="L">The script to push to.</param>
+        public static void RegisterEnums(this Script L)
+        {
+            var types = Assembly.GetExecutingAssembly().GetTypes()
+                .Where(x => x.GetCustomAttributes(typeof(LuaEnumAttribute), false).Length > 0);
+
+            foreach (var type in types)
+            {
+                L.Globals[type.Name] = DynValue.NewTable(L);
+
+                foreach (var value in Enum.GetValues(type))
+                    ((Table)L.Globals[type.Name])[value.ToString()] = DynValue.NewNumber((int)value);
+            }
         }
     }
 }

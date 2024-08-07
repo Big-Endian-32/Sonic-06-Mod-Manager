@@ -73,5 +73,25 @@ namespace SonicNextModManager.Helpers
 
             return Path.Combine(dir, name);
         }
+
+        /// <summary>
+        /// Gets a list of indices where the input substring is found in a given string.
+        /// </summary>
+        /// <param name="in_str">The string to find substrings in.</param>
+        /// <param name="in_substr">The substring to search for.</param>
+        /// <returns>A list of indices where a substring appears in the given string.</returns>
+        public static List<int> GetSubstringIndices(string in_str, string in_substr)
+        {
+            var indices = new List<int>();
+
+            int i = 0;
+            while ((i = in_str.IndexOf(in_substr, i)) != -1)
+            {
+                indices.Add(i);
+                i += in_substr.Length;
+            }
+
+            return indices;
+        }
     }
 }

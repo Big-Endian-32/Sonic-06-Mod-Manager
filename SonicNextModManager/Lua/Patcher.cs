@@ -16,6 +16,7 @@ namespace SonicNextModManager.Lua
             L.RegisterCallbacks();
             L.RegisterDescriptors();
             L.RegisterUserData();
+            L.RegisterEnums();
 
             // Initialise patch symbols.
             AddSymbol("Executable", App.Settings.Path_GameExecutable!);
