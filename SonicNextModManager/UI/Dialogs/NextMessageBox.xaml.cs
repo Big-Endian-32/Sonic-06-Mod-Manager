@@ -88,21 +88,27 @@ namespace SonicNextModManager.UI.Dialogs
             ENextMessageBoxIcon in_icon = ENextMessageBoxIcon.None
         )
         {
-            var msg = new NextMessageBox();
+            return App.Current.Dispatcher.Invoke
+            (
+                () =>
+                {
+                    var msg = new NextMessageBox();
 
-            msg.Message = in_message;
-            msg.Caption = in_caption;
+                    msg.Message = in_message;
+                    msg.Caption = in_caption;
 
-            // Add generic Win32 buttons.
-            msg.SetButtons(in_buttons);
+                    // Add generic Win32 buttons.
+                    msg.SetButtons(in_buttons);
 
-            // Set dialog icon.
-            msg.SetIcon(in_icon);
+                    // Set dialog icon.
+                    msg.SetIcon(in_icon);
 
-            // Open message box.
-            msg.ShowDialog();
+                    // Open message box.
+                    msg.ShowDialog();
 
-            return msg.Result;
+                    return msg.Result;
+                }
+            );
         }
 
         /// <summary>

@@ -98,8 +98,7 @@ namespace SonicNextModManager.Lua.Callback
             if (!Enum.TryParse(typeof(ENextMessageBoxIcon), in_icon, true, out var out_icon))
                 out_icon = ENextMessageBoxIcon.Information;
 
-            return App.Current.Dispatcher.Invoke(() =>
-                NextMessageBox.Show(in_message, in_caption, (ENextMessageBoxButton)out_buttons, (ENextMessageBoxIcon)out_icon).ToString());
+            return NextMessageBox.Show(in_message, in_caption, (ENextMessageBoxButton)out_buttons, (ENextMessageBoxIcon)out_icon).ToString();
         }
     }
 }
