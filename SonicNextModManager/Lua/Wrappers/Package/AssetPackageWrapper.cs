@@ -31,6 +31,16 @@ namespace SonicNextModManager.Lua.Wrappers.Package
             L.RegisterType<AssetFile>();
         }
 
+        public void AddCategory(string in_name)
+        {
+            _assetPackage.Categories.Add(new(in_name));
+        }
+
+        public void RemoveCategory(string in_name)
+        {
+            _assetPackage.Categories.RemoveAll(x => x.Name == in_name);
+        }
+
         public AssetCategoryWrapper GetCategory(string in_name)
         {
             return new AssetCategoryWrapper(_assetPackage.Categories.Where(x => x.Name == in_name).FirstOrDefault()!);
@@ -66,7 +76,12 @@ namespace SonicNextModManager.Lua.Wrappers.Package
 
         public void AddFile(string in_name, string in_path)
         {
-            _assetCategory.Files.Add(new AssetFile(in_name, in_path));
+            _assetCategory.Files.Add(new(in_name, in_path));
+        }
+
+        public void RemoveFile(string in_name)
+        {
+            _assetCategory.Files.RemoveAll(x => x.Name == in_name);
         }
 
         public AssetFile GetFile(string in_name)
@@ -77,11 +92,6 @@ namespace SonicNextModManager.Lua.Wrappers.Package
         public AssetFile[] GetFiles()
         {
             return [.. _assetCategory.Files];
-        }
-
-        public void DeleteFile(string in_name)
-        {
-            _assetCategory.Files.Remove(GetFile(in_name));
         }
     }
 }

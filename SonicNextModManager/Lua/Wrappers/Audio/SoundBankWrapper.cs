@@ -24,6 +24,11 @@ namespace SonicNextModManager.Lua.Wrappers.Audio
             L.RegisterType<Cue>();
         }
 
+        public void RemoveCue(string in_name)
+        {
+            _soundBank.Data.Cues.RemoveAll(x => x.Name == in_name);
+        }
+
         public Cue GetCue(string in_name)
         {
             return _soundBank.Data.Cues.Where(x => x.Name == in_name).FirstOrDefault()!;
@@ -47,17 +52,22 @@ namespace SonicNextModManager.Lua.Wrappers.Audio
             }
             else
             {
-                // TODO: Give Marathon Cue Constructors and crush this down like in the Message Table Wrapper.
-                var cue = new Cue()
-                {
-                    Name = in_name,
-                    Category = in_category,
-                    UnknownSingle = in_unknownSingle,
-                    Radius = in_radius,
-                    Stream = in_stream
-                };
+                _soundBank.Data.Cues.Add(new(in_name, in_category, in_unknownSingle, in_radius, in_stream));
+            }
+        }
 
+        public void SetCue(DynValue in_table)
+        {
+            var cue = in_table.ParseClassFromDynValue<Cue>();
+            var index = _soundBank.Data.Cues.FindIndex(x => x.Name == cue.Name);
+
+            if (index == -1)
+            {
                 _soundBank.Data.Cues.Add(cue);
+            }
+            else
+            {
+                _soundBank.Data.Cues[index] = cue;
             }
         }
 

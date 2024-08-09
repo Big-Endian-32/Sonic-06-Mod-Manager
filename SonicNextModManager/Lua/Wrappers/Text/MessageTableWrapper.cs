@@ -45,7 +45,7 @@ namespace SonicNextModManager.Lua.Wrappers.Text
             }
             else
             {
-                _messageTable.Data.Messages.Add(new Message(in_name, in_text, in_placeholders));
+                _messageTable.Data.Messages.Add(new(in_name, in_text, in_placeholders));
             }
         }
 
