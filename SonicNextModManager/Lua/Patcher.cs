@@ -22,6 +22,7 @@ namespace SonicNextModManager.Lua
             AddSymbol("Executable", App.Settings.Path_GameExecutable!);
             AddSymbol("Platform", App.GetCurrentPlatform() == EPlatform.Xbox ? "xenon" : "ps3");
             AddSymbol("Root", App.Settings.GetGameDirectory()!);
+            AddSymbol("Language", App.CurrentCulture?.Name!);
 
             return L;
         }
