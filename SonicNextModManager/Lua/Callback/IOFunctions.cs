@@ -1,5 +1,4 @@
-﻿using Marathon.Formats.Archive;
-using SonicNextModManager.Helpers;
+﻿using SonicNextModManager.Helpers;
 using SonicNextModManager.Lua.Attributes;
 using SonicNextModManager.Metadata;
 using System.Diagnostics;
@@ -112,7 +111,7 @@ namespace SonicNextModManager.Lua.Callback
         /// <param name="in_destination">The path to write to.</param>
         /// <param name="in_source">The path to the file on the local disk to write to the archive.</param>
         [LuaCallback]
-        public static void WriteFile(string in_destination, string in_source)
+        public static bool WriteFile(string in_destination, string in_source)
         {
             var source = Path.Combine(UtilityFunctions.GetSymbol("Work"), in_source);
 
@@ -121,22 +120,12 @@ namespace SonicNextModManager.Lua.Callback
                 source = in_source;
 
                 if (!File.Exists(source))
-                    return;
+                    return false;
             }
 
-            if (Helpers.ArchiveHelper.IsInternalArchivePath(in_destination))
-            {
-                var dir = Helpers.ArchiveHelper.GetArchiveDirectory(Path.GetDirectoryName(in_destination)!);
+            File.Copy(source, in_destination);
 
-                if (dir == null)
-                    return;
-
-                dir.Add(new U8ArchiveFile(source) { Name = Path.GetFileName(in_destination) });
-            }
-            else
-            {
-                File.Copy(source, in_destination);
-            }
+            return true;
         }
     }
 }

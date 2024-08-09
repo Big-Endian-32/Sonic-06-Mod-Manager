@@ -6,7 +6,6 @@ using SonicNextModManager.Helpers;
 using SonicNextModManager.Lua.Attributes;
 using SonicNextModManager.Lua.Hooks;
 using System.Diagnostics;
-using System.Text.RegularExpressions;
 
 namespace SonicNextModManager.Lua.Wrappers.Script
 {

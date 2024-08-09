@@ -1,4 +1,5 @@
 ﻿using Marathon.Formats.Archive;
+using Marathon.Helpers;
 using Marathon.IO;
 using SonicNextModManager.Helpers;
 
@@ -15,12 +16,14 @@ namespace SonicNextModManager.Lua.Wrappers
             File = in_file;
         }
 
-        public static DynValue RegisterWrapperToArchiveFile<T>(string in_path) where T : MarathonWrapper
+        public static DynValue RegisterWrapperToArchiveFile<T>(U8Archive in_arc, string in_path) where T : MarathonWrapper
         {
-            var file = ArchiveHelper.GetArchiveFile(in_path);
+            var file = in_arc.Root.GetFile(in_path);
 
             if (file == null)
                 return DynValue.Nil;
+
+            file.Decompress();
 
             var instance = Activator.CreateInstance(typeof(T), file);
 

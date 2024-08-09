@@ -19,16 +19,12 @@ namespace SonicNextModManager.Lua.Callback
             try
             {
 #endif
-                // Open the file for reading.
-                // TODO: accept paths to archive files.
                 using (FileStream fileStream = File.OpenRead(Patcher.GetSymbol(in_file)))
                 {
                     using (var reader = new BinaryReader(fileStream))
                     {
-                        // Seek to requested address in the stream.
                         reader.BaseStream.Seek(in_addr, SeekOrigin.Begin);
 
-                        // Return as a hexadecimal string.
                         return MemoryHelper.ByteArrayToHexString(reader.ReadBytes(in_count));
                     }
                 }
@@ -58,8 +54,6 @@ namespace SonicNextModManager.Lua.Callback
 #endif
                 IOHelper.Backup(in_file);
 
-                // Open the file for writing.
-                // TODO: accept paths to archive files.
                 using (FileStream fileStream = File.OpenWrite(Patcher.GetSymbol(in_file)))
                 {
                     using (var writer = new BinaryWriter(fileStream))
@@ -98,7 +92,7 @@ namespace SonicNextModManager.Lua.Callback
         /// </summary>
         /// <param name="in_file">The path to the file to write to.</param>
         /// <param name="in_addr">The address in the file to write to.</param>
-        /// <param name="in_data">The amount of null bytes to write.</param>
+        /// <param name="in_count">The amount of null bytes to write.</param>
         [LuaCallback]
         public static bool WriteNulls(string in_file, uint in_addr, int in_count)
         {
