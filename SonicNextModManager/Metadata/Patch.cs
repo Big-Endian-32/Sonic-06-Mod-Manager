@@ -57,6 +57,14 @@ namespace SonicNextModManager.Metadata
 
                     continue;
                 }
+                else
+                {
+                    /* If the first line is not an
+                       opening bracket, assume no
+                       metadata is present. */
+                    if (i == 0)
+                        break;
+                }
 
                 if (isJsonReached)
                 {

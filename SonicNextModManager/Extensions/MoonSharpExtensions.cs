@@ -116,12 +116,11 @@ namespace SonicNextModManager.Extensions
                 throw new ArgumentException("The DynValue is not a Lua table.");
 
             var instance = new T();
-            var table = in_value.Table;
             var properties = typeof(T).GetProperties(BindingFlags.Public | BindingFlags.Instance);
 
             foreach (var property in properties)
             {
-                if (table.RawGet(property.Name) is not DynValue out_value)
+                if (in_value.Table.RawGet(property.Name) is not DynValue out_value)
                     continue;
 
                 property.SetValue(instance, out_value.TransformDynValueToCLRType(property.PropertyType));
@@ -141,13 +140,16 @@ namespace SonicNextModManager.Extensions
             {
                 return in_value.String;
             }
-            else if (in_type == typeof(int))
+            else if
+            (
+                in_type == typeof(sbyte) || in_type == typeof(byte)   ||
+                in_type == typeof(short) || in_type == typeof(ushort) ||
+                in_type == typeof(int)   || in_type == typeof(uint)   ||
+                in_type == typeof(long)  || in_type == typeof(ulong)  ||
+                in_type == typeof(float) || in_type == typeof(double)
+            )
             {
-                return (int)in_value.Number;
-            }
-            else if (in_type == typeof(double))
-            {
-                return in_value.Number;
+                return Convert.ChangeType(in_value.Number, in_type);
             }
             else if (in_type == typeof(bool))
             {
@@ -157,8 +159,33 @@ namespace SonicNextModManager.Extensions
             {
                 return Enum.ToObject(in_type, (int)in_value.Number);
             }
+            else if (in_type.IsArray)
+            {
+                return TransformDynValueToCLRTypeArray(in_value, in_type);
+            }
 
             throw new NotSupportedException($"Unsupported type: {in_type}");
+        }
+
+        /// <summary>
+        /// Transforms the value of a <see cref="DynValue"/> to an array of CLR types.
+        /// </summary>
+        /// <param name="in_value">The Lua type to parse.</param>
+        /// <param name="in_type">The CLR types to cast to.</param>
+        public static object[] TransformDynValueToCLRTypeArray(this DynValue in_value, Type in_type)
+        {
+            if (in_value.Type != DataType.Table)
+                throw new ArgumentException("The DynValue is not a Lua table.");
+
+            if (in_type.IsArray)
+                throw new ArgumentException("The target CLR type cannot be an array.");
+
+            var arr = new object[in_value.Table.Length];
+
+            for (int i = 0; i < arr.Length; i++)
+                arr[i] = TransformDynValueToCLRType(in_value.Table.Get(i + 1), in_type);
+
+            return arr;
         }
     }
 }
