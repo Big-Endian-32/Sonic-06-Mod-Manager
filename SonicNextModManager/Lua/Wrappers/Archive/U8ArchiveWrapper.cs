@@ -76,7 +76,7 @@ namespace SonicNextModManager.Lua.Wrappers.Archive
                             {
                                 // ScriptPackage
                                 case "ScriptParameter.bin":
-                                    return MarathonWrapper.RegisterWrapperToArchiveFile<ScriptPackageWrapper>(_archive, in_path);
+                                    return MarathonWrapper.RegisterWrapper<ScriptPackageWrapper>(_archive, in_path);
 
                                 case "collision.bin":     // Collision
                                 case "Common.bin":        // CommonPackage
@@ -93,19 +93,19 @@ namespace SonicNextModManager.Lua.Wrappers.Archive
                     // LuaBinary
                     case ".lua":
                     case ".lub":
-                        return MarathonWrapper.RegisterWrapperToArchiveFile<LuaBinaryWrapper>(_archive, in_path);
+                        return MarathonWrapper.RegisterWrapper<LuaBinaryWrapper>(_archive, in_path);
 
                     // MessageTable
                     case ".mst":
-                        return MarathonWrapper.RegisterWrapperToArchiveFile<MessageTableWrapper>(_archive, in_path);
+                        return MarathonWrapper.RegisterWrapper<MessageTableWrapper>(_archive, in_path);
 
                     // AssetPackage
                     case ".pkg":
-                        return MarathonWrapper.RegisterWrapperToArchiveFile<AssetPackageWrapper>(_archive, in_path);
+                        return MarathonWrapper.RegisterWrapper<AssetPackageWrapper>(_archive, in_path);
 
                     // SoundBank
                     case ".sbk":
-                        return MarathonWrapper.RegisterWrapperToArchiveFile<SoundBankWrapper>(_archive, in_path);
+                        return MarathonWrapper.RegisterWrapper<SoundBankWrapper>(_archive, in_path);
 
                     case ".epb":  // EventPlaybook
                     case ".tev":  // TimeEvent

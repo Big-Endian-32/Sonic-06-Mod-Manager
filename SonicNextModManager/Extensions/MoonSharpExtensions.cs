@@ -40,7 +40,7 @@ namespace SonicNextModManager.Extensions
                 if (register == null)
                     continue;
 
-                register.Invoke(instance, null);
+                register.Invoke(instance, [L]);
             }
         }
 
@@ -73,6 +73,92 @@ namespace SonicNextModManager.Extensions
                 foreach (var value in Enum.GetValues(type))
                     ((Table)L.Globals[type.Name])[value.ToString()] = DynValue.NewNumber((int)value);
             }
+        }
+
+        /// <summary>
+        /// Registers a type and its constructors with the interpreter.
+        /// </summary>
+        /// <typeparam name="T">The type to register.</typeparam>
+        /// <param name="L">The script to push to.</param>
+        public static void RegisterType<T>(this Script L)
+        {
+            UserData.RegisterType<T>();
+
+            var ctors = typeof(T).GetConstructors(BindingFlags.Public | BindingFlags.Instance);
+
+            foreach (var ctor in ctors)
+            {
+                var parameters = ctor.GetParameters();
+                var parameterTypes = parameters.Select(x => x.ParameterType).ToArray();
+
+                var ctorDelegate = (Func<object[]>)
+                (
+                    () =>
+                    {
+                        var args = parameters.Select((p, i) => L.Globals[$"a{i}"]).ToArray();
+
+                        return [ctor.Invoke(args)];
+                    }
+                );
+
+                L.Globals[typeof(T).Name] = ctorDelegate;
+            }
+        }
+
+        /// <summary>
+        /// Parses a class from a Lua table.
+        /// </summary>
+        /// <typeparam name="T">The type to extract.</typeparam>
+        /// <param name="in_value">The Lua table to parse.</param>
+        public static T ParseClassFromDynValue<T>(this DynValue in_value) where T : new()
+        {
+            if (in_value.Type != DataType.Table)
+                throw new ArgumentException("The DynValue is not a Lua table.");
+
+            var instance = new T();
+            var table = in_value.Table;
+            var properties = typeof(T).GetProperties(BindingFlags.Public | BindingFlags.Instance);
+
+            foreach (var property in properties)
+            {
+                if (table.RawGet(property.Name) is not DynValue out_value)
+                    continue;
+
+                property.SetValue(instance, out_value.TransformDynValueToCLRType(property.PropertyType));
+            }
+
+            return instance;
+        }
+
+        /// <summary>
+        /// Transforms the value of a <see cref="DynValue"/> to a CLR type.
+        /// </summary>
+        /// <param name="in_value">The Lua type to parse.</param>
+        /// <param name="in_type">The CLR type to cast to.</param>
+        public static object TransformDynValueToCLRType(this DynValue in_value, Type in_type)
+        {
+            if (in_type == typeof(string))
+            {
+                return in_value.String;
+            }
+            else if (in_type == typeof(int))
+            {
+                return (int)in_value.Number;
+            }
+            else if (in_type == typeof(double))
+            {
+                return in_value.Number;
+            }
+            else if (in_type == typeof(bool))
+            {
+                return in_value.Boolean;
+            }
+            else if (in_type.IsEnum)
+            {
+                return Enum.ToObject(in_type, (int)in_value.Number);
+            }
+
+            throw new NotSupportedException($"Unsupported type: {in_type}");
         }
     }
 }

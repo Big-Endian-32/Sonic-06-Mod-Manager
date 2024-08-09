@@ -2,6 +2,6 @@
 {
     public interface ILuaUserDataDescriptor
     {
-        public void Register();
+        public void Register(Script L);
     }
 }

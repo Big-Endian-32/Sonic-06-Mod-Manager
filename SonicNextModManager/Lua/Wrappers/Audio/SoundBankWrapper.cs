@@ -1,5 +1,6 @@
 ﻿using Marathon.Formats.Archive;
 using Marathon.Formats.Audio;
+using SonicNextModManager.Extensions;
 using SonicNextModManager.Helpers;
 using SonicNextModManager.Lua.Attributes;
 using SonicNextModManager.Lua.Interfaces;
@@ -18,9 +19,9 @@ namespace SonicNextModManager.Lua.Wrappers.Audio
             _soundBank = IOHelper.LoadMarathonTypeFromBuffer<SoundBank>(File.Data);
         }
 
-        public void Register()
+        public void Register(MoonSharp.Interpreter.Script L)
         {
-            UserData.RegisterType<Cue>();
+            L.RegisterType<Cue>();
         }
 
         public Cue GetCue(string in_name)

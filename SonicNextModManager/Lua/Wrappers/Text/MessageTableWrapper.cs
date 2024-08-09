@@ -1,5 +1,6 @@
 ﻿using Marathon.Formats.Archive;
 using Marathon.Formats.Text;
+using SonicNextModManager.Extensions;
 using SonicNextModManager.Helpers;
 using SonicNextModManager.Lua.Attributes;
 using SonicNextModManager.Lua.Interfaces;
@@ -18,9 +19,9 @@ namespace SonicNextModManager.Lua.Wrappers.Text
             _messageTable = IOHelper.LoadMarathonTypeFromBuffer<MessageTable>(File.Data);
         }
 
-        public void Register()
+        public void Register(MoonSharp.Interpreter.Script L)
         {
-            UserData.RegisterType<Message>();
+            L.RegisterType<Message>();
         }
 
         public Message GetMessage(string in_name)

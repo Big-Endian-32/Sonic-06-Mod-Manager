@@ -16,7 +16,7 @@ namespace SonicNextModManager.Lua.Wrappers
             File = in_file;
         }
 
-        public static DynValue RegisterWrapperToArchiveFile<T>(U8Archive in_arc, string in_path) where T : MarathonWrapper
+        public static DynValue RegisterWrapper<T>(U8Archive in_arc, string in_path) where T : MarathonWrapper
         {
             var file = in_arc.Root.GetFile(in_path);
 
