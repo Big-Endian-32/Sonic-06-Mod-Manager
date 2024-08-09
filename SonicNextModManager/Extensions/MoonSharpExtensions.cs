@@ -110,23 +110,35 @@ namespace SonicNextModManager.Extensions
         /// </summary>
         /// <typeparam name="T">The type to extract.</typeparam>
         /// <param name="in_value">The Lua table to parse.</param>
-        public static T ParseClassFromDynValue<T>(this DynValue in_value) where T : new()
+        public static object ParseClassFromDynValue(this DynValue in_value, Type in_type)
         {
             if (in_value.Type != DataType.Table)
                 throw new ArgumentException("The DynValue is not a Lua table.");
 
-            var instance = new T();
-            var properties = typeof(T).GetProperties(BindingFlags.Public | BindingFlags.Instance);
+            var instance = Activator.CreateInstance(in_type);
+            var members = in_type.GetAllMembers();
 
-            foreach (var property in properties)
+            foreach (var member in members)
             {
-                if (in_value.Table.RawGet(property.Name) is not DynValue out_value)
-                    continue;
-
-                property.SetValue(instance, out_value.TransformDynValueToCLRType(property.PropertyType));
+                if (in_value.Table.RawGet(member.Name) is DynValue out_value)
+                {
+                    if (member is PropertyInfo out_property)
+                    {
+                        out_property.SetValue(instance, out_value.TransformDynValueToCLRType(out_property.PropertyType));
+                    }
+                    else if (member is FieldInfo out_field)
+                    {
+                        out_field.SetValue(instance, out_value.TransformDynValueToCLRType(out_field.FieldType));
+                    }
+                }
             }
 
-            return instance;
+            return instance!;
+        }
+
+        public static T ParseClassFromDynValue<T>(this DynValue in_value) where T : new()
+        {
+            return (T)in_value.ParseClassFromDynValue(typeof(T));
         }
 
         /// <summary>
@@ -154,6 +166,10 @@ namespace SonicNextModManager.Extensions
             else if (in_type == typeof(bool))
             {
                 return in_value.Boolean;
+            }
+            else if (in_value.Type == DataType.Table && (in_type.IsClass || in_type.IsStruct()))
+            {
+                return in_value.ParseClassFromDynValue(in_type);
             }
             else if (in_type.IsEnum)
             {

@@ -2,6 +2,7 @@
 using Marathon.Helpers;
 using SonicNextModManager.Lua.Attributes;
 using SonicNextModManager.Lua.Wrappers.Audio;
+using SonicNextModManager.Lua.Wrappers.Event;
 using SonicNextModManager.Lua.Wrappers.Package;
 using SonicNextModManager.Lua.Wrappers.Script;
 using SonicNextModManager.Lua.Wrappers.Text;
@@ -69,7 +70,6 @@ namespace SonicNextModManager.Lua.Wrappers.Archive
                     // Common
                     case ".bin":
                     {
-                        // TODO
                         if (in_type == EFileType.Guess)
                         {
                             switch (fileName)
@@ -93,6 +93,10 @@ namespace SonicNextModManager.Lua.Wrappers.Archive
                         break;
                     }
 
+                    // EventPlaybook
+                    case ".epb":
+                        return MarathonWrapper.RegisterWrapper<EventPlaybookWrapper>(_archive, in_path);
+
                     // LuaBinary
                     case ".lua":
                     case ".lub":
@@ -110,7 +114,6 @@ namespace SonicNextModManager.Lua.Wrappers.Archive
                     case ".sbk":
                         return MarathonWrapper.RegisterWrapper<SoundBankWrapper>(_archive, in_path);
 
-                    case ".epb":  // EventPlaybook
                     case ".tev":  // TimeEvent
                     case ".path": // PathSpline
                     case ".rab":  // ReflectionZone
