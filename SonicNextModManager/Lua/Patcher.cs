@@ -10,7 +10,7 @@ namespace SonicNextModManager.Lua
         /// <summary>
         /// Initialises the input Lua interpreter with the default exposed functions.
         /// </summary>
-        /// <param name="L">Lua interpreter to initialise.</param>
+        /// <param name="L">The Lua interpreter to initialise.</param>
         public static Script Initialise(this Script L)
         {
             L.RegisterCallbacks();
@@ -25,6 +25,19 @@ namespace SonicNextModManager.Lua
             AddSymbol("Language", App.CurrentCulture?.Name!);
 
             return L;
+        }
+
+        /// <summary>
+        /// Loads and executes a string containing a Lua/MoonSharp script.
+        /// </summary>
+        /// <param name="L">The Lua interpreter to use.</param>
+        /// <param name="in_code">The code.</param>
+        /// <returns>A DynValue containing the result of the processing of the loaded chunk.</returns>
+        public static DynValue Run(this Script L, string in_code)
+        {
+            in_code = L.InstallSyntaxPatches(in_code);
+
+            return L.DoString(in_code);
         }
 
         /// <summary>

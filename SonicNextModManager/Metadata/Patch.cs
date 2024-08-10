@@ -127,22 +127,25 @@ namespace SonicNextModManager.Metadata
 
         public void Install()
         {
+            if (string.IsNullOrEmpty(Code))
+                return;
+
             // Initialise patch symbols.
             Patcher.AddSymbol("Work", Path.GetDirectoryName(Location)!);
 
             // Initialise script interpreter.
-            var l = new Script().Initialise();
+            var L = new Script().Initialise();
 
             // Initialise global declarations.
             foreach (var decl in Declarations)
             {
                 // TODO: use config values.
-                l.Globals[decl.Name] = decl.DefaultValue;
+                L.Globals[decl.Name] = decl.DefaultValue;
             }
 
             try
             {
-                l.DoString(Code);
+                L.Run(Code);
             }
             catch (ScriptRuntimeException out_ex)
             {
@@ -160,7 +163,7 @@ namespace SonicNextModManager.Metadata
                 return;
 
             // Call the user-specified function.
-            l.Call(l.Globals[Function]);
+            L.Call(L.Globals[Function]);
         }
     }
 }

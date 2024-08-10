@@ -206,5 +206,27 @@ namespace SonicNextModManager.Extensions
 
             return arr;
         }
+
+        /// <summary>
+        /// Patches the input string with all types derived from <see cref="ICustomSyntax"/>.
+        /// </summary>
+        /// <param name="in_code">The code to patch.</param>
+        public static string InstallSyntaxPatches(this Script L, string in_code)
+        {
+            var code = in_code;
+
+            foreach (var type in TypeHelper.GetDerivedInterfaces<ICustomSyntax>())
+            {
+                var instance = Activator.CreateInstance(type) as ICustomSyntax;
+                var register = typeof(ICustomSyntax).GetMethod("Install");
+
+                if (register == null)
+                    continue;
+
+                code = (string)register.Invoke(instance, [code])!;
+            }
+
+            return code;
+        }
     }
 }
