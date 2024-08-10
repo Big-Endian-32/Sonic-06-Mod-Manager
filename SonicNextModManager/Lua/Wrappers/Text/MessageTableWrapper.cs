@@ -49,6 +49,21 @@ namespace SonicNextModManager.Lua.Wrappers.Text
             }
         }
 
+        public void SetMessage(DynValue in_value)
+        {
+            var message = in_value.ParseClassFromDynValue<Message>();
+            var index = _messageTable.Data.Messages.FindIndex(x => x.Name == message.Name);
+
+            if (index == -1)
+            {
+                _messageTable.Data.Messages.Add(message);
+            }
+            else
+            {
+                _messageTable.Data.Messages[index] = message;
+            }
+        }
+
         public void Save()
         {
             Save(_messageTable);
