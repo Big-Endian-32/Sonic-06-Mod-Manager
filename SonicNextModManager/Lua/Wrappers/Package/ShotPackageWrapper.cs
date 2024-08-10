@@ -39,9 +39,9 @@ namespace SonicNextModManager.Lua.Wrappers.Package
             return [.. _shotPackage.Parameters];
         }
 
-        public void SetParameter(DynValue in_table)
+        public void SetParameter(DynValue in_value)
         {
-            var shotParameter = in_table.ParseClassFromDynValue<ShotParameter>();
+            var shotParameter = in_value.ParseClassFromDynValue<ShotParameter>();
             var index = _shotPackage.Parameters.FindIndex(x => x.Name == shotParameter.Name);
 
             if (index == -1)

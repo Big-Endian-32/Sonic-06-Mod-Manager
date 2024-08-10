@@ -39,9 +39,9 @@ namespace SonicNextModManager.Lua.Wrappers.Package
             return [.. _pathPackage.PathObjects];
         }
 
-        public void SetPathObject(DynValue in_table)
+        public void SetPathObject(DynValue in_value)
         {
-            var pathObject = in_table.ParseClassFromDynValue<PathObject>();
+            var pathObject = in_value.ParseClassFromDynValue<PathObject>();
             var index = _pathPackage.PathObjects.FindIndex(x => x.Name == pathObject.Name);
 
             if (index == -1)

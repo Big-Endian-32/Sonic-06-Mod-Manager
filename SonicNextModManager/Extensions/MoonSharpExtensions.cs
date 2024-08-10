@@ -112,6 +112,9 @@ namespace SonicNextModManager.Extensions
         /// <param name="in_value">The Lua table to parse.</param>
         public static object ParseClassFromDynValue(this DynValue in_value, Type in_type)
         {
+            if (in_value.Type == DataType.UserData)
+                return in_value.ToObject(in_type);
+
             if (in_value.Type != DataType.Table)
                 throw new ArgumentException("The DynValue is not a Lua table.");
 

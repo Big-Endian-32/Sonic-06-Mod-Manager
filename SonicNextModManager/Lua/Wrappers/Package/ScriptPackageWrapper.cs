@@ -39,9 +39,9 @@ namespace SonicNextModManager.Lua.Wrappers.Package
             return [.. _scriptPackage.Parameters];
         }
 
-        public void SetParameter(DynValue in_table)
+        public void SetParameter(DynValue in_value)
         {
-            var scriptParameter = in_table.ParseClassFromDynValue<ScriptParameter>();
+            var scriptParameter = in_value.ParseClassFromDynValue<ScriptParameter>();
             var index = _scriptPackage.Parameters.FindIndex(x => x.Name == scriptParameter.Name);
 
             if (index == -1)

@@ -56,9 +56,9 @@ namespace SonicNextModManager.Lua.Wrappers.Audio
             }
         }
 
-        public void SetCue(DynValue in_table)
+        public void SetCue(DynValue in_value)
         {
-            var cue = in_table.ParseClassFromDynValue<Cue>();
+            var cue = in_value.ParseClassFromDynValue<Cue>();
             var index = _soundBank.Data.Cues.FindIndex(x => x.Name == cue.Name);
 
             if (index == -1)

@@ -36,9 +36,9 @@ namespace SonicNextModManager.Lua.Wrappers.Event
             return [.. _eventPlaybook.Events];
         }
 
-        public void SetEvent(DynValue in_table)
+        public void SetEvent(DynValue in_value)
         {
-            var @event = in_table.ParseClassFromDynValue<_Event>();
+            var @event = in_value.ParseClassFromDynValue<_Event>();
             var index = _eventPlaybook.Events.FindIndex(x => x.Name == @event.Name);
 
             if (index == -1)

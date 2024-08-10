@@ -79,6 +79,10 @@ namespace SonicNextModManager.Lua.Wrappers.Archive
                         {
                             switch (fileName)
                             {
+                                // CommonPackage
+                                case "Common.bin":
+                                    return MarathonWrapper.RegisterWrapper<CommonPackageWrapper>(_archive, in_path);
+
                                 // ExplosionPackage
                                 case "Explosion.bin":
                                     return MarathonWrapper.RegisterWrapper<ExplosionPackageWrapper>(_archive, in_path);
@@ -96,7 +100,6 @@ namespace SonicNextModManager.Lua.Wrappers.Archive
                                     return MarathonWrapper.RegisterWrapper<ShotPackageWrapper>(_archive, in_path);
 
                                 case "collision.bin": // Collision
-                                case "Common.bin":    // CommonPackage
                                     throw new NotImplementedException();
                             }
                         }

@@ -39,9 +39,9 @@ namespace SonicNextModManager.Lua.Wrappers.Package
             return [.. _explosionPackage.Explosions];
         }
 
-        public void SetExplosion(DynValue in_table)
+        public void SetExplosion(DynValue in_value)
         {
-            var explosion = in_table.ParseClassFromDynValue<Explosion>();
+            var explosion = in_value.ParseClassFromDynValue<Explosion>();
             var index = _explosionPackage.Explosions.FindIndex(x => x.Name == explosion.Name);
 
             if (index == -1)
