@@ -19,6 +19,11 @@ namespace SonicNextModManager.Lua.Wrappers.Package
             _shotPackage = IOHelper.LoadMarathonTypeFromBuffer<ShotPackage>(File.Data);
         }
 
+        public ShotParameter this[string in_name]
+        {
+            get => GetParameter(in_name);
+        }
+
         public void Register(MoonSharp.Interpreter.Script L)
         {
             L.RegisterType<ShotParameter>();

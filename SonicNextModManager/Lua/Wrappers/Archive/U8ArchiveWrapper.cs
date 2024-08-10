@@ -22,6 +22,11 @@ namespace SonicNextModManager.Lua.Wrappers.Archive
             _archive = Database.LoadArchive(in_path);
         }
 
+        public DynValue this[string in_path, EFileType in_type = EFileType.Guess]
+        {
+            get => Load(in_path, in_type);
+        }
+
         public DynValue Load(string in_path, EFileType in_type = EFileType.Guess)
         {
             // Change ".lua" to ".lub" to check if the file exists.

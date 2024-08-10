@@ -19,6 +19,11 @@ namespace SonicNextModManager.Lua.Wrappers.Package
             _scriptPackage = IOHelper.LoadMarathonTypeFromBuffer<ScriptPackage>(File.Data);
         }
 
+        public ScriptParameter this[string in_name]
+        {
+            get => GetParameter(in_name);
+        }
+
         public void Register(MoonSharp.Interpreter.Script L)
         {
             L.RegisterType<ScriptParameter>();

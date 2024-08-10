@@ -19,6 +19,11 @@ namespace SonicNextModManager.Lua.Wrappers.Package
             _pathPackage = IOHelper.LoadMarathonTypeFromBuffer<PathPackage>(File.Data);
         }
 
+        public PathObject this[string in_name]
+        {
+            get => GetPathObject(in_name);
+        }
+
         public void Register(MoonSharp.Interpreter.Script L)
         {
             L.RegisterType<PathObject>();
