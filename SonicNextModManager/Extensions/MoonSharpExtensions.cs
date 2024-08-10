@@ -1,5 +1,7 @@
-﻿using SonicNextModManager.Lua.Attributes;
+﻿using SonicNextModManager.Helpers;
+using SonicNextModManager.Lua.Attributes;
 using SonicNextModManager.Lua.Interfaces;
+using SonicNextModManager.Lua.Syntax.Interfaces;
 
 namespace SonicNextModManager.Extensions
 {
@@ -27,15 +29,10 @@ namespace SonicNextModManager.Extensions
         /// <param name="L">The script to push to.</param>
         public static void RegisterDescriptors(this Script L)
         {
-            var @interface = typeof(ILuaUserDataDescriptor);
-
-            var types = Assembly.GetExecutingAssembly().GetTypes()
-                .Where(x => @interface.IsAssignableFrom(x) && !x.IsInterface && !x.IsAbstract);
-
-            foreach (var type in types)
+            foreach (var type in TypeHelper.GetDerivedInterfaces<ILuaUserDataDescriptor>())
             {
                 var instance = Activator.CreateInstance(type) as ILuaUserDataDescriptor;
-                var register = @interface.GetMethod("Register");
+                var register = typeof(ILuaUserDataDescriptor).GetMethod("Register");
 
                 if (register == null)
                     continue;
@@ -47,7 +44,6 @@ namespace SonicNextModManager.Extensions
         /// <summary>
         /// Registers all classes marked as Lua user data with the interpreter.
         /// </summary>
-        /// <param name="L">The script to push to.</param>
         public static void RegisterUserData(this Script L)
         {
             var types = Assembly.GetExecutingAssembly().GetTypes()
@@ -67,12 +63,42 @@ namespace SonicNextModManager.Extensions
                 .Where(x => x.GetCustomAttributes(typeof(LuaEnumAttribute), false).Length > 0);
 
             foreach (var type in types)
-            {
-                L.Globals[type.Name] = DynValue.NewTable(L);
+                L.RegisterEnum(type);
+        }
 
-                foreach (var value in Enum.GetValues(type))
-                    ((Table)L.Globals[type.Name])[value.ToString()] = DynValue.NewNumber((int)value);
+        /// <summary>
+        /// Registers an enum with the interpreter.
+        /// </summary>
+        /// <param name="L">The script to push to.</param>
+        /// <param name="in_type">The enum type to register.</param>
+        public static void RegisterEnum(this Script L, Type in_type, string in_name = "")
+        {
+            if (!in_type.IsEnum)
+                throw new ArgumentException("The specified type is not an enum.");
+
+            var name = string.IsNullOrEmpty(in_name)
+                ? in_type.Name
+                : in_name;
+
+            var underlyingType = Enum.GetUnderlyingType(in_type);
+
+            L.Globals[name] = DynValue.NewTable(L);
+
+            foreach (var value in Enum.GetValues(in_type))
+            {
+                ((Table)L.Globals[name])[value.ToString()] =
+                    DynValue.NewNumber(Convert.ToDouble(Convert.ChangeType(value, underlyingType)));
             }
+        }
+
+        /// <summary>
+        /// Registers an enum with the interpreter.
+        /// </summary>
+        /// <typeparam name="T">The enum type to register.</typeparam>
+        /// <param name="L">The script to push to.</param>
+        public static void RegisterEnum<T>(this Script L, string in_name = "")
+        {
+            RegisterEnum(L, typeof(T), in_name);
         }
 
         /// <summary>
@@ -108,8 +134,8 @@ namespace SonicNextModManager.Extensions
         /// <summary>
         /// Parses a class from a Lua table.
         /// </summary>
-        /// <typeparam name="T">The type to extract.</typeparam>
         /// <param name="in_value">The Lua table to parse.</param>
+        /// <param name="in_type">The type to extract.</param>
         public static object ParseClassFromDynValue(this DynValue in_value, Type in_type)
         {
             if (in_value.Type == DataType.UserData)
@@ -139,6 +165,11 @@ namespace SonicNextModManager.Extensions
             return instance!;
         }
 
+        /// <summary>
+        /// Parses a class from a Lua table.
+        /// </summary>
+        /// <typeparam name="T">The type to extract.</typeparam>
+        /// <param name="in_value">The Lua table to parse.</param>
         public static T ParseClassFromDynValue<T>(this DynValue in_value) where T : new()
         {
             return (T)in_value.ParseClassFromDynValue(typeof(T));
