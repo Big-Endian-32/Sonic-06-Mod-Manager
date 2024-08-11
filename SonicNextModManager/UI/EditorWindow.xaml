@@ -77,7 +77,7 @@
 
                             <StackPanel Margin="0,0,0,15">
                                 <c:HorizontalFieldLabel Caption="{DynamicResource Metadata_Description}" Description="{DynamicResource Editor_Metadata_Description_Description}" Margin="0,0,0,5"/>
-                                <TextBox Height="180" Text="{Binding Description}" TextWrapping="Wrap" VerticalContentAlignment="Top" VerticalScrollBarVisibility="Auto" AcceptsReturn="True"/>
+                                <TextBox Height="180" Text="{Binding Description}" Padding="6,2,8,6" TextWrapping="Wrap" VerticalContentAlignment="Top" VerticalScrollBarVisibility="Auto" AcceptsReturn="True"/>
                             </StackPanel>
 
                             <StackPanel>

@@ -35,7 +35,7 @@ namespace SonicNextModManager.Lua
         /// <returns>A DynValue containing the result of the processing of the loaded chunk.</returns>
         public static DynValue Run(this Script L, string in_code)
         {
-            in_code = L.InstallSyntaxPatches(in_code);
+            in_code = L.InstallCustomSyntax(in_code);
 
             return L.DoString(in_code);
         }

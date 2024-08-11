@@ -242,19 +242,19 @@ namespace SonicNextModManager.Extensions
         /// Patches the input string with all types derived from <see cref="ICustomSyntax"/>.
         /// </summary>
         /// <param name="in_code">The code to patch.</param>
-        public static string InstallSyntaxPatches(this Script L, string in_code)
+        public static string InstallCustomSyntax(this Script L, string in_code)
         {
             var code = in_code;
 
             foreach (var type in TypeHelper.GetDerivedInterfaces<ICustomSyntax>())
             {
                 var instance = Activator.CreateInstance(type) as ICustomSyntax;
-                var register = typeof(ICustomSyntax).GetMethod("Install");
+                var install = typeof(ICustomSyntax).GetMethod("Install");
 
-                if (register == null)
+                if (install == null)
                     continue;
 
-                code = (string)register.Invoke(instance, [code])!;
+                code = (string)install.Invoke(instance, [code])!;
             }
 
             return code;
