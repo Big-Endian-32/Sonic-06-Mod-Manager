@@ -160,7 +160,7 @@ namespace SonicNextModManager.Metadata
         {
             var contentCount = ActiveContent!.GetTotalContent();
 
-            for (int i = 0; i < Mods!.Count; i++)
+            for (int i = Mods!.Count - 1; i >= 0; i--)
             {
                 if (in_cancellationToken?.IsCancellationRequested == true)
                     break;
@@ -176,7 +176,7 @@ namespace SonicNextModManager.Metadata
                 }
             }
 
-            for (int i = 0; i < Patches!.Count; i++)
+            for (int i = Patches!.Count - 1; i >= 0; i--)
             {
                 if (in_cancellationToken?.IsCancellationRequested == true)
                     break;
