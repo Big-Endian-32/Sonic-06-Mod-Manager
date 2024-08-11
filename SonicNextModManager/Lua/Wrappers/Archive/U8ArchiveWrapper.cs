@@ -3,6 +3,7 @@ using Marathon.Helpers;
 using SonicNextModManager.Lua.Attributes;
 using SonicNextModManager.Lua.Wrappers.Audio;
 using SonicNextModManager.Lua.Wrappers.Event;
+using SonicNextModManager.Lua.Wrappers.Mesh;
 using SonicNextModManager.Lua.Wrappers.Package;
 using SonicNextModManager.Lua.Wrappers.Script;
 using SonicNextModManager.Lua.Wrappers.Text;

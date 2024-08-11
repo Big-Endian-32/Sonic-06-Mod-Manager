@@ -6,7 +6,7 @@ using SonicNextModManager.Lua.Attributes;
 using SonicNextModManager.Lua.Interfaces;
 using System.Numerics;
 
-namespace SonicNextModManager.Lua.Wrappers.Package
+namespace SonicNextModManager.Lua.Wrappers.Mesh
 {
     [LuaUserData]
     public class CollisionWrapper : MarathonWrapper, ILuaUserDataDescriptor
