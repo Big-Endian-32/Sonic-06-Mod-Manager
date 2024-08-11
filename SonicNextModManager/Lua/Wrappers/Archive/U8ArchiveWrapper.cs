@@ -129,7 +129,10 @@ namespace SonicNextModManager.Lua.Wrappers.Archive
                     case ".sbk":
                         return MarathonWrapper.RegisterWrapper<SoundBankWrapper>(_archive, in_path);
 
-                    case ".tev":  // TimeEvent
+                    // TimeEvent
+                    case ".tev":
+                        return MarathonWrapper.RegisterWrapper<TimeEventWrapper>(_archive, in_path);
+
                     case ".path": // PathSpline
                     case ".rab":  // ReflectionZone
                     case ".plc":  // ParticleContainer
