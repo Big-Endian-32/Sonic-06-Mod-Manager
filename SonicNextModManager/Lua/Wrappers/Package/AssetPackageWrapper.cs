@@ -64,9 +64,9 @@ namespace SonicNextModManager.Lua.Wrappers.Package
 
         public AssetCategoryWrapper() { }
 
-        public AssetCategoryWrapper(AssetCategory in_assetType)
+        public AssetCategoryWrapper(AssetCategory in_assetCategory)
         {
-            _assetCategory = in_assetType;
+            _assetCategory = in_assetCategory;
         }
 
         public AssetFile this[string in_name]

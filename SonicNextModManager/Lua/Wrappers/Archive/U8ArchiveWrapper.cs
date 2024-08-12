@@ -5,6 +5,7 @@ using SonicNextModManager.Lua.Wrappers.Audio;
 using SonicNextModManager.Lua.Wrappers.Event;
 using SonicNextModManager.Lua.Wrappers.Mesh;
 using SonicNextModManager.Lua.Wrappers.Package;
+using SonicNextModManager.Lua.Wrappers.Particle;
 using SonicNextModManager.Lua.Wrappers.Placement;
 using SonicNextModManager.Lua.Wrappers.Script;
 using SonicNextModManager.Lua.Wrappers.Text;
@@ -122,13 +123,29 @@ namespace SonicNextModManager.Lua.Wrappers.Archive
                     case ".mst":
                         return MarathonWrapper.RegisterWrapper<MessageTableWrapper>(_archive, in_path);
 
+                    // ParticleEffectBank
+                    case ".peb":
+                        return MarathonWrapper.RegisterWrapper<ParticleEffectBankWrapper>(_archive, in_path);
+
                     // PictureFont
                     case ".pft":
                         return MarathonWrapper.RegisterWrapper<PictureFontWrapper>(_archive, in_path);
 
+                    // ParticleGenerationSystem
+                    case ".pgs":
+                        return MarathonWrapper.RegisterWrapper<ParticleGenerationSystemWrapper>(_archive, in_path);
+
                     // AssetPackage
                     case ".pkg":
                         return MarathonWrapper.RegisterWrapper<AssetPackageWrapper>(_archive, in_path);
+
+                    // ParticleContainer
+                    case ".plc":
+                        return MarathonWrapper.RegisterWrapper<ParticleContainerWrapper>(_archive, in_path);
+
+                    // ParticleTextureBank
+                    case ".ptb":
+                        return MarathonWrapper.RegisterWrapper<ParticleTextureBankWrapper>(_archive, in_path);
 
                     // ReflectionZone
                     case ".rab":
@@ -145,13 +162,6 @@ namespace SonicNextModManager.Lua.Wrappers.Archive
                     // TimeEvent
                     case ".tev":
                         return MarathonWrapper.RegisterWrapper<TimeEventWrapper>(_archive, in_path);
-
-                    case ".path": // PathSpline
-                    case ".plc":  // ParticleContainer
-                    case ".peb":  // ParticleEffectBank
-                    case ".pgs":  // ParticleGenerationSystem
-                    case ".ptb":  // ParticleTextureBank
-                        throw new NotImplementedException();
                 }
             }
 

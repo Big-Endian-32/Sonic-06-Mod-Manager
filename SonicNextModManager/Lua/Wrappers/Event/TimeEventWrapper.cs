@@ -24,16 +24,6 @@ namespace SonicNextModManager.Lua.Wrappers.Event
             L.RegisterType<AnimationTimer>();
         }
 
-        public void AddEvent(DynValue in_value)
-        {
-            _timeEvent.Data.Events.Add(in_value.ParseClassFromDynValue<AnimationTimer>());
-        }
-
-        public AnimationTimer[] GetEvents()
-        {
-            return [.. _timeEvent.Data.Events];
-        }
-
         public string GetAnimation()
         {
             return _timeEvent.Data.Animation;
@@ -42,6 +32,16 @@ namespace SonicNextModManager.Lua.Wrappers.Event
         public void SetAnimation(string in_path)
         {
             _timeEvent.Data.Animation = in_path;
+        }
+
+        public void AddEvent(DynValue in_value)
+        {
+            _timeEvent.Data.Events.Add(in_value.ParseClassFromDynValue<AnimationTimer>());
+        }
+
+        public AnimationTimer[] GetEvents()
+        {
+            return [.. _timeEvent.Data.Events];
         }
 
         public void Save()
