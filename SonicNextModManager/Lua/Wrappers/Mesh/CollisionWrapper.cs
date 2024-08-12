@@ -23,7 +23,7 @@ namespace SonicNextModManager.Lua.Wrappers.Mesh
         public void Register(MoonSharp.Interpreter.Script L)
         {
             L.RegisterType<CollisionFace>();
-            L.RegisterEnum<CollisionFlag>("ECollisionFlag");
+            L.RegisterType<CollisionFlag>("ECollisionFlag");
         }
 
         public Vector3[] GetVertices()

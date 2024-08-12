@@ -5,6 +5,7 @@ using SonicNextModManager.Lua.Wrappers.Audio;
 using SonicNextModManager.Lua.Wrappers.Event;
 using SonicNextModManager.Lua.Wrappers.Mesh;
 using SonicNextModManager.Lua.Wrappers.Package;
+using SonicNextModManager.Lua.Wrappers.Placement;
 using SonicNextModManager.Lua.Wrappers.Script;
 using SonicNextModManager.Lua.Wrappers.Text;
 using SonicNextModManager.Metadata;
@@ -130,6 +131,10 @@ namespace SonicNextModManager.Lua.Wrappers.Archive
                     case ".sbk":
                         return MarathonWrapper.RegisterWrapper<SoundBankWrapper>(_archive, in_path);
 
+                    // SetData
+                    case ".set":
+                        return MarathonWrapper.RegisterWrapper<SetDataWrapper>(_archive, in_path);
+
                     // TimeEvent
                     case ".tev":
                         return MarathonWrapper.RegisterWrapper<TimeEventWrapper>(_archive, in_path);
@@ -140,8 +145,7 @@ namespace SonicNextModManager.Lua.Wrappers.Archive
                     case ".peb":  // ParticleEffectBank
                     case ".pgs":  // ParticleGenerationSystem
                     case ".ptb":  // ParticleTextureBank
-                    case ".set":  // ObjectPlacement
-                    case ".prop": // ObjectPropertyDatabase
+                    case ".prop": // PropertyDatabase
                     case ".pft":  // PictureFont
                         throw new NotImplementedException();
                 }

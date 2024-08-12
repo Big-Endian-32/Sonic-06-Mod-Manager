@@ -106,8 +106,14 @@ namespace SonicNextModManager.Extensions
         /// </summary>
         /// <typeparam name="T">The type to register.</typeparam>
         /// <param name="L">The script to push to.</param>
-        public static void RegisterType<T>(this Script L)
+        public static void RegisterType<T>(this Script L, string in_name = "")
         {
+            if (typeof(T).IsEnum)
+            {
+                L.RegisterEnum<T>(in_name);
+                return;
+            }
+
             UserData.RegisterType<T>();
 
             var ctors = typeof(T).GetConstructors(BindingFlags.Public | BindingFlags.Instance);
@@ -127,7 +133,7 @@ namespace SonicNextModManager.Extensions
                     }
                 );
 
-                L.Globals[typeof(T).Name] = ctorDelegate;
+                L.Globals[string.IsNullOrEmpty(in_name) ? typeof(T).Name : in_name] = ctorDelegate;
             }
         }
 
@@ -182,7 +188,31 @@ namespace SonicNextModManager.Extensions
         /// <param name="in_type">The CLR type to cast to.</param>
         public static object TransformDynValueToCLRType(this DynValue in_value, Type in_type)
         {
-            if (in_type == typeof(string))
+            if (in_type.IsGenericType)
+            {
+                if (in_type.GetGenericTypeDefinition() == typeof(List<>))
+                {
+                    var itemType = in_type.GetGenericArguments()[0];
+
+                    var listType = typeof(List<>).MakeGenericType(itemType);
+                    var listInstance = Activator.CreateInstance(listType);
+
+                    var addMethod = listType.GetMethod("Add");
+
+                    foreach (var key in in_value.Table.Keys)
+                    {
+                        if (key.Type == DataType.Number)
+                        {
+                            var itemValue = in_value.Table.RawGet(key);
+
+                            addMethod.Invoke(listInstance, [itemValue.TransformDynValueToCLRType(itemType)]);
+                        }
+                    }
+
+                    return listInstance;
+                }
+            }
+            else if (in_type == typeof(string))
             {
                 return in_value.String;
             }
@@ -200,6 +230,10 @@ namespace SonicNextModManager.Extensions
             else if (in_type == typeof(bool))
             {
                 return in_value.Boolean;
+            }
+            else if (in_type == typeof(object))
+            {
+                return in_value.ToObject();
             }
             else if (in_value.Type == DataType.Table && (in_type.IsClass || in_type.IsStruct()))
             {
@@ -258,6 +292,15 @@ namespace SonicNextModManager.Extensions
             }
 
             return code;
+        }
+
+        /// <summary>
+        /// Determines whether the <see cref="DynValue"/> is an array table.
+        /// </summary>
+        /// <param name="in_value">The value to check.</param>
+        public static bool IsArray(this DynValue in_value)
+        {
+            return in_value.Type == DataType.Table && in_value.GetLength().CastToNumber() > 0;
         }
     }
 }
