@@ -67,6 +67,9 @@ namespace SonicNextModManager
             // Set current language.
             if (App.CurrentCulture != null)
                 Load(App.CurrentCulture.FileName);
+
+            // Register additional code pages.
+            Encoding.RegisterProvider(CodePagesEncodingProvider.Instance);
         }
 
         /// <summary>
