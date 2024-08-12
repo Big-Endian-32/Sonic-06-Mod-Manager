@@ -115,13 +115,16 @@ namespace SonicNextModManager.Lua.Wrappers.Archive
                         return MarathonWrapper.RegisterWrapper<EventPlaybookWrapper>(_archive, in_path);
 
                     // LuaBinary
-                    case ".lua":
                     case ".lub":
                         return MarathonWrapper.RegisterWrapper<LuaBinaryWrapper>(_archive, in_path);
 
                     // MessageTable
                     case ".mst":
                         return MarathonWrapper.RegisterWrapper<MessageTableWrapper>(_archive, in_path);
+
+                    // PictureFont
+                    case ".pft":
+                        return MarathonWrapper.RegisterWrapper<PictureFontWrapper>(_archive, in_path);
 
                     // AssetPackage
                     case ".pkg":
@@ -145,8 +148,6 @@ namespace SonicNextModManager.Lua.Wrappers.Archive
                     case ".peb":  // ParticleEffectBank
                     case ".pgs":  // ParticleGenerationSystem
                     case ".ptb":  // ParticleTextureBank
-                    case ".prop": // PropertyDatabase
-                    case ".pft":  // PictureFont
                         throw new NotImplementedException();
                 }
             }
