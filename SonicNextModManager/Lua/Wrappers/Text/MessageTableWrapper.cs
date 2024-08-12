@@ -19,6 +19,11 @@ namespace SonicNextModManager.Lua.Wrappers.Text
             _messageTable = IOHelper.LoadMarathonTypeFromBuffer<MessageTable>(File.Data);
         }
 
+        public Message this[string in_name]
+        {
+            get => GetMessage(in_name);
+        }
+
         public void Register(MoonSharp.Interpreter.Script L)
         {
             L.RegisterType<Message>();
