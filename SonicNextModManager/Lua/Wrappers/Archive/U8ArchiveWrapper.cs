@@ -130,6 +130,10 @@ namespace SonicNextModManager.Lua.Wrappers.Archive
                     case ".pkg":
                         return MarathonWrapper.RegisterWrapper<AssetPackageWrapper>(_archive, in_path);
 
+                    // ReflectionZone
+                    case ".rab":
+                        return MarathonWrapper.RegisterWrapper<ReflectionZoneWrapper>(_archive, in_path);
+
                     // SoundBank
                     case ".sbk":
                         return MarathonWrapper.RegisterWrapper<SoundBankWrapper>(_archive, in_path);
@@ -143,7 +147,6 @@ namespace SonicNextModManager.Lua.Wrappers.Archive
                         return MarathonWrapper.RegisterWrapper<TimeEventWrapper>(_archive, in_path);
 
                     case ".path": // PathSpline
-                    case ".rab":  // ReflectionZone
                     case ".plc":  // ParticleContainer
                     case ".peb":  // ParticleEffectBank
                     case ".pgs":  // ParticleGenerationSystem
