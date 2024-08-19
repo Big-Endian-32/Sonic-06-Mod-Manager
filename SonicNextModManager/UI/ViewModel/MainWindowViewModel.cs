@@ -90,11 +90,11 @@ namespace SonicNextModManager.UI.ViewModel
 
         public void DragOver(IDropInfo in_dropInfo)
         {
-            if (in_dropInfo.Data is MetadataBase && in_dropInfo.TargetItem is MetadataBase)
-            {
-                in_dropInfo.DropTargetAdorner = DropTargetAdorners.Insert;
-                in_dropInfo.Effects = DragDropEffects.Move;
-            }
+            if (!in_dropInfo.IsSameDragDropContextAsSource)
+                return;
+
+            in_dropInfo.DropTargetAdorner = DropTargetAdorners.Insert;
+            in_dropInfo.Effects = DragDropEffects.Move;
         }
 
         public void Drop(IDropInfo in_dropInfo)
@@ -117,6 +117,9 @@ namespace SonicNextModManager.UI.ViewModel
             {
                 int forbiddenIndex = Database.IndexOfLastInstall(in_collection);
                 int dropIndex = in_collection.IndexOf((T)targetItem);
+
+                if (dropIndex == -1)
+                    return;
 
                 // Remove current item.
                 in_collection.Remove((T)sourceItem);
