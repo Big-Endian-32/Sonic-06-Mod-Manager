@@ -5,7 +5,7 @@
     {
         public object Convert(object in_value, Type in_targetType, object in_param, CultureInfo in_culture)
         {
-            return (int)in_value == 0 ? true : false;
+            return System.Convert.ToInt64(in_value) == 0 ? true : false;
         }
 
         public object ConvertBack(object in_value, Type in_targetType, object in_param, CultureInfo in_culture)

@@ -1,4 +1,6 @@
 ﻿using CommunityToolkit.Mvvm.Input;
+using HandyControl.Controls;
+using HandyControl.Tools.Extension;
 using SonicNextModManager.Emulation;
 using SonicNextModManager.Helpers;
 using SonicNextModManager.Metadata;
@@ -173,15 +175,18 @@ namespace SonicNextModManager.UI
             if (in_args.ChangedButton != MouseButton.Left)
                 return;
 
-            if (selectedItem is Mod)
+            if (!App.Settings.General_IsAllowMultipleInfoDisplays)
             {
-                // Close all info displays in the mods list.
-                CloseAllInfoDisplays(_viewModel.Database.Mods);
-            }
-            else if (selectedItem is Patch)
-            {
-                // Close all info displays in the patches list.
-                CloseAllInfoDisplays(_viewModel.Database.Patches);
+                if (selectedItem is Mod)
+                {
+                    // Close all info displays in the mods list.
+                    CloseAllInfoDisplays(_viewModel.Database.Mods);
+                }
+                else if (selectedItem is Patch)
+                {
+                    // Close all info displays in the patches list.
+                    CloseAllInfoDisplays(_viewModel.Database.Patches);
+                }
             }
 
             void CloseAllInfoDisplays<T>(ObservableCollection<T> collection) where T : MetadataBase
@@ -494,26 +499,20 @@ namespace SonicNextModManager.UI
         private void SetSidebarTabIndex(string in_index)
         {
             CloseSidebar();
-            MainTabControl.SelectedIndex = Convert.ToInt32(in_index);
-        }
 
-        /// <summary>
-        /// <see cref="SetSidebarTabIndex"/> command for side bar bindings.
-        /// </summary>
-        public RelayCommand Command_OpenSettings => new(OpenSettings);
+            var index = Convert.ToInt32(in_index);
 
-        /// <summary>
-        /// Opens the Settings window.
-        /// </summary>
-        private void OpenSettings()
-        {
-            CloseSidebar();
+            // Deselect side menu items for inactive menus.
+            if (index >= 4)
+            {
+                MainSideMenu.Items.Do(x => ((SideMenuItem)x).IsSelected = false);
+            }
+            else
+            {
+                MiscSideMenu.Items.Do(x => ((SideMenuItem)x).IsSelected = false);
+            }
 
-            Sidebar_Settings.IsSelected = false;
-
-            new SettingsWindow { Owner = this }.ShowDialog();
-
-            RefreshUI();
+            MainTabControl.SelectedIndex = index;
         }
     }
 }

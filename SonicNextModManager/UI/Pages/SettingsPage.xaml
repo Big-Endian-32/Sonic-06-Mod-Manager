@@ -1,19 +1,16 @@
-﻿<c:ImmersiveWindow x:Class="SonicNextModManager.UI.SettingsWindow"
-                   xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
-                   xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-                   xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-                   xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-                   xmlns:local="clr-namespace:SonicNextModManager"
-                   xmlns:converters="clr-namespace:SonicNextModManager.UI.Converters"
-                   xmlns:c="clr-namespace:SonicNextModManager.UI.Components"
-                   xmlns:hc="https://handyorg.github.io/handycontrol"
-                   mc:Ignorable="d"
-                   Title="{DynamicResource Settings}"
-                   Width="475" Height="450"
-                   Background="#131313"
-                   WindowStartupLocation="CenterOwner">
+﻿<UserControl x:Class="SonicNextModManager.UI.Pages.SettingsPage"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:SonicNextModManager"
+             xmlns:converters="clr-namespace:SonicNextModManager.UI.Converters"
+             xmlns:c="clr-namespace:SonicNextModManager.UI.Components"
+             xmlns:hc="https://handyorg.github.io/handycontrol"
+             mc:Ignorable="d" 
+             d:DesignHeight="450" d:DesignWidth="800">
 
-    <Grid>
+    <Grid Margin="0,0,0,-2">
 
         <Grid.Resources>
 
@@ -24,15 +21,10 @@
 
             <!-- Set up converters -->
             <converters:IntToInvertedBoolConverter x:Key="IntToInvertedBoolConverter"/>
-            
+
         </Grid.Resources>
 
-        <Grid.RowDefinitions>
-            <RowDefinition/>
-            <RowDefinition Height="50"/>
-        </Grid.RowDefinitions>
-
-        <hc:TabControl Background="#191919" Grid.Row="0" ShowContextMenu="False" Style="{StaticResource TabControlInLine}">
+        <hc:TabControl Background="#191919" ShowContextMenu="False" Style="{StaticResource TabControlInLine}">
 
             <hc:TabItem Header="{DynamicResource Settings_General}" Style="{StaticResource TabItemInLineAccentColour}">
                 <StackPanel Margin="10">
@@ -43,6 +35,12 @@
                         <ComboBox ItemsSource="{Binding SupportedCultures, Source={x:Static Application.Current}}" SelectedItem="{Binding CurrentCulture, Source={x:Static Application.Current}}" SelectionChanged="Language_SelectionChanged"/>
                     </StackPanel>
 
+                    <!-- Gamma correction -->
+                    <Grid Margin="0,0,0,10">
+                        <CheckBox Content="{DynamicResource Settings_General_AllowMultipleInfoDisplays}" IsChecked="{Binding Mode=TwoWay, Source={x:Static local:App.Settings}, Path=General_IsAllowMultipleInfoDisplays}"/>
+                        <TextBlock HorizontalAlignment="Right" FontStyle="Italic" Foreground="Gray" Text="{DynamicResource Settings_General_AllowMultipleInfoDisplays_Description}" VerticalAlignment="Center"/>
+                    </Grid>
+                    
                 </StackPanel>
             </hc:TabItem>
 
@@ -56,7 +54,7 @@
                     </StackPanel>
 
                     <StackPanel Name="XeniaFrontend">
-                        
+
                         <!-- Backend -->
                         <StackPanel Margin="0,0,0,10">
                             <c:HorizontalFieldLabel Caption="{DynamicResource Settings_Emulator_Backend}" Description="{DynamicResource Settings_Emulator_Backend_Description}" Margin="0,0,0,5"/>
@@ -130,7 +128,7 @@
                             <CheckBox Content="{DynamicResource Settings_Emulator_GammaCorrect}" IsChecked="{Binding Mode=TwoWay, Source={x:Static local:App.Settings}, Path=Emulator_Xenia_IsGammaCorrection}"/>
                             <TextBlock HorizontalAlignment="Right" FontStyle="Italic" Foreground="Gray" Text="{DynamicResource Settings_Emulator_GammaCorrect_Description}" VerticalAlignment="Center"/>
                         </Grid>
-                        
+
                     </StackPanel>
 
                     <!-- Launch after installing content -->
@@ -174,11 +172,9 @@
                     <StackPanel Name="Credits" Margin="0,0,0,10"/>
                 </hc:ScrollViewer>
             </hc:TabItem>
-            
+
         </hc:TabControl>
 
-        <Button Click="OK_Click" Content="{DynamicResource Common_OK}" Grid.Row="1" Height="32" HorizontalAlignment="Right" Margin="0,0,10,0" Width="120"/>
-        
     </Grid>
     
-</c:ImmersiveWindow>
+</UserControl>

@@ -162,7 +162,8 @@
     <system:String x:Key="Settings"                                                  >Settings</system:String>
     <system:String x:Key="Settings_General"                                          >General</system:String>
     <system:String x:Key="Settings_General_Language_Description"                     >The current application language.</system:String>
-    <system:String x:Key="Settings_General_Debug"                                    >Debug mode</system:String>
+    <system:String x:Key="Settings_General_AllowMultipleInfoDisplays"                >Allow multiple info displays</system:String>
+    <system:String x:Key="Settings_General_AllowMultipleInfoDisplays_Description"    >Allows the content list to show more than one info display at a time.</system:String>
     <system:String x:Key="Settings_Emulator"                                         >Emulator</system:String>
     <system:String x:Key="Settings_Emulator_Backend"                                 >Backend</system:String>
     <system:String x:Key="Settings_Emulator_Backend_Description"                     >The backend the emulator will use.</system:String>

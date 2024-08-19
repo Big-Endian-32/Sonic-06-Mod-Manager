@@ -3,14 +3,14 @@ using SonicNextModManager.Metadata;
 using SonicNextModManager.UI.Components;
 using SonicNextModManager.UI.Dialogs;
 
-namespace SonicNextModManager.UI
+namespace SonicNextModManager.UI.Pages
 {
     /// <summary>
-    /// Interaction logic for SettingsWindow.xaml
+    /// Interaction logic for SettingsPage.xaml
     /// </summary>
-    public partial class SettingsWindow : ImmersiveWindow
+    public partial class SettingsPage : UserControl
     {
-        public SettingsWindow()
+        public SettingsPage()
         {
             InitializeComponent();
 
@@ -21,14 +21,15 @@ namespace SonicNextModManager.UI
                 Credits.Children.Add(new CreditsPane(credits));
         }
 
-        private void OK_Click(object in_sender, RoutedEventArgs in_args)
-            => Close();
-
         private void Language_SelectionChanged(object in_sender, SelectionChangedEventArgs in_args)
-            => SonicNextModManager.Language.UpdateCultureResources();
+        {
+            SonicNextModManager.Language.UpdateCultureResources();
+        }
 
         private void Path_ModsDirectory_Browse(object in_sender, EventArgs in_args)
-            => PropertyHelper.SetStringWithNullCheck(s => App.Settings.Path_ModsDirectory = s, DirectoryQueries.QueryModsDirectory());
+        {
+            PropertyHelper.SetStringWithNullCheck(s => App.Settings.Path_ModsDirectory = s, DirectoryQueries.QueryModsDirectory());
+        }
 
         private void Path_GameExecutable_Browse(object in_sender, EventArgs in_args)
         {
@@ -38,7 +39,9 @@ namespace SonicNextModManager.UI
         }
 
         private void Path_EmulatorExecutable_Browse(object in_sender, EventArgs in_args)
-            => PropertyHelper.SetStringWithNullCheck(s => App.Settings.Path_EmulatorExecutable = s, FileQueries.QueryEmulatorExecutable());
+        {
+            PropertyHelper.SetStringWithNullCheck(s => App.Settings.Path_EmulatorExecutable = s, FileQueries.QueryEmulatorExecutable());
+        }
 
         private void UpdateXeniaFrontendVisibility()
         {
