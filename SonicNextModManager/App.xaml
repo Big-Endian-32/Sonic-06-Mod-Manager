@@ -31,6 +31,7 @@
             <converters:InstallStateToVisibilityConverter x:Key="InstallStateToVisibilityConverter"/>
             <converters:EnumToIntConverter x:Key="EnumToIntConverter"/>
             <converters:MultiplyConverter x:Key="MultiplyConverter"/>
+            <converters:SumConverter x:Key="SumConverter"/>
 
             <!-- Font used for displaying icons with text -->
             <FontFamily x:Key="MaterialIcons">pack://application:,,,/Resources/Fonts/#Material Icons</FontFamily>

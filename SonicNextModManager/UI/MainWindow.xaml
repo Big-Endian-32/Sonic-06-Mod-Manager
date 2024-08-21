@@ -13,7 +13,6 @@
                    xmlns:c="clr-namespace:SonicNextModManager.UI.Components"
                    xmlns:dd="urn:gong-wpf-dragdrop"
                    xmlns:hc="https://handyorg.github.io/handycontrol"
-                   xmlns:viewmodel="clr-namespace:SonicNextModManager.UI.ViewModel"
                    d:DataContext="{d:DesignInstance Type=viewmodel:MainWindowViewModel}"
                    mc:Ignorable="d"
                    Title="Sonic '06 Mod Manager"
@@ -231,6 +230,10 @@
                         <Grid Margin="0,0,0,-7" Background="#191919"/>
                     </hc:TabItem>
 
+                    <hc:TabItem Name="DebugTab">
+                        <pages:DebugPage/>
+                    </hc:TabItem>
+
                     <hc:TabItem Name="SettingsTab">
                         <pages:SettingsPage/>
                     </hc:TabItem>
@@ -330,7 +333,7 @@
                 <Grid.RowDefinitions>
                     <RowDefinition Height="48"/>
                     <RowDefinition/>
-                    <RowDefinition Height="48"/>
+                    <RowDefinition Height="96"/>
                 </Grid.RowDefinitions>
 
                 <hc:SideMenu>
@@ -365,6 +368,11 @@
                 </hc:SideMenu>
 
                 <hc:SideMenu Grid.Row="2" Name="MiscSideMenu">
+                    <hc:SideMenuItem x:Name="Sidebar_Debug" Header="Debug" Command="{Binding ElementName=Root, Path=Command_SetSidebarTabIndex}" CommandParameter="4">
+                        <hc:SideMenuItem.Icon>
+                            <TextBlock Text="bug_report" FontFamily="{StaticResource MaterialIcons}" FontSize="24"/>
+                        </hc:SideMenuItem.Icon>
+                    </hc:SideMenuItem>
                     <hc:SideMenuItem x:Name="Sidebar_Settings" Header="Settings" Command="{Binding ElementName=Root, Path=Command_SetSidebarTabIndex}" CommandParameter="5">
                         <hc:SideMenuItem.Icon>
                             <TextBlock Text="settings" FontFamily="{StaticResource MaterialIcons}" FontSize="22"/>
