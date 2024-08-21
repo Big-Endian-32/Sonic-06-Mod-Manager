@@ -7,7 +7,9 @@
                    xmlns:local="clr-namespace:SonicNextModManager"
                    xmlns:metadata="clr-namespace:SonicNextModManager.Metadata"
                    xmlns:converters="clr-namespace:SonicNextModManager.UI.Converters"
+                   xmlns:ex="clr-namespace:SonicNextModManager.UI.Extensions"
                    xmlns:pages="clr-namespace:SonicNextModManager.UI.Pages"
+                   xmlns:viewmodel="clr-namespace:SonicNextModManager.UI.ViewModel"
                    xmlns:c="clr-namespace:SonicNextModManager.UI.Components"
                    xmlns:dd="urn:gong-wpf-dragdrop"
                    xmlns:hc="https://handyorg.github.io/handycontrol"
@@ -74,7 +76,7 @@
                                     <DropShadowEffect ShadowDepth="0.5"/>
                                 </Border.Effect>
                                 <hc:ScrollViewer>
-                                    <TextBlock Margin="5,2,5,2" Text="{Binding Description}" TextWrapping="WrapWithOverflow"/>
+                                    <TextBlock Margin="5,2,5,2" Text="{Binding Description}" TextWrapping="WrapWithOverflow" VirtualizingPanel.ScrollUnit="Pixel"/>
                                 </hc:ScrollViewer>
                             </Border>
                         </Grid>
@@ -141,16 +143,18 @@
                     </hc:TabControl.ItemContainerStyle>
 
                     <hc:TabItem Name="ModsTab">
-                        <ListView Name="ModsList" Margin="0,0,0,-7"
+                        <ListView Name="ModsList"
+                                  Margin="0,0,0,-7"
                                   Background="#191919"
                                   BorderBrush="{x:Null}"
                                   d:ItemsSource="{d:SampleData ItemCount=1}"
+                                  dd:DragDrop.DefaultDragAdornerOpacity="0"
+                                  dd:DragDrop.DropHandler="{Binding}"
                                   dd:DragDrop.IsDragSource="True"
                                   dd:DragDrop.IsDropTarget="True"
+                                  dd:DragDrop.SelectDroppedItems="True"
                                   dd:DragDrop.UseDefaultDragAdorner="True"
                                   dd:DragDrop.UseVisualSourceItemSizeForDragAdorner="True"
-                                  dd:DragDrop.DropHandler="{Binding}"
-                                  dd:DragDrop.SelectDroppedItems="True"
                                   ItemsSource="{Binding Database.Mods}"
                                   VirtualizingPanel.ScrollUnit="Pixel">
                             <ListView.ItemContainerStyle>
@@ -169,19 +173,26 @@
                             </ListView.ItemContainerStyle>
                             <ListView.View>
                                 <GridView ColumnHeaderContainerStyle="{StaticResource SlimGridViewColumnHeader}">
-                                    <GridViewColumn CellTemplate="{StaticResource ContentInformation}" Width="0"/>
-                                    <GridViewColumn Header="{DynamicResource Metadata_Title}" CellTemplate="{StaticResource ContentListItem}" Width="250"/>
-                                    <GridViewColumn Header="{DynamicResource Metadata_Version}" DisplayMemberBinding="{Binding Version}" Width="80"/>
-                                    <GridViewColumn Header="{DynamicResource Metadata_Author}" DisplayMemberBinding="{Binding Author}" Width="125"/>
-                                    <GridViewColumn Header="{DynamicResource Metadata_Date}" DisplayMemberBinding="{Binding Date, Converter={StaticResource StringToNotAvailableConverter}}" Width="80"/>
-                                    <GridViewColumn Header="{DynamicResource Metadata_Platform}" DisplayMemberBinding="{Binding Platform}" Width="80"/>
+                                    <GridViewColumn CellTemplate="{StaticResource ContentInformation}"
+                                                    Width="0"/>
+                                    <GridViewColumn Header="{DynamicResource Metadata_Title}" CellTemplate="{StaticResource ContentListItem}"
+                                                    Width="250" ex:GridViewColumnExtensions.MinWidth="250"/>
+                                    <GridViewColumn Header="{DynamicResource Metadata_Version}" DisplayMemberBinding="{Binding Version}"
+                                                    Width="80" ex:GridViewColumnExtensions.MinWidth="80"/>
+                                    <GridViewColumn Header="{DynamicResource Metadata_Author}" DisplayMemberBinding="{Binding Author}"
+                                                    Width="125" ex:GridViewColumnExtensions.MinWidth="125"/>
+                                    <GridViewColumn Header="{DynamicResource Metadata_Date}" DisplayMemberBinding="{Binding Date, Converter={StaticResource StringToNotAvailableConverter}}"
+                                                    Width="80" ex:GridViewColumnExtensions.MinWidth="80"/>
+                                    <GridViewColumn Header="{DynamicResource Metadata_Platform}" DisplayMemberBinding="{Binding Platform}"
+                                                    Width="80" ex:GridViewColumnExtensions.MinWidth="80"/>
                                 </GridView>
                             </ListView.View>
                         </ListView>
                     </hc:TabItem>
 
                     <hc:TabItem Name="PatchesTab">
-                        <ListView Name="PatchesList" Margin="0,0,0,-7"
+                        <ListView Name="PatchesList"
+                                  Margin="0,0,0,-7"
                                   Background="#191919"
                                   BorderBrush="{x:Null}"
                                   d:ItemsSource="{d:SampleData ItemCount=1}"
@@ -197,11 +208,16 @@
                             </ListView.ItemContainerStyle>
                             <ListView.View>
                                 <GridView ColumnHeaderContainerStyle="{StaticResource SlimGridViewColumnHeader}">
-                                    <GridViewColumn CellTemplate="{StaticResource ContentInformation}" Width="0"/>
-                                    <GridViewColumn Header="{DynamicResource Metadata_Title}" CellTemplate="{StaticResource ContentListItem}"/>
-                                    <GridViewColumn Header="{DynamicResource Metadata_Author}" DisplayMemberBinding="{Binding Author}"/>
-                                    <GridViewColumn Header="{DynamicResource Metadata_Platform}" DisplayMemberBinding="{Binding Platform}" Width="80"/>
-                                    <GridViewColumn Header="{DynamicResource Metadata_Blurb}" DisplayMemberBinding="{Binding Blurb}"/>
+                                    <GridViewColumn CellTemplate="{StaticResource ContentInformation}"
+                                                    Width="0"/>
+                                    <GridViewColumn Header="{DynamicResource Metadata_Title}" CellTemplate="{StaticResource ContentListItem}"
+                                                    Width="250" ex:GridViewColumnExtensions.MinWidth="250"/>
+                                    <GridViewColumn Header="{DynamicResource Metadata_Author}" DisplayMemberBinding="{Binding Author}"
+                                                    Width="125" ex:GridViewColumnExtensions.MinWidth="125"/>
+                                    <GridViewColumn Header="{DynamicResource Metadata_Platform}" DisplayMemberBinding="{Binding Platform}"
+                                                    Width="80" ex:GridViewColumnExtensions.MinWidth="80"/>
+                                    <GridViewColumn Header="{DynamicResource Metadata_Blurb}" DisplayMemberBinding="{Binding Blurb}"
+                                                    Width="Auto"/>
                                 </GridView>
                             </ListView.View>
                         </ListView>
