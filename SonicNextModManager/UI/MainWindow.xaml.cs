@@ -292,10 +292,10 @@ namespace SonicNextModManager.UI
                 (
                     LocaleService.Localise("Exception_InstallError", out_ex),
                     LocaleService.Localise("Exception_InstallFailed"),
-                    in_icon: NextMessageBoxIcon.Error
+                    in_icon: ENextMessageBoxIcon.Error
                 );
 
-                SetInstallState(InstallState.Uninstalling);
+                SetInstallState(EInstallState.Uninstalling);
 
                 await Task.Run(_viewModel.Database.Uninstall);
             }
@@ -357,7 +357,9 @@ namespace SonicNextModManager.UI
         /// Performs a hard refresh of the content database.
         /// </summary>
         private void Refresh_Click(object in_sender, RoutedEventArgs in_args)
-            => _viewModel.InvokeDatabaseContentUpdate();
+        {
+            _viewModel.InvokeDatabaseContentUpdate();
+        }
 
         /// <summary>
         /// Opens the mod editor to create a new mod.
@@ -372,19 +374,16 @@ namespace SonicNextModManager.UI
         /// </summary>
         private void Common_OpenFolder_Click(object in_sender, RoutedEventArgs in_args)
         {
-            var metadata = ((MenuItem)in_sender).DataContext as MetadataBase;
-
-            if (metadata != null)
+            if (((MenuItem)in_sender).DataContext is MetadataBase out_metadata)
             {
-                // Open path in Windows Explorer.
-                ProcessHelper.StartWithDefaultProgram
-                (
-                    // Use containing directory if mod, otherwise launch Windows Explorer.
-                    metadata is Mod ? Path.GetDirectoryName(metadata.Location) : "explorer",
-
-                    // Use no arguments if mod, otherwise select the patch with Windows Explorer.
-                    metadata is Mod ? string.Empty : $"/select, \"{metadata.Location}\""
-                );
+                if (out_metadata is Mod out_mod)
+                {
+                    ProcessHelper.StartWithDefaultProgram(Path.GetDirectoryName(out_mod.Location));
+                }
+                else if (out_metadata is Patch out_patch)
+                {
+                    ProcessHelper.StartWithDefaultProgram("explorer", $"/select \"{out_patch.Location}\"");
+                }
             }
         }
 

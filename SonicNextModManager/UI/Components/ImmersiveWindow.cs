@@ -32,7 +32,7 @@ namespace SonicNextModManager.UI.Components
         protected override void OnSourceInitialized(EventArgs in_args)
         {
             // Initialise immersive dark mode for every window.
-            ImmersiveDarkMode.Initialise(new WindowInteropHelper(this).Handle, true);
+            ImmersiveDarkMode.Init(new WindowInteropHelper(this).Handle, true);
 
             if (!CloseButton)
             {

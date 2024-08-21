@@ -2,7 +2,7 @@
 
   <PropertyGroup>
     <OutputType>WinExe</OutputType>
-    <TargetFramework>net8.0-windows7.0</TargetFramework>
+    <TargetFramework>net8.0-windows</TargetFramework>
     <Nullable>enable</Nullable>
     <UseWPF>true</UseWPF>
     <ApplicationIcon>Resources\Images\Icon.ico</ApplicationIcon>
@@ -44,6 +44,7 @@
   <ItemGroup>
     <PackageReference Include="BE32.Marathon" Version="1.0.97" />
     <PackageReference Include="CommunityToolkit.Mvvm" Version="8.2.2" />
+    <PackageReference Include="Gee.External.Capstone" Version="2.3.0" />
     <PackageReference Include="gong-wpf-dragdrop" Version="3.2.1" />
     <PackageReference Include="HandyControl" Version="3.5.1" />
     <PackageReference Include="keystoneengine.csharp" Version="0.9.1.1" />
@@ -98,7 +99,13 @@
     <None Update="Resources\Libraries\PlayStation\scetool.exe">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
+    <None Update="Resources\Libraries\PlayStation\SonicNextModLoader.sprx">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
     <None Update="Resources\Libraries\PlayStation\zlib1.dll">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="Resources\Libraries\Xbox\SonicNextModLoader.xex">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
     <None Update="Resources\Libraries\Xbox\xextool.exe">

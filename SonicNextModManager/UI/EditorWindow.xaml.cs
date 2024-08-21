@@ -34,6 +34,7 @@ namespace SonicNextModManager.UI
                     IsINI = true;
             }
 
+            // TODO: fix closing without saving overwriting this.
             DataContext = Metadata;
         }
 

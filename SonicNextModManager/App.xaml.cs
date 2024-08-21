@@ -84,7 +84,6 @@ namespace SonicNextModManager
         /// <summary>
         /// Gets the current platform from the game executable path.
         /// </summary>
-        /// <returns></returns>
         public static EPlatform GetCurrentPlatform()
         {
             return StringHelper.GetPlatformFromFilePath(Settings.Path_GameExecutable);
@@ -124,15 +123,11 @@ namespace SonicNextModManager
                 Directory.CreateDirectory(directory.Value);
 
             string modsDirectory = Settings.Path_ModsDirectory;
+
+            if (string.IsNullOrEmpty(modsDirectory) || !Directory.Exists(modsDirectory))
             {
                 // Create default mods directory if the current one is null or doesn't exist.
-                if (string.IsNullOrEmpty(modsDirectory) || !Directory.Exists(modsDirectory))
-                {
-                    Directory.CreateDirectory
-                    (
-                        Settings.Path_ModsDirectory = Path.Combine(Environment.CurrentDirectory, "Mods")
-                    );
-                }
+                Directory.CreateDirectory(Settings.Path_ModsDirectory = Path.Combine(Environment.CurrentDirectory, "Mods"));
             }
         }
 

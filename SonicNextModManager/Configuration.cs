@@ -13,6 +13,8 @@ namespace SonicNextModManager
 
         public string? General_Language { get; set; } = "en-GB";
 
+        public bool General_IsAllowMultipleInfoDisplays { get; set; } = false;
+
         public WindowState MainWindow_WindowState { get; set; } = WindowState.Normal;
 
         public EXeniaBackend Emulator_Xenia_Backend { get; set; } = EXeniaBackend.D3D12;
