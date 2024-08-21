@@ -256,6 +256,8 @@ namespace SonicNextModManager.UI
             }
             else
             {
+                _viewModel.InvokeDatabaseContentUpdate();
+
                 SetInstallState(EInstallState.Uninstalling);
 
                 // Uninstall content before installing to prevent stacking.
