@@ -320,7 +320,7 @@
                 <hc:SideMenu>
                     <hc:SideMenuItem Name="SidebarMenu" Header="Menu" Command="{Binding ElementName=Root, Path=Command_SidebarMenu_Click}">
                         <hc:SideMenuItem.Icon>
-                            <TextBlock Text="menu" FontFamily="{StaticResource MaterialIcons}" FontSize="28"/>
+                            <TextBlock Text="menu" FontFamily="{StaticResource MaterialIcons}" FontSize="24"/>
                         </hc:SideMenuItem.Icon>
                     </hc:SideMenuItem>
                 </hc:SideMenu>
@@ -328,22 +328,22 @@
                 <hc:SideMenu Grid.Row="1" Name="MainSideMenu">
                     <hc:SideMenuItem Header="Mods" IsSelected="True" Command="{Binding ElementName=Root, Path=Command_SetSidebarTabIndex}" CommandParameter="0">
                         <hc:SideMenuItem.Icon>
-                            <TextBlock Text="widgets" FontFamily="{StaticResource MaterialIcons}" FontSize="28"/>
+                            <TextBlock Text="widgets" FontFamily="{StaticResource MaterialIcons}" FontSize="24"/>
                         </hc:SideMenuItem.Icon>
                     </hc:SideMenuItem>
                     <hc:SideMenuItem Header="Patches" Command="{Binding ElementName=Root, Path=Command_SetSidebarTabIndex}" CommandParameter="1">
                         <hc:SideMenuItem.Icon>
-                            <TextBlock Text="auto_awesome" FontFamily="{StaticResource MaterialIcons}" FontSize="28"/>
+                            <TextBlock Text="auto_awesome" FontFamily="{StaticResource MaterialIcons}" FontSize="24"/>
                         </hc:SideMenuItem.Icon>
                     </hc:SideMenuItem>
                     <hc:SideMenuItem Header="Tweaks" Command="{Binding ElementName=Root, Path=Command_SetSidebarTabIndex}" CommandParameter="2">
                         <hc:SideMenuItem.Icon>
-                            <TextBlock Text="tune" FontFamily="{StaticResource MaterialIcons}" FontSize="28"/>
+                            <TextBlock Text="tune" FontFamily="{StaticResource MaterialIcons}" FontSize="24"/>
                         </hc:SideMenuItem.Icon>
                     </hc:SideMenuItem>
                     <hc:SideMenuItem Header="Updates" Command="{Binding ElementName=Root, Path=Command_SetSidebarTabIndex}" CommandParameter="3">
                         <hc:SideMenuItem.Icon>
-                            <TextBlock Text="update" FontFamily="{StaticResource MaterialIcons}" FontSize="28"/>
+                            <TextBlock Text="update" FontFamily="{StaticResource MaterialIcons}" FontSize="24"/>
                         </hc:SideMenuItem.Icon>
                     </hc:SideMenuItem>
                 </hc:SideMenu>
@@ -351,7 +351,7 @@
                 <hc:SideMenu Grid.Row="2" Name="MiscSideMenu">
                     <hc:SideMenuItem x:Name="Sidebar_Settings" Header="Settings" Command="{Binding ElementName=Root, Path=Command_SetSidebarTabIndex}" CommandParameter="5">
                         <hc:SideMenuItem.Icon>
-                            <TextBlock Text="settings" FontFamily="{StaticResource MaterialIcons}" FontSize="28"/>
+                            <TextBlock Text="settings" FontFamily="{StaticResource MaterialIcons}" FontSize="22"/>
                         </hc:SideMenuItem.Icon>
                     </hc:SideMenuItem>
                 </hc:SideMenu>
