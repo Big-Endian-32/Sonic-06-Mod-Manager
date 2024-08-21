@@ -32,9 +32,9 @@ namespace SonicNextModManager
 
         public static Dictionary<string, string> Directories { get; } = new()
         {
-            { "Patches", Path.Combine(Environment.CurrentDirectory, "Patches") },
-            { "Profiles", Path.Combine(Environment.CurrentDirectory, "Profiles") },
-            { "Resources", Path.Combine(Environment.CurrentDirectory, "Resources") }
+            { "Patches",   Path.Combine(Environment.CurrentDirectory, "Patches")  },
+            { "Profiles",  Path.Combine(Environment.CurrentDirectory, "Profiles") },
+            { "Resources", Path.Combine(AppContext.BaseDirectory, "Resources")    }
         };
 
         public static Dictionary<string, string> Configurations { get; } = new()
@@ -44,9 +44,11 @@ namespace SonicNextModManager
 
         public static Dictionary<string, string> Modules { get; } = new()
         {
-            { "xextool", Path.Combine(Directories["Resources"], "Libraries", "Xbox", "xextool.exe") },
-            { "scetool", Path.Combine(Directories["Resources"], "Libraries", "PlayStation", "scetool.exe") },
-            { "make_fself", Path.Combine(Directories["Resources"], "Libraries", "PlayStation", "make_fself.exe") }
+            { "xextool",    Path.Combine(Directories["Resources"], @"Libraries\Xbox\xextool.exe")                    },
+            { "scetool",    Path.Combine(Directories["Resources"], @"Libraries\PlayStation\scetool.exe")             },
+            { "make_fself", Path.Combine(Directories["Resources"], @"Libraries\PlayStation\make_fself.exe")          },
+            { "LoaderXbox", Path.Combine(Directories["Resources"], @"Libraries\Xbox\SonicNextModLoader.xex")         },
+            { "LoaderPS3",  Path.Combine(Directories["Resources"], @"Libraries\PlayStation\SonicNextModLoader.sprx") }
         };
 
         /// <summary>
