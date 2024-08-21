@@ -23,7 +23,11 @@ namespace SonicNextModManager.Patches
 
             var core = App.GetCurrentPlatformString();
 
-            _archivePath = Path.Combine(gameDirectory, core, @"archives\system.arc");
+            _archivePath = Path.Combine(gameDirectory, $@"{core}\archives\system.arc");
+
+            if (!File.Exists(_archivePath))
+                return;
+
             _archive = new(_archivePath, ReadMode.IndexOnly);
             _file = (ArchiveHelper.GetFile(_archive.Root, $@"{core}\archive.pkg") as U8ArchiveFile)!;
 

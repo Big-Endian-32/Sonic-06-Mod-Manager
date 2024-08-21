@@ -84,6 +84,7 @@ namespace SonicNextModManager.Lua.Callback
         [LuaCallback]
         public static bool WriteJump(Script L, uint in_source, int in_destination)
         {
+            // TODO: support far jumps.
             return WriteAsm(L, in_source, $"b {in_destination};");
         }
     }
