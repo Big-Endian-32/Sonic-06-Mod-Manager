@@ -157,6 +157,12 @@
   <data name="scetool" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\resources\libraries\playstation\scetool.exe;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
+  <data name="SonicNextModLoaderPS3" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\Libraries\PlayStation\SonicNextModLoader.sprx;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="SonicNextModLoaderXbox" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\Libraries\Xbox\SonicNextModLoader.xex;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
   <data name="vsh_curves" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\resources\libraries\playstation\data\vsh_curves;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>

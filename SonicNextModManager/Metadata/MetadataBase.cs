@@ -15,12 +15,12 @@ namespace SonicNextModManager.Metadata
         /// <summary>
         /// The title of this content.
         /// </summary>
-        public string? Title { get; set; } = LocaleService.Localise("Common_NotAvailable");
+        public string? Title { get; set; }
 
         /// <summary>
         /// The author of this content.
         /// </summary>
-        public string? Author { get; set; } = LocaleService.Localise("Common_NotAvailable");
+        public string? Author { get; set; }
 
         /// <summary>
         /// The platform this content is targeting.

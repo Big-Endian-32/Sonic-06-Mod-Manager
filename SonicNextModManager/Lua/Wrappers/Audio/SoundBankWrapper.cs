@@ -1,8 +1,8 @@
 ﻿using Marathon.Formats.Archive;
 using Marathon.Formats.Audio;
-using SonicNextModManager.Extensions;
 using SonicNextModManager.Helpers;
 using SonicNextModManager.Lua.Attributes;
+using SonicNextModManager.Lua.Extensions;
 using SonicNextModManager.Lua.Interfaces;
 
 namespace SonicNextModManager.Lua.Wrappers.Audio
@@ -71,9 +71,9 @@ namespace SonicNextModManager.Lua.Wrappers.Audio
             }
         }
 
-        public void Save()
+        public void Close()
         {
-            Save(_soundBank);
+            Close(_soundBank);
         }
     }
 }

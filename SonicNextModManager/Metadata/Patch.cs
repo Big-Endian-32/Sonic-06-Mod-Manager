@@ -1,4 +1,6 @@
-﻿using SonicNextModManager.Lua;
+﻿using SonicNextModManager.Extensions;
+using SonicNextModManager.Lua;
+using SonicNextModManager.Lua.Extensions;
 using SonicNextModManager.UI.Dialogs;
 using System.Collections.ObjectModel;
 
@@ -130,11 +132,13 @@ namespace SonicNextModManager.Metadata
             if (string.IsNullOrEmpty(Code))
                 return;
 
-            // Initialise patch symbols.
-            Patcher.AddSymbol("Work", Path.GetDirectoryName(Location)!);
-
             // Initialise script interpreter.
-            var L = new Script().Initialise();
+            var L = new Script();
+
+            // Initialise patch symbols.
+            L.SetGlobal("Work", Path.GetDirectoryName(Location)!);
+
+            L.Initialise(Title ?? Path.GetFileName(Path.GetDirectoryName(Location)));
 
             // Initialise global declarations.
             foreach (var decl in Declarations)

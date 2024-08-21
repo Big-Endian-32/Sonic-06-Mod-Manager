@@ -3,6 +3,7 @@ using Marathon.IO;
 using SonicNextModManager.Helpers;
 using SonicNextModManager.Interop;
 using SonicNextModManager.Metadata.Events;
+using SonicNextModManager.Patches;
 using SonicNextModManager.UI.Dialogs;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
@@ -15,6 +16,13 @@ namespace SonicNextModManager.Metadata
     public class Database : INotifyPropertyChanged
     {
         private string _location { get; } = App.Configurations["Content"];
+
+        public const char AppendChar = '+';
+        public const char RemoveChar = '-';
+        public const char CustomChar = '#';
+
+        public const string BackupExt = ".$06mm";
+        public const string CustomExt = ".#06mm";
 
         public event PropertyChangedEventHandler? PropertyChanged;
 
@@ -160,6 +168,9 @@ namespace SonicNextModManager.Metadata
         {
             var contentCount = ActiveContent!.GetTotalContent();
 
+            Executable.Decrypt();
+            Bootstrapper.Uninstall();
+
             for (int i = Mods!.Count - 1; i >= 0; i--)
             {
                 if (in_cancellationToken?.IsCancellationRequested == true)
@@ -176,7 +187,7 @@ namespace SonicNextModManager.Metadata
                 }
             }
 
-            for (int i = Patches!.Count - 1; i >= 0; i--)
+            for (int i = 0; i < Patches!.Count; i++)
             {
                 if (in_cancellationToken?.IsCancellationRequested == true)
                     break;
@@ -191,6 +202,9 @@ namespace SonicNextModManager.Metadata
                         new ContentProcessedEventArgs(patch.Title!, Mods.Count + i, contentCount));
                 }
             }
+
+            Bootstrapper.Install();
+            Executable.Encrypt();
 
             if (in_cancellationToken?.IsCancellationRequested == true)
             {
@@ -216,13 +230,26 @@ namespace SonicNextModManager.Metadata
             if (string.IsNullOrEmpty(gameDirectory))
                 return;
 
+            Bootstrapper.Uninstall();
+
+            // Delete custom files copied via Lua scripts.
+            foreach (var file in Directory.GetFiles(gameDirectory, $"*{CustomExt}", SearchOption.AllDirectories))
+            {
+                var realFilePath = Path.ChangeExtension(file, "");
+
+                if (File.Exists(realFilePath))
+                    File.Delete(realFilePath);
+
+                File.Delete(file);
+            }
+
             // Restore backed up files.
-            foreach (var file in Directory.GetFiles(gameDirectory, "*.06mm_backup", SearchOption.AllDirectories))
+            foreach (var file in Directory.GetFiles(gameDirectory, $"*{BackupExt}", SearchOption.AllDirectories))
             {
                 if (!File.Exists(file))
                     continue;
 
-                File.Move(file, file.Replace(".06mm_backup", ""), true);
+                File.Move(file, Path.ChangeExtension(file, ""), true);
             }
 
             for (int i = 0; i < Mods!.Count; i++)
@@ -243,7 +270,29 @@ namespace SonicNextModManager.Metadata
         }
 
         /// <summary>
-        /// Returns the last index of a checked mod.
+        /// Backs up a file to the same location with a suffix.
+        /// </summary>
+        /// <param name="in_path">The path to the file to back up.</param>
+        /// <param name="in_suffix">The suffix to append.</param>
+        /// <param name="in_isOverwrite">Determines whether to overwrite an already existing backup.</param>
+        /// <returns><c>true</c> if the backup was successful; otherwise, <c>false</c>.</returns>
+        public static bool Backup(string in_path, string in_suffix = BackupExt, bool in_isOverwrite = false)
+        {
+            var backupPath = in_path + in_suffix;
+
+            if (!File.Exists(in_path))
+                return false;
+
+            if (!in_isOverwrite && File.Exists(backupPath))
+                return false;
+
+            File.Copy(in_path, backupPath, in_isOverwrite);
+
+            return true;
+        }
+
+        /// <summary>
+        /// Gets the last index of a checked mod.
         /// </summary>
         /// <typeparam name="T">Content type.</typeparam>
         /// <param name="collection">Collection of content.</param>
@@ -260,7 +309,7 @@ namespace SonicNextModManager.Metadata
         }
 
         /// <summary>
-        /// Returns the last index of the installing or installed content.
+        /// Gets the last index of the installing or installed content.
         /// </summary>
         /// <typeparam name="T">Content type.</typeparam>
         /// <param name="collection">Collection of content.</param>
@@ -415,7 +464,7 @@ namespace SonicNextModManager.Metadata
         {
             foreach (var arc in Archives!)
             {
-                IOHelper.Backup(arc.Key);
+                Backup(arc.Key);
 
                 arc.Value.Save(arc.Key);
                 arc.Value.Dispose();

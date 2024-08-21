@@ -1,5 +1,4 @@
 ﻿using Marathon.Formats.Archive;
-using Marathon.Helpers;
 using SonicNextModManager.Lua.Attributes;
 using SonicNextModManager.Lua.Wrappers.Audio;
 using SonicNextModManager.Lua.Wrappers.Event;
@@ -25,12 +24,12 @@ namespace SonicNextModManager.Lua.Wrappers.Archive
             _archive = Database.LoadArchive(in_path);
         }
 
-        public DynValue this[string in_path, EFileType in_type = EFileType.Guess, EReadMode in_readMode = EReadMode.Stream]
+        public DynValue this[string in_path, EFileType in_type = EFileType.Guess]
         {
-            get => Load(in_path, in_type, in_readMode);
+            get => Open(in_path, in_type);
         }
 
-        public DynValue Load(string in_path, EFileType in_type = EFileType.Guess, EReadMode in_readMode = EReadMode.Stream)
+        public DynValue Open(string in_path, EFileType in_type = EFileType.Guess)
         {
             // Change ".lua" to ".lub" to check if the file exists.
             if (Path.GetExtension(in_path) == ".lua")
@@ -165,8 +164,8 @@ namespace SonicNextModManager.Lua.Wrappers.Archive
                 }
             }
 
-            // Return a buffer if no Marathon type could be evaluated.
-            return UserData.Create(new BufferWrapper(_archive, in_path, in_readMode));
+            // Return a generic file wrapper if no Marathon type could be evaluated.
+            return UserData.Create(new U8ArchiveFileWrapper(_archive, in_path));
         }
     }
 }

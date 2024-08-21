@@ -89,6 +89,17 @@ namespace SonicNextModManager
         }
 
         /// <summary>
+        /// Gets the current platform from the game executable path
+        /// and returns it as the game's internal platform-specific directory name.
+        /// </summary>
+        public static string GetCurrentPlatformString()
+        {
+            return GetCurrentPlatform() == EPlatform.Xbox
+                ? "xenon"
+                : "ps3";
+        }
+
+        /// <summary>
         /// Creates the exception handler to provide a friendly interface for errors.
         /// </summary>
         private static void CreateExceptionHandler()

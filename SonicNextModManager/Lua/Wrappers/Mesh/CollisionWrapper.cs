@@ -1,8 +1,8 @@
 ﻿using Marathon.Formats.Archive;
 using Marathon.Formats.Mesh;
-using SonicNextModManager.Extensions;
 using SonicNextModManager.Helpers;
 using SonicNextModManager.Lua.Attributes;
+using SonicNextModManager.Lua.Extensions;
 using SonicNextModManager.Lua.Interfaces;
 using System.Numerics;
 
@@ -36,9 +36,9 @@ namespace SonicNextModManager.Lua.Wrappers.Mesh
             return [.. _collision.Data.Faces];
         }
 
-        public void Save()
+        public void Close()
         {
-            Save(_collision);
+            Close(_collision);
         }
     }
 }

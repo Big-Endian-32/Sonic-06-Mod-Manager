@@ -1,8 +1,8 @@
 ﻿using Marathon.Formats.Archive;
 using Marathon.Formats.Placement;
-using SonicNextModManager.Extensions;
 using SonicNextModManager.Helpers;
 using SonicNextModManager.Lua.Attributes;
+using SonicNextModManager.Lua.Extensions;
 using SonicNextModManager.Lua.Interfaces;
 
 namespace SonicNextModManager.Lua.Wrappers.Placement
@@ -87,9 +87,9 @@ namespace SonicNextModManager.Lua.Wrappers.Placement
             _setData.Data.Groups.Add(group);
         }
 
-        public void Save()
+        public void Close()
         {
-            Save(_setData);
+            Close(_setData);
         }
     }
 }

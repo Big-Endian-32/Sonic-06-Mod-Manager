@@ -1,7 +1,9 @@
 ﻿using Marathon.Formats.Archive;
 using Marathon.IO;
 using SonicNextModManager.Helpers;
+using SonicNextModManager.Patches;
 using System.Collections.ObjectModel;
+using System.Diagnostics;
 
 namespace SonicNextModManager.Metadata
 {
@@ -16,6 +18,11 @@ namespace SonicNextModManager.Metadata
         /// A collection of patches required by this mod.
         /// </summary>
         public ObservableCollection<string> Patches { get; set; } = [];
+
+        /// <summary>
+        /// A collection of DLL modules required by this mod.
+        /// </summary>
+        public ObservableCollection<string> Modules { get; set; } = [];
 
         public Mod() { }
 
@@ -35,6 +42,7 @@ namespace SonicNextModManager.Metadata
             Location    = in_file;
             Version     = mod.Version;
             Patches     = mod.Patches;
+            Modules     = mod.Modules;
 
             // Get single thumbnail and use that as the path.
             if (DirectoryHelper.Contains(Path.GetDirectoryName(in_file)!, "thumbnail.*", out string out_thumbnail))
@@ -73,15 +81,18 @@ namespace SonicNextModManager.Metadata
 
             State = EInstallState.Installing;
 
+            var customArchives = new List<string>();
+
             // Loop through each file in this mod.
             foreach (var file in Directory.GetFiles(modDirectory, "*", SearchOption.AllDirectories))
             {
                 var fileName = Path.GetFileName(file);
+                var extension = Path.GetExtension(file);
 
                 // Skip mod metadata.
                 if (fileName == "mod.json" ||
-                    Path.GetExtension(fileName) == ".mlua" ||
-                    Patches.Any(x => x.Contains(fileName)) ||
+                    extension == ".mlua" ||
+                    Patches.Any(x => x.TrimStart(Database.AppendChar, Database.RemoveChar).Contains(fileName)) ||
                     Path.GetFileNameWithoutExtension(file) == "thumbnail")
                 {
                     continue;
@@ -89,20 +100,24 @@ namespace SonicNextModManager.Metadata
 
                 var relativePath = Path.GetRelativePath(modDirectory, file);
                 var absolutePath = Path.Combine(gameDirectory, relativePath);
+                var isArchive = extension == ".arc";
 
                 // Check if this file is a custom file.
-                if (fileName.StartsWith('#'))
+                if (fileName.StartsWith(Database.CustomChar))
                 {
-                    File.Copy(file, Path.Combine(gameDirectory,
-                        Helpers.StringHelper.OmitFileNamePrefix(relativePath, '#')), true);
+                    // Add archive to queue for appending to archive.pkg.
+                    if (isArchive)
+                        customArchives.Add(relativePath);
+
+                    File.Copy(file, Path.Combine(gameDirectory, StringHelper.OmitFileNamePrefix(relativePath, Database.CustomChar)), true);
 
                     continue;
                 }
 
-                // Check if this file is a merge archive.
-                if (fileName.StartsWith('+') && Path.GetExtension(file) == ".arc")
+                // Check if this file is an append archive.
+                if (isArchive && fileName.StartsWith(Database.AppendChar))
                 {
-                    var baseArchive  = Database.LoadArchive(Helpers.StringHelper.OmitFileNamePrefix(relativePath, '+'));
+                    var baseArchive  = Database.LoadArchive(StringHelper.OmitFileNamePrefix(relativePath, Database.AppendChar));
                     var mergeArchive = new U8Archive(file, ReadMode.IndexOnly);
 
                     if (baseArchive == null)
@@ -117,7 +132,7 @@ namespace SonicNextModManager.Metadata
                 // Check if this file exists in the game directory.
                 if (File.Exists(absolutePath))
                 {
-                    IOHelper.Backup(absolutePath);
+                    Database.Backup(absolutePath);
 
                     File.Copy(file, absolutePath, true);
 
@@ -127,12 +142,16 @@ namespace SonicNextModManager.Metadata
                 }
             }
 
+            // Append custom archives to archive.pkg.
+            using (var arcList = new ArchiveList())
+                arcList.Add(customArchives);
+
             foreach (var patchName in Patches)
             {
                 // Check if this patch should be installed.
-                if (patchName.StartsWith('+'))
+                if (patchName.StartsWith(Database.AppendChar))
                 {
-                    var patchPath = Path.Combine(modDirectory, patchName.TrimStart('+'));
+                    var patchPath = Path.Combine(modDirectory, patchName.TrimStart(Database.AppendChar));
 
                     if (!File.Exists(patchPath))
                     {
@@ -153,7 +172,7 @@ namespace SonicNextModManager.Metadata
                 }
 
                 // Check if this patch should be blocked.
-                if (patchName.StartsWith('-'))
+                if (patchName.StartsWith(Database.RemoveChar))
                 {
                     // TODO
                 }
@@ -173,10 +192,10 @@ namespace SonicNextModManager.Metadata
             State = EInstallState.Uninstalling;
 
             // Remove custom files.
-            foreach (var file in Directory.GetFiles(modDirectory, "#*", SearchOption.AllDirectories))
+            foreach (var file in Directory.GetFiles(modDirectory, $"{Database.CustomChar}*", SearchOption.AllDirectories))
             {
                 var relativePath = Path.GetRelativePath(modDirectory, file);
-                var originalPath = Path.Combine(gameDirectory, Helpers.StringHelper.OmitFileNamePrefix(relativePath, '#'));
+                var originalPath = Path.Combine(gameDirectory, StringHelper.OmitFileNamePrefix(relativePath, Database.CustomChar));
 
                 if (!File.Exists(originalPath))
                     continue;

@@ -1,12 +1,47 @@
-﻿using SonicNextModManager.Helpers;
+﻿using SonicNextModManager.Extensions;
+using SonicNextModManager.Helpers;
 using SonicNextModManager.Lua.Attributes;
 using SonicNextModManager.Lua.Interfaces;
 using SonicNextModManager.Lua.Syntax.Interfaces;
 
-namespace SonicNextModManager.Extensions
+namespace SonicNextModManager.Lua.Extensions
 {
-    public static class MoonSharpExtensions
+    public static class ScriptExtensions
     {
+        /// <summary>
+        /// Initialises the input Lua interpreter with the default exposed functions.
+        /// </summary>
+        /// <param name="L">The Lua interpreter to initialise.</param>
+        public static Script Initialise(this Script L, string? in_name)
+        {
+            L.RegisterCallbacks();
+            L.RegisterDescriptors();
+            L.RegisterUserData();
+            L.RegisterEnums();
+
+            // Initialise patch symbols.
+            L.SetGlobal("ScriptName", in_name ?? "Script");
+            L.SetGlobal("Executable", App.Settings.Path_GameExecutable!);
+            L.SetGlobal("Platform", App.GetCurrentPlatformString());
+            L.SetGlobal("Root", App.Settings.GetGameDirectory()!);
+            L.SetGlobal("Language", App.CurrentCulture?.Name!);
+
+            return L;
+        }
+
+        /// <summary>
+        /// Loads and executes a string containing a Lua/MoonSharp script.
+        /// </summary>
+        /// <param name="L">The Lua interpreter to use.</param>
+        /// <param name="in_code">The code.</param>
+        /// <returns>A DynValue containing the result of the processing of the loaded chunk.</returns>
+        public static DynValue Run(this Script L, string in_code)
+        {
+            in_code = L.InstallCustomSyntax(in_code);
+
+            return L.DoString(in_code);
+        }
+
         /// <summary>
         /// Registers all methods marked as Lua callback functions with the interpreter.
         /// </summary>
@@ -218,10 +253,10 @@ namespace SonicNextModManager.Extensions
             }
             else if
             (
-                in_type == typeof(sbyte) || in_type == typeof(byte)   ||
+                in_type == typeof(sbyte) || in_type == typeof(byte) ||
                 in_type == typeof(short) || in_type == typeof(ushort) ||
-                in_type == typeof(int)   || in_type == typeof(uint)   ||
-                in_type == typeof(long)  || in_type == typeof(ulong)  ||
+                in_type == typeof(int) || in_type == typeof(uint) ||
+                in_type == typeof(long) || in_type == typeof(ulong) ||
                 in_type == typeof(float) || in_type == typeof(double)
             )
             {
@@ -301,6 +336,43 @@ namespace SonicNextModManager.Extensions
         public static bool IsArray(this DynValue in_value)
         {
             return in_value.Type == DataType.Table && in_value.GetLength().CastToNumber() > 0;
+        }
+
+        /// <summary>
+        /// Gets a global value from the Lua interpreter.
+        /// </summary>
+        /// <param name="L">The script to pull from.</param>
+        /// <param name="in_name">The name of the global to get.</param>
+        /// <returns>The value of the requested global, if present; otherwise, the name of the global.</returns>
+        public static object GetGlobal(this Script L, string in_name)
+        {
+            if (!L.Globals.Keys.Any(x => x.CastToString() == in_name))
+                return in_name;
+
+            return L.Globals[in_name];
+        }
+
+        /// <summary>
+        /// Gets a global value from the Lua interpreter.
+        /// </summary>
+        /// <typeparam name="T">The type to cast to.</typeparam>
+        /// <param name="L">The script to pull from.</param>
+        /// <param name="in_name">The name of the global to get.</param>
+        /// <returns>The value of the requested global, if present; otherwise, the name of the global.</returns>
+        public static T GetGlobal<T>(this Script L, string in_name)
+        {
+            return (T)L.GetGlobal(in_name);
+        }
+
+        /// <summary>
+        /// Sets a global value in the Lua interpreter.
+        /// </summary>
+        /// <param name="L">The script to push to.</param>
+        /// <param name="in_name">The name of the global to set.</param>
+        /// <param name="in_value">The value of the global.</param>
+        public static void SetGlobal(this Script L, string in_name, object in_value)
+        {
+            L.Globals[in_name] = in_value;
         }
     }
 }

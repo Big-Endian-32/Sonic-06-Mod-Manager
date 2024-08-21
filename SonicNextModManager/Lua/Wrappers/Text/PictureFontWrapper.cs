@@ -1,8 +1,8 @@
 ﻿using Marathon.Formats.Archive;
 using Marathon.Formats.Text;
-using SonicNextModManager.Extensions;
 using SonicNextModManager.Helpers;
 using SonicNextModManager.Lua.Attributes;
+using SonicNextModManager.Lua.Extensions;
 using SonicNextModManager.Lua.Interfaces;
 
 namespace SonicNextModManager.Lua.Wrappers.Text
@@ -81,9 +81,9 @@ namespace SonicNextModManager.Lua.Wrappers.Text
             }
         }
 
-        public void Save()
+        public void Close()
         {
-            Save(_pictureFont);
+            Close(_pictureFont);
         }
     }
 }

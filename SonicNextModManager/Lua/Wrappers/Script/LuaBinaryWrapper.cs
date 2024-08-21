@@ -115,7 +115,7 @@ namespace SonicNextModManager.Lua.Wrappers.Script
             _luaCode = [.. _luaCode, .. in_code.GetLines()];
         }
 
-        public void Save()
+        public void Close()
         {
             var code = string.Join('\n', _luaCode);
 

@@ -1,4 +1,5 @@
-﻿using System.Runtime.InteropServices;
+﻿using SonicNextModManager.Metadata;
+using System.Runtime.InteropServices;
 
 namespace SonicNextModManager.Helpers
 {
@@ -23,8 +24,38 @@ namespace SonicNextModManager.Helpers
         /// Returns a hexadecimal string based off a byte array.
         /// </summary>
         /// <param name="in_data">Bytes to convert.</param>
-        public static string ByteArrayToHexString(byte[] in_data)
-            => BitConverter.ToString(in_data).Replace("-", " ");
+        public static string ByteArrayToHexString(byte[] in_data, bool in_isSpaced = true)
+        {
+            return BitConverter.ToString(in_data).Replace("-", in_isSpaced ? " " : "");
+        }
+
+        /// <summary>
+        /// Transforms a virtual memory address to a physical executable address.
+        /// </summary>
+        /// <param name="in_addr">The address to transform.</param>
+        public static uint ToPhysical(uint in_addr)
+        {
+            return App.GetCurrentPlatform() switch
+            {
+                EPlatform.Xbox => (in_addr - 0x82000000) + 0x3000,
+                EPlatform.PlayStation => in_addr - 0x10000,
+                _ => in_addr,
+            };
+        }
+
+        /// <summary>
+        /// Transforms a physical executable address to a virtual memory address.
+        /// </summary>
+        /// <param name="in_addr">The address to transform.</param>
+        public static uint ToVirtual(uint in_addr)
+        {
+            return App.GetCurrentPlatform() switch
+            {
+                EPlatform.Xbox => (in_addr + 0x82000000) - 0x3000,
+                EPlatform.PlayStation => in_addr + 0x10000,
+                _ => in_addr,
+            };
+        }
 
         public static object? ByteArrayToUnmanagedType(byte[] in_data, Type in_type, bool in_isBigEndian = false)
         {

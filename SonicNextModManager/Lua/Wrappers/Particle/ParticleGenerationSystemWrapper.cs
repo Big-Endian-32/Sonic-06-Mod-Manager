@@ -1,8 +1,8 @@
 ﻿using Marathon.Formats.Archive;
 using Marathon.Formats.Particle;
-using SonicNextModManager.Extensions;
 using SonicNextModManager.Helpers;
 using SonicNextModManager.Lua.Attributes;
+using SonicNextModManager.Lua.Extensions;
 using SonicNextModManager.Lua.Interfaces;
 
 namespace SonicNextModManager.Lua.Wrappers.Particle
@@ -111,9 +111,9 @@ namespace SonicNextModManager.Lua.Wrappers.Particle
             }
         }
 
-        public void Save()
+        public void Close()
         {
-            Save(_particleGenerationSystem);
+            Close(_particleGenerationSystem);
         }
     }
 }

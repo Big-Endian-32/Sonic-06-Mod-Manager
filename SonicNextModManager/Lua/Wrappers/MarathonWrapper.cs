@@ -33,7 +33,7 @@ namespace SonicNextModManager.Lua.Wrappers
             return UserData.Create((T)instance);
         }
 
-        public void Save<T>(T in_instance) where T : FileBase
+        public void Close<T>(T in_instance) where T : FileBase
         {
             File.Data = IOHelper.GetMarathonTypeBuffer(in_instance);
         }

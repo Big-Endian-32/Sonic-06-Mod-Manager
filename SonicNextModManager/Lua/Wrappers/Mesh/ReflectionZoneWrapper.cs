@@ -1,8 +1,8 @@
 ﻿using Marathon.Formats.Archive;
 using Marathon.Formats.Mesh;
-using SonicNextModManager.Extensions;
 using SonicNextModManager.Helpers;
 using SonicNextModManager.Lua.Attributes;
+using SonicNextModManager.Lua.Extensions;
 using SonicNextModManager.Lua.Interfaces;
 
 namespace SonicNextModManager.Lua.Wrappers.Mesh
@@ -44,9 +44,9 @@ namespace SonicNextModManager.Lua.Wrappers.Mesh
             return [.. _reflectionZone.Reflections];
         }
 
-        public void Save()
+        public void Close()
         {
-            Save(_reflectionZone);
+            Close(_reflectionZone);
         }
     }
 }

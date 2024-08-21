@@ -24,12 +24,7 @@ namespace SonicNextModManager.Lua.Callback
         [LuaCallback]
         public static uint ToPhysical(uint in_addr)
         {
-            return App.GetCurrentPlatform() switch
-            {
-                EPlatform.Xbox        => (in_addr - 0x82000000) + 0x3000,
-                EPlatform.PlayStation => in_addr - 0x10000,
-                _                    => in_addr,
-            };
+            return MemoryHelper.ToPhysical(in_addr);
         }
 
         /// <summary>
@@ -39,23 +34,7 @@ namespace SonicNextModManager.Lua.Callback
         [LuaCallback]
         public static uint ToVirtual(uint in_addr)
         {
-            return App.GetCurrentPlatform() switch
-            {
-                EPlatform.Xbox        => (in_addr + 0x82000000) - 0x3000,
-                EPlatform.PlayStation => in_addr + 0x10000,
-                _                    => in_addr,
-            };
-        }
-
-        /// <summary>
-        /// Gets the value of a symbol.
-        /// </summary>
-        /// <param name="in_symbol">The name of the symbol to get.</param>
-        /// <returns>If it exists, the value of the specified symbol; otherwise, the symbol name.</returns>
-        [LuaCallback]
-        public static string GetSymbol(string in_symbol)
-        {
-            return Patcher.GetSymbol(in_symbol);
+            return MemoryHelper.ToVirtual(in_addr);
         }
 
         /// <summary>
@@ -99,6 +78,36 @@ namespace SonicNextModManager.Lua.Callback
                 out_icon = ENextMessageBoxIcon.Information;
 
             return NextMessageBox.Show(in_message, in_caption, (ENextMessageBoxButton)out_buttons, (ENextMessageBoxIcon)out_icon).ToString();
+        }
+
+        [LuaCallback]
+        public static bool MessageBoxYesNo(string in_message, string in_caption = "Sonic '06 Mod Manager")
+        {
+            return MessageBox(in_message, in_caption, "YesNo", "Question") == "Yes";
+        }
+
+        [LuaCallback]
+        public static void Print(string in_message)
+        {
+            LoggerService.WriteLine(in_message);
+        }
+
+        [LuaCallback]
+        public static void PrintWarning(string in_message)
+        {
+            LoggerService.Warning(in_message);
+        }
+
+        [LuaCallback]
+        public static void PrintError(string in_message)
+        {
+            LoggerService.Error(in_message);
+        }
+
+        [LuaCallback]
+        public static void PrintUtility(string in_message)
+        {
+            LoggerService.Utility(in_message);
         }
     }
 }

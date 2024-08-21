@@ -68,18 +68,20 @@ namespace SonicNextModManager.Properties {
         ///    &quot;Contributors&quot;: [
         ///      {
         ///        &quot;Name&quot;: &quot;Hyper&quot;,
-        ///        &quot;Description&quot;: &quot;Lead developer and designer&quot;,
+        ///        &quot;Description&quot;: &quot;Programming, design&quot;,
         ///        &quot;URL&quot;: &quot;https://github.com/hyperbx&quot;
         ///      },
         ///      {
+        ///        &quot;Name&quot;: &quot;Knuxfan24&quot;,
+        ///        &quot;Description&quot;: &quot;Programming&quot;,
+        ///        &quot;URL&quot;: &quot;https://github.com/Knuxfan24&quot;
+        ///      },
+        ///      {
         ///        &quot;Name&quot;: &quot;Sajid&quot;,
-        ///        &quot;Description&quot;: &quot;GitHub API&quot;,
+        ///        &quot;Description&quot;: &quot;Programming&quot;,
         ///        &quot;URL&quot;: &quot;https://github.com/Sajidur78&quot;
         ///      },
         ///      {
-        ///        &quot;Name&quot;: &quot;SuperSonic16&quot;,
-        ///        &quot;Description&quot;: &quot;GameBanana API&quot;,
-        ///        &quot;URL&quot;: &quot;https://github.com/thesupersonic16&quot;
         ///   [rest of string was truncated]&quot;;.
         /// </summary>
         internal static string Credits {
@@ -201,6 +203,26 @@ namespace SonicNextModManager.Properties {
         internal static byte[] scetool {
             get {
                 object obj = ResourceManager.GetObject("scetool", resourceCulture);
+                return ((byte[])(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Byte[].
+        /// </summary>
+        internal static byte[] SonicNextModLoaderPS3 {
+            get {
+                object obj = ResourceManager.GetObject("SonicNextModLoaderPS3", resourceCulture);
+                return ((byte[])(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Byte[].
+        /// </summary>
+        internal static byte[] SonicNextModLoaderXbox {
+            get {
+                object obj = ResourceManager.GetObject("SonicNextModLoaderXbox", resourceCulture);
                 return ((byte[])(obj));
             }
         }

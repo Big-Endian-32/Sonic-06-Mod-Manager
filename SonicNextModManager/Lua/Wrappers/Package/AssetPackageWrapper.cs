@@ -1,8 +1,8 @@
 ﻿using Marathon.Formats.Archive;
 using Marathon.Formats.Package;
-using SonicNextModManager.Extensions;
 using SonicNextModManager.Helpers;
 using SonicNextModManager.Lua.Attributes;
+using SonicNextModManager.Lua.Extensions;
 using SonicNextModManager.Lua.Interfaces;
 
 namespace SonicNextModManager.Lua.Wrappers.Package
@@ -51,9 +51,9 @@ namespace SonicNextModManager.Lua.Wrappers.Package
             return _assetPackage.Categories.Select(x => new AssetCategoryWrapper(x)).ToArray();
         }
 
-        public void Save()
+        public void Close()
         {
-            Save(_assetPackage);
+            Close(_assetPackage);
         }
     }
 

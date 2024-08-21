@@ -1,8 +1,8 @@
 ﻿using Marathon.Formats.Archive;
 using Marathon.Formats.Event;
-using SonicNextModManager.Extensions;
 using SonicNextModManager.Helpers;
 using SonicNextModManager.Lua.Attributes;
+using SonicNextModManager.Lua.Extensions;
 using SonicNextModManager.Lua.Interfaces;
 
 using _Event = Marathon.Formats.Event.Event;
@@ -51,9 +51,9 @@ namespace SonicNextModManager.Lua.Wrappers.Event
             }
         }
 
-        public void Save()
+        public void Close()
         {
-            Save(_eventPlaybook);
+            Close(_eventPlaybook);
         }
     }
 }
