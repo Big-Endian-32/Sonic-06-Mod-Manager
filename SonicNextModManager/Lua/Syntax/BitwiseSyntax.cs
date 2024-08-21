@@ -2,12 +2,12 @@
 
 namespace SonicNextModManager.Lua.Syntax
 {
-    public class BitwiseSyntax
+    public class BitwiseSyntax : SanitisedSyntaxBase
     {
         public string Install(string in_code, string in_operator)
         {
-            in_code = InstallBitwise(in_code, in_operator);
-            in_code = InstallBitwiseAssignment(in_code, in_operator);
+            in_code = InstallSanitised(in_code, (c) => InstallBitwise(c, in_operator));
+            in_code = InstallSanitised(in_code, (c) => InstallBitwiseAssignment(c, in_operator));
 
             return in_code;
         }
